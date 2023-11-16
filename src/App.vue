@@ -9,6 +9,7 @@
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
     <div>測試部屬</div>
+    <div>測試部屬</div>
   </div>
 </template>
 
