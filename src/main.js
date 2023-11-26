@@ -13,6 +13,7 @@ import { createPersistedState } from "pinia-plugin-persistedstate";
 
 //ccs
 import './style.css'
+import "animate.css";
 
 import App from './App.vue'
 import router from "./router";
