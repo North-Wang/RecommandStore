@@ -1,8 +1,10 @@
-<script setup></script>
+<script setup>
+import Homepage from "./component/Homepage.vue";
+</script>
 
 <template>
   <div>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
+    <routerView></routerView>
   </div>
 </template>
 
