@@ -1,6 +1,8 @@
 <template>
   <div>
-    <header class="bg-sky-700 text-white">Header</header>
+    <header class="bg-sky-700 text-white cusror">
+      <router-link to="/" class="text-white">Header</router-link>
+    </header>
   </div>
 </template>
 

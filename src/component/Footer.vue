@@ -21,5 +21,8 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 </style>
