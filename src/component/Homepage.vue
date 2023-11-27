@@ -22,22 +22,22 @@ const addNewStore = async function () {
     category: "滷味,水餃",
   };
   const config = {
-    method: "Post",
-    body: newStore,
+    method: "POST",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Request-Method": "POST",
+    },
+    body: JSON.stringify(newStore),
   };
   const url =
     "https://script.google.com/macros/s/AKfycbyoKmSWJLN8E52T2P5w-kBAGf5_foUzSC-ShPGUOSVC8g0_yRLPlcQ64oWJf6zst9zv3A/exec";
-  // fetch(url, config)
-  //   .then((response) => response.json())
-  //   .then((result) => {
-  //     if (result === "success") {
-  //       alert("資料已成功送出，我們下次見~");
-  //     }
-  //   })
-  //   .catch((error) => console.log("error", error));
-  axios.post(url, newStore).then((result) => {
+
+  try {
+    const result = fetch(url, config);
     console.log("result", result);
-  });
+  } catch (error) {
+    console.log("error", error);
+  }
 };
 </script>
 <style scoped></style>
