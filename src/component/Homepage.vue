@@ -26,7 +26,7 @@ const addNewStore = async function () {
     body: newStore,
   };
   const url =
-    "https://script.google.com/macros/library/d/1vFlvViGJaZRYNHJygvz9ImyQsZV38dszpYS6kgH1i_g-EMHSn4-S69OX/1";
+    "https://script.google.com/macros/s/AKfycbyoKmSWJLN8E52T2P5w-kBAGf5_foUzSC-ShPGUOSVC8g0_yRLPlcQ64oWJf6zst9zv3A/exec";
   // fetch(url, config)
   //   .then((response) => response.json())
   //   .then((result) => {
