@@ -30,7 +30,7 @@ const addNewStore = async function () {
     body: JSON.stringify(newStore),
   };
   const url =
-    "https://script.google.com/macros/s/AKfycbyoKmSWJLN8E52T2P5w-kBAGf5_foUzSC-ShPGUOSVC8g0_yRLPlcQ64oWJf6zst9zv3A/exec";
+    "https://script.google.com/macros/s/AKfycby861bkJ2z38iybFkkTBcIRaoyirXrk9wMc-XKtSbg8QTtc4o9tEFoW_BPpnDWpOIYJqA/exec";
 
   try {
     const result = fetch(url, config);
