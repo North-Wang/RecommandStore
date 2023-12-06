@@ -16,10 +16,10 @@ const getStoreList = async function () {
         "https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/工作表1?key=AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
       )
       .then((result) => {
-        // console.log("result", result);
+        console.log("成功取得店家資訊", result);
         const titleList = result.data.values[0];
         const storeList = result.data.values.slice(1);
-        console.log("標題", titleList);
+        // console.log("標題", titleList);
         // console.log("店家", storeList);
 
         storeList.forEach((store) => {
@@ -35,8 +35,7 @@ const getStoreList = async function () {
             category: store[8],
           });
         });
-        console.log("全部的店家資訊", allStoreInfo.value);
-        // storeInfo.updateStoreList(allStoreInfo.value);
+        // console.log("全部的店家資訊", allStoreInfo.value);
 
         //update data to Pinia
         storeInfo.storeList = allStoreInfo.value;
@@ -53,18 +52,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-wrapper">
-    <Header />
-    <routerView class="wrapper"></routerView>
-    <Footer />
+  <div class="app-wrapper flex flex-col">
+    <Header class="" />
+    <routerView class="p-6 flex-1"></routerView>
+    <Footer class="" />
   </div>
 </template>
 
 <style scoped>
 .app-wrapper {
   max-width: 1440px;
-}
-.wrapper {
-  min-height: calc(100vh - 200px);
 }
 </style>

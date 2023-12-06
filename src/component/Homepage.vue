@@ -1,13 +1,28 @@
 <template>
-  <div>
-    <div class="text-3xl font-bold underline">首頁</div>
-    <button @click="addNewStore">新增店家</button>
-  </div>
+  <ul class="flex flex-col items-center">
+    <!-- <li class="text-3xl font-bold"></li> -->
+    <!-- <button @click="addNewStore">新增店家</button> -->
+    <li
+      class="w-4/5 rounded-lg border-[1.5px] border-black p-2 flex flex-col justify-center items-center mt-4"
+    >
+      <h2>{{ answer }}</h2>
+      <h3>10556台北市松山區復興南路一段45號</h3>
+      <div></div>
+    </li>
+    <li
+      class="h-[120px] w-[120px] rounded-full border border-white mt-10 flex justify-center items-center"
+    >
+      Click
+    </li>
+    <button>more detail</button>
+  </ul>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
+
+const answer = ref("Dreamers Coffee Roasters 微風復興店");
 
 const addNewStore = async function () {
   const newStore = {

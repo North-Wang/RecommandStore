@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="bg-sky-700 text-white cusror">
-      <router-link to="/" class="text-white">Header</router-link>
+      <router-link to="/" class="text-white">HOME</router-link>
     </header>
   </div>
 </template>
@@ -13,7 +13,7 @@ import StoreListTable from "./StoreListTable.vue";
 </script>
 <style scoped>
 header {
-  height: 50px;
+  height: 72px;
   width: 100vw;
   display: flex;
   justify-content: center;

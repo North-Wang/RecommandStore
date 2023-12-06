@@ -16,7 +16,6 @@
 
 a {
   font-weight: 500;
-  /* color: #646cff; */
   color: #1a1a1a;
   text-decoration: inherit;
 }
@@ -32,6 +31,12 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+h2{
+  font-size: 1.875rem;
+}
+h3{
+  font-size: 1.5rem;
 }
 
 button {
