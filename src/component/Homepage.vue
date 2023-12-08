@@ -3,26 +3,52 @@
     <!-- <li class="text-3xl font-bold"></li> -->
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
-      class="w-4/5 rounded-lg border-[1.5px] border-black p-2 flex flex-col justify-center items-center mt-4"
+      class="w-full rounded-lg border-[1.5px] border-black p-2 flex flex-col justify-center items-center mt-4"
     >
-      <h2>{{ answer }}</h2>
-      <h3>10556台北市松山區復興南路一段45號</h3>
-      <div></div>
+      <h4
+        class="whitespace-nowrap translate-x-0 delay-[1s] hover:translate-x-[ translateX(calc(200px - 100%))]"
+      >
+        {{ answer }}
+      </h4>
+      <h4 class="" style="text-align: justify">
+        10556台北市松山區復興南路一段45號
+      </h4>
     </li>
-    <li
-      class="h-[120px] w-[120px] rounded-full border border-white mt-10 flex justify-center items-center"
+    <button
+      class="lottery-button h-[100px] w-[100px] rounded-full border border-white mt-10 select-none"
     >
-      Click
-    </li>
-    <button>more detail</button>
+      pick up
+    </button>
+    <div
+      class="border border-white rounded-full h-16 w-16 flex justify-center items-center"
+    >
+      <img
+        :src="moreOptionWhite"
+        alt="moreOptionWhite"
+        class="h-10 w-10 hover:opacity-50 blur:opacity-100"
+        v-if="isDarkMode"
+      />
+      <img
+        :src="moreOptionBlack"
+        alt="moreOptionBlack"
+        class="h-10 w-10 hover:opacity-50 blur:opacity-100"
+        v-else
+      />
+    </div>
   </ul>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
+import detectiveDarkMode from "../js/detectiveDarkMode.js";
+
+//picture
+import moreOptionWhite from "../assets/moreOptionWhite.svg";
+import moreOptionBlack from "../assets/moreOptionBlack.svg";
 
 const answer = ref("Dreamers Coffee Roasters 微風復興店");
+const isDarkMode = detectiveDarkMode();
 
 const addNewStore = async function () {
   const newStore = {
@@ -55,4 +81,10 @@ const addNewStore = async function () {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.lottery-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

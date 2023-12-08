@@ -1,9 +1,8 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
-import axios from "axios";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "./store/useStoreInfo.js";
-import Homepage from "./component/Homepage.vue";
+import axios from "axios";
 import Header from "./component/Header.vue";
 import Footer from "./component/Footer.vue";
 
@@ -46,8 +45,8 @@ const getStoreList = async function () {
   }
 };
 
-onMounted(() => {
-  getStoreList();
+onMounted(async function () {
+  Promise.all([getStoreList()]);
 });
 </script>
 
