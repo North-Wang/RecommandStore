@@ -45,8 +45,18 @@ const getStoreList = async function () {
   }
 };
 
+const stopCopyImage = () => {
+  const imageElement = document.querySelectorAll("img");
+  if (imageElement.length === 0) {
+    return;
+  }
+  imageElement.setAttribute("oncentextmenu", "return false");
+  imageElement.setAttribute("style", "pointer-events: none;");
+  imageElement.setAttribute("style", "user-select: none;");
+};
+
 onMounted(async function () {
-  Promise.all([getStoreList()]);
+  Promise.all([getStoreList(), stopCopyImage()]);
 });
 </script>
 
