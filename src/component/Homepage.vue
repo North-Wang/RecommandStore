@@ -13,7 +13,7 @@
       <input
         type="text"
         name=""
-        id=""
+        id="answerAddress"
         value="10556台北市松山區復興南路一段45號"
         @click="copyText"
       />
@@ -106,8 +106,8 @@ const addNewStore = async function () {
 };
 
 const copyText = async function (text) {
-  const address = text.target.innerText;
-  console.log("選擇的文本", address);
+  const address = document.querySelector("#answerAddress");
+  navigator.clipboard.writeText(address.value);
 };
 </script>
 <style scoped>
