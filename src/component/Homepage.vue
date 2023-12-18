@@ -10,25 +10,20 @@
       >
         {{ answer }}
       </h2>
-      <input
-        type="text"
-        name=""
-        id="answerAddress"
-        value="10556台北市松山區復興南路一段45號"
-        @click="copyText"
-      />
       <button
         class="w-[300px] border-[0.5px] border-white p-2 rounded-l mt-2 overflow-hidden"
       >
-        <h4 class="text- whitespace-nowrap">
-          10556台北市松山區復興南路一段45號
+        <h4 ref="answerAddress" class="text- whitespace-nowrap">
+          10556台北市松山區復興南路一段45號4428293777
         </h4>
       </button>
+      <button @click="copyText()">copy</button>
+      <i class="fa-solid fa-copy"></i>
     </li>
-    <div class="relative flex items-center justify-center mt-20">
-      <!-- <div
+    <!-- <div class="relative flex items-center justify-center mt-20">
+      <div
         class="bg-white w-[56px] h-[56px] rounded-[50%] absolute top-0 left-0"
-      ></div> -->
+      ></div>
       <img
         :src="blackBlurButton"
         alt="blackBlurButton"
@@ -38,7 +33,12 @@
       <h5 class="text-white absolute z-20 select-none whitespace-nowrap">
         pick up
       </h5>
-    </div>
+    </div> -->
+    <ul class="w-20 h-20 bg-white rounded-full relative">
+      <li
+        class="w-8 h-8 bg-red-500 rounded-full absolute top-0 left-0 right-0 bottom-0 m-auto"
+      ></li>
+    </ul>
 
     <div
       class="border border-white rounded-full h-16 w-16 flex justify-center items-center pointer-events-none mt-4"
@@ -74,6 +74,8 @@ import blackBlurButton from "../assets/blackBlurButton.svg";
 const answer = ref("Dreamers Coffee Roasters 微風復興店");
 const isDarkMode = detectiveDarkMode();
 
+const answerAddress = ref(null);
+
 const addNewStore = async function () {
   const newStore = {
     name: "北大荒水餃店",
@@ -106,8 +108,9 @@ const addNewStore = async function () {
 };
 
 const copyText = async function (text) {
-  const address = document.querySelector("#answerAddress");
-  navigator.clipboard.writeText(address.value);
+  console.log("text：", answerAddress.value.innerText);
+  const address = answerAddress.value.innerText;
+  navigator.clipboard.writeText(address);
 };
 </script>
 <style scoped>
