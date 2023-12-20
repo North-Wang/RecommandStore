@@ -5,40 +5,41 @@
     <li
       class="w-full p-6 rounded-lg border-[1px] border-white flex flex-col justify-center items-center mt-4 text-center"
     >
-      <h2
-        class="leading-tight translate-x-0 delay-[1s] hover:translate-x-[ translateX(calc(200px - 100%))]"
-      >
-        {{ answer }}
+      <h2 class="leading-tight whitespace-break-spaces text-start">
+        {{ storeName }}
       </h2>
       <button
         class="w-[300px] border-[0.5px] border-white p-2 rounded-l mt-2 overflow-hidden"
       >
-        <h4 ref="answerAddress" class="text- whitespace-nowrap">
-          10556台北市松山區復興南路一段45號4428293777
-        </h4>
+        <h5 ref="answerAddress" class="text- whitespace-nowrap">
+          {{ address }}
+        </h5>
       </button>
       <button @click="copyText()">copy</button>
-      <i class="fa-solid fa-copy"></i>
     </li>
-    <!-- <div class="relative flex items-center justify-center mt-20">
-      <div
+    <div class="relative flex items-center justify-center mt-20">
+      <!-- <div
         class="bg-white w-[56px] h-[56px] rounded-[50%] absolute top-0 left-0"
-      ></div>
+      ></div> -->
       <img
         :src="blackBlurButton"
         alt="blackBlurButton"
         class="w-[100px] h-[100px] cursor-pointer pointer-events-none"
         oncontextmenu="return false"
       />
-      <h5 class="text-white absolute z-20 select-none whitespace-nowrap">
-        pick up
+      <h5
+        class="text-white absolute z-20 select-none whitespace-nowrap"
+        @click="lotteryStore"
+      >
+        search
       </h5>
-    </div> -->
-    <ul class="w-20 h-20 bg-white rounded-full relative">
+    </div>
+    <h3 class="btn select-none text-white">抽選</h3>
+    <!-- <ul class="w-20 h-20 bg-white rounded-full relative">
       <li
         class="w-8 h-8 bg-red-500 rounded-full absolute top-0 left-0 right-0 bottom-0 m-auto"
       ></li>
-    </ul>
+    </ul> -->
 
     <div
       class="border border-white rounded-full h-16 w-16 flex justify-center items-center pointer-events-none mt-4"
@@ -65,16 +66,29 @@
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
+import { storeToRefs } from "pinia";
+import { useStoreInfo } from "../store/useStoreInfo";
 
 //picture
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
 import blackBlurButton from "../assets/blackBlurButton.svg";
+import copyIcon from "../assets/copy.svg";
 
-const answer = ref("Dreamers Coffee Roasters 微風復興店");
+const storeName = ref("Dreamers Coffee Roasters 微風復興店");
+const address = ref(" 10556台北市松山區復興南路一段45號4428293777");
 const isDarkMode = detectiveDarkMode();
-
 const answerAddress = ref(null);
+const storeInfo = useStoreInfo();
+const { storeList } = storeToRefs(storeInfo);
+const lotteryStore = () => {
+  console.log("全部的店家資料", storeList.value);
+  const randomNumber = Math.floor(Math.random() * (storeList.value.length + 1));
+  const answerStore = storeList.value[randomNumber];
+  console.log("全部的店家資料", randomNumber);
+  storeName.value = answerStore.name;
+  address.value = answerStore.address;
+};
 
 const addNewStore = async function () {
   const newStore = {
@@ -118,5 +132,24 @@ const copyText = async function (text) {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.btn,
+.btn:hover,
+.btn:focus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: #ed1c5b;
+  transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1),
+    transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
+}
+.btn:hover {
+  box-shadow: 0 0 1px 15px rgba(138, 59, 88, 0.4),
+    0 0 1px 30px rgba(138, 59, 88, 0.1), 0 0 1px 45px rgba(138, 59, 88, 0.1);
 }
 </style>
