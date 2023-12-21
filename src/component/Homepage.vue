@@ -17,10 +17,7 @@
       </button>
       <button @click="copyText()">copy</button>
     </li>
-    <div class="relative flex items-center justify-center mt-20">
-      <!-- <div
-        class="bg-white w-[56px] h-[56px] rounded-[50%] absolute top-0 left-0"
-      ></div> -->
+    <!-- <div class="relative flex items-center justify-center mt-20">
       <img
         :src="blackBlurButton"
         alt="blackBlurButton"
@@ -33,30 +30,64 @@
       >
         search
       </h5>
-    </div>
-    <h3 class="btn select-none text-white">抽選</h3>
+    </div> -->
+    <!-- <h3 class="btn select-none text-white mt-10" @click="lotteryStore">抽選</h3> -->
+    <h4
+      class="w-[140px] bg-blue-400 border-2 py-1 rounded-lg select-none text-white mt-10"
+      @click="lotteryStore"
+    >
+      抽選
+    </h4>
+
     <!-- <ul class="w-20 h-20 bg-white rounded-full relative">
       <li
         class="w-8 h-8 bg-red-500 rounded-full absolute top-0 left-0 right-0 bottom-0 m-auto"
       ></li>
     </ul> -->
-
-    <div
-      class="border border-white rounded-full h-16 w-16 flex justify-center items-center pointer-events-none mt-4"
-    >
+    <div class="w-16 h-16 mt-4 cursor-pointer">
       <img
-        :src="moreOptionWhite"
-        alt="moreOptionWhite"
-        class="h-10 w-10 hover:opacity-50 blur:opacity-100"
+        class=" "
+        :src="settingIconWhite"
+        alt="setting-icon"
+        @mouseover.passive="showAnimateSettingIcon = true"
+        @mouseleave.passive="showAnimateSettingIcon = false"
+        @touchstart.passive="showAnimateSettingIcon = true"
+        @touchend.passive="showAnimateSettingIcon = false"
         oncontextmenu="return false"
-        v-if="isDarkMode"
+        v-if="isDarkMode && !showAnimateSettingIcon"
       />
       <img
-        :src="moreOptionBlack"
-        alt="moreOptionBlack"
-        class="h-10 w-10 hover:opacity-50 blur:opacity-100"
+        class=" "
+        :src="settingIconBlack"
+        alt="setting-icon"
+        @mouseover.passive="showAnimateSettingIcon = true"
+        @mouseleave.passive="showAnimateSettingIcon = false"
+        @touchstart.passive="showAnimateSettingIcon = true"
+        @touchend.passive="showAnimateSettingIcon = false"
         oncontextmenu="return false"
-        v-else
+        v-if="!isDarkMode && !showAnimateSettingIcon"
+      />
+      <img
+        class=" "
+        :src="animationSettingIconWhite"
+        alt="animate-setting-icon"
+        @mouseover.passive="showAnimateSettingIcon = true"
+        @mouseleave.passive="showAnimateSettingIcon = false"
+        @touchstart.passive="showAnimateSettingIcon = true"
+        @touchend.passive="showAnimateSettingIcon = false"
+        oncontextmenu="return false"
+        v-if="isDarkMode && showAnimateSettingIcon"
+      />
+      <img
+        class=" "
+        :src="animationSettingIconBlack"
+        alt="animate-setting-icon"
+        @mouseover.passive="showAnimateSettingIcon = true"
+        @mouseleave.passive="showAnimateSettingIcon = false"
+        @touchstart.passive="showAnimateSettingIcon = true"
+        @touchend.passive="showAnimateSettingIcon = false"
+        oncontextmenu="return false"
+        v-if="!isDarkMode && showAnimateSettingIcon"
       />
     </div>
   </ul>
@@ -74,6 +105,10 @@ import moreOptionWhite from "../assets/moreOptionWhite.svg";
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
 import blackBlurButton from "../assets/blackBlurButton.svg";
 import copyIcon from "../assets/copy.svg";
+import settingIconBlack from "../assets/setting_icon_black.svg";
+import settingIconWhite from "../assets/setting_icon_white.svg";
+import animationSettingIconBlack from "../assets/animate_setting_icon_black.gif";
+import animationSettingIconWhite from "../assets/animate_setting_icon_white.gif";
 
 const storeName = ref("Dreamers Coffee Roasters 微風復興店");
 const address = ref(" 10556台北市松山區復興南路一段45號4428293777");
@@ -81,13 +116,19 @@ const isDarkMode = detectiveDarkMode();
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
+
+const showAnimateSettingIcon = ref(false);
+
 const lotteryStore = () => {
   console.log("全部的店家資料", storeList.value);
-  const randomNumber = Math.floor(Math.random() * (storeList.value.length + 1));
+  const randomNumber = Math.floor(Math.random() * storeList.value.length);
   const answerStore = storeList.value[randomNumber];
-  console.log("全部的店家資料", randomNumber);
-  storeName.value = answerStore.name;
-  address.value = answerStore.address;
+  if (answerStore) {
+    storeName.value = answerStore.name || "";
+    address.value = answerStore.address || "";
+  } else {
+    console.warn("出現不存在的店家", storeList.value, randomNumber);
+  }
 };
 
 const addNewStore = async function () {
