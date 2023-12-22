@@ -18,6 +18,8 @@ import "animate.css";
 import App from "./App.vue";
 import router from "./router";
 
+//dataTable
+
 // Vue.config.productionTip = false; //禁止開發模式的提示
 const app = createApp(App);
 

@@ -5,7 +5,7 @@
     <li
       class="w-full p-6 rounded-lg border-[1px] border-white flex flex-col justify-center items-center mt-4 text-center"
     >
-      <h2 class="leading-tight whitespace-break-spaces text-start">
+      <h2 class="h-[72px] leading-tight whitespace-break-spaces text-start">
         {{ storeName }}
       </h2>
       <button
@@ -33,18 +33,13 @@
     </div> -->
     <!-- <h3 class="btn select-none text-white mt-10" @click="lotteryStore">抽選</h3> -->
     <h4
-      class="w-[140px] bg-blue-400 border-2 py-1 rounded-lg select-none text-white mt-10"
+      class="w-[140px] bg-blue-400 border-2 py-1 rounded-lg select-none text-white mt-10 cursor-pointer hover:bg-blue-600"
       @click="lotteryStore"
     >
       抽選
     </h4>
 
-    <!-- <ul class="w-20 h-20 bg-white rounded-full relative">
-      <li
-        class="w-8 h-8 bg-red-500 rounded-full absolute top-0 left-0 right-0 bottom-0 m-auto"
-      ></li>
-    </ul> -->
-    <div class="w-16 h-16 mt-4 cursor-pointer">
+    <li class="w-16 h-16 mt-4 cursor-pointer relative">
       <img
         class=" "
         :src="settingIconWhite"
@@ -89,7 +84,20 @@
         oncontextmenu="return false"
         v-if="!isDarkMode && showAnimateSettingIcon"
       />
-    </div>
+      <!-- <div
+        class="w-20 h-20 bg-blue-400 rounded-full absolute top-3 left-3 z-10 flex justify-center items-center"
+        style="transform: translate(48px, 48px)"
+      >
+        feature
+      </div>
+      <div
+        class="w-20 h-20 bg-blue-600 rounded-full absolute top-3 left-3 z-10 translate-x-[101.82px] flex justify-center items-center"
+        style="transform: translate(67.812px, 0px)"
+      >
+        purpose
+      </div> -->
+    </li>
+    <div class="w-[250px] h-[250px] bg-slate-600 rounded-lg mt-4"></div>
   </ul>
 </template>
 
