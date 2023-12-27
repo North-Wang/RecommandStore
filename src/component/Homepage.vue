@@ -107,6 +107,7 @@ import axios from "axios";
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
+import "animate.css";
 
 //picture
 import moreOptionWhite from "../assets/moreOptionWhite.svg";

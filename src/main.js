@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-
+import PrimeVue from 'primevue/config';
 //pinia
 import { createPinia, storeToRefs } from "pinia";
 const pinia = createPinia();
@@ -27,4 +27,4 @@ app.config.errorHandler = (err) => {
   console.error("捕抓到錯誤訊息", err);
 };
 
-app.use(pinia).use(router).mount("#app");
+app.use(pinia).use(PrimeVue).use(router).mount("#app");
