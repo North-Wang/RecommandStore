@@ -1,3 +1,11 @@
+<template>
+  <div class="app-wrapper flex flex-col">
+    <Header class="" />
+    <routerView class="p-6 flex-1"></routerView>
+    <!-- <Footer class="" /> -->
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
@@ -59,14 +67,6 @@ onMounted(async function () {
   Promise.all([getStoreList(), stopCopyImage()]);
 });
 </script>
-
-<template>
-  <div class="app-wrapper flex flex-col">
-    <Header class="" />
-    <routerView class="p-6 flex-1"></routerView>
-    <Footer class="" />
-  </div>
-</template>
 
 <style scoped>
 .app-wrapper {
