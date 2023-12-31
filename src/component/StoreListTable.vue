@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="select-none">
     <div class="text-3xl font-bold">店家列表</div>
+    <div>{{ isMobile }}</div>
     <div class="flex">
       <input
         type="text"
@@ -9,32 +10,48 @@
         class="w-full my-4 text-center"
       />
     </div>
-    <div class="lg-h-[420px]">
+    <div class="h-[420px]">
       <DataTable
         id="storeTable"
         :value="storeTable"
         class="mt-4"
         scrollable
         scrollHeight="flex"
+        :loading="loadingTable"
       >
         <Column :field="'name'" header="店家名稱" sortable>
           <template #body="{ data, index }">
             <div class="text-start">
-              <span>{{ data.name }}</span>
-            </div></template
-          >
+              <h4 class="font-bold" style="line-height: 1.1">
+                {{ data.name }}
+              </h4>
+              <h5 class="text-blue-900 font-[500] dark:text-white mt-2">
+                {{ data.feature }}
+              </h5>
+              <h5 class="mt-1">{{ data.address }}</h5>
+            </div>
+          </template>
         </Column>
-        <!-- <Column :field="'type'" header="地點種類"></Column> -->
+
         <Column :field="'purple'" header="目的" sortable></Column>
-        <Column :field="'category'" header="種類" sortable></Column>
-        <Column :field="'feature'" header="店家特色" sortable></Column>
-        <Column :field="'address'" header="地址"> </Column>
+        <Column :field="'category'" header="種類" sortable>
+          <template #body="{ data, index }">
+            <h5 class="text-start">{{ data.category }}</h5>
+          </template>
+        </Column>
+        <Column :field="'type'" header="類型"></Column>
+        <!-- <Column :field="'feature'" header="店家特色" sortable></Column> -->
+        <template #empty>
+          <div class="h-[360px] flex items-center justify-center">
+            沒有符合的店家資料
+          </div>
+        </template>
       </DataTable>
       <Paginator
-        :rows="10"
-        :totalRecords="120"
+        :rows="rows"
+        :totalRecords="Math.ceil(storeTable.length / rows)"
         template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+        currentPageReportTemplate="{first} of {totalRecords}"
         class="mt-4"
       />
     </div>
@@ -53,8 +70,22 @@ import { FilterMatchMode } from "primevue/api";
 const storeInfo = useStoreInfo();
 const { storeList, titleList } = storeToRefs(storeInfo);
 const storeTable = ref([]);
+const isMobile = computed(() => {
+  const result =
+    navigator.userAgent.match("mobi") ||
+    navigator.userAgent.match("android") ||
+    navigator.userAgent.match("iphone");
+  console.log("result", result);
+  if (result) {
+    return true;
+  } else {
+    return false;
+  }
+});
 const testList = ref([{ name: "測試" }]);
 const keyword = ref("");
+const rows = ref(10);
+const loadingTable = ref(false);
 
 const search = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {
@@ -84,8 +115,10 @@ input[type="text"] {
 }
 :deep(#storeTable thead th) {
   padding: 8px 16px;
+  border: 1px solid gray;
 }
 :deep(#storeTable tbody td) {
   padding: 8px 16px;
+  border: 1px solid gray;
 }
 </style>
