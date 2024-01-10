@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col w-screen">
     <Header class="" />
     <routerView class="p-6 flex-1"></routerView>
     <!-- <Footer class="" /> -->

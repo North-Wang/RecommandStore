@@ -77,16 +77,8 @@ const storeInfo = useStoreInfo();
 const { storeList, titleList } = storeToRefs(storeInfo);
 const storeTable = ref([]);
 const isMobile = computed(() => {
-  const result =
-    navigator.userAgent.match("mobi") ||
-    navigator.userAgent.match("android") ||
-    navigator.userAgent.match("iphone");
-  console.log("result", result);
-  if (result) {
-    return true;
-  } else {
-    return false;
-  }
+  const info = navigator.userAgent;
+  return /mobile/i.test(info);
 });
 const testList = ref([{ name: "測試" }]);
 const keyword = ref("");
