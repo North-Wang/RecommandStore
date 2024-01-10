@@ -23,7 +23,7 @@ import "primeicons/primeicons.css";
 import "primevue/resources/primevue.min.css";
 import "primeflex/primeflex.css";
 //各種內建的表格主題：https://primevue.org/theming/
-import "primevue/resources/themes/md-light-deeppurple/theme.css";
+// import "primevue/resources/themes/md-light-deeppurple/theme.css";
 // import "primevue/resources/themes/arya-orange/theme.css";
 //PrimeVue DataTable end
 

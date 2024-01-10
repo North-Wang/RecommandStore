@@ -1,7 +1,6 @@
 <template>
   <div class="select-none">
     <div class="text-3xl font-bold">店家列表</div>
-    <div>{{ isMobile }}</div>
     <div class="flex">
       <input
         type="text"
@@ -14,8 +13,9 @@
       <DataTable
         id="storeTable"
         :value="storeTable"
-        class="mt-4"
+        class="mt-4 rounded-lg overflow-hidden"
         showGridlines
+        stripedRows
         scrollable
         scrollHeight="flex"
         :loading="loadingTable"
@@ -45,7 +45,7 @@
             <h5 class="text-start">{{ data.category }}</h5>
           </template>
         </Column>
-        <Column :field="'type'" header="類型"></Column>
+        <Column :field="'type'" header="類型" sortable></Column>
         <!-- <Column :field="'feature'" header="店家特色" sortable></Column> -->
         <template #empty>
           <div class="h-[360px] flex items-center justify-center">
@@ -72,6 +72,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Paginator from "primevue/paginator";
 import { FilterMatchMode } from "primevue/api";
+// import "primevue/resources/themes/arya-orange/theme.css"; //內建的主題樣式之一
 
 const storeInfo = useStoreInfo();
 const { storeList, titleList } = storeToRefs(storeInfo);
@@ -88,7 +89,7 @@ let loadingTable = false;
 const search = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {
     console.log("搜尋", store, keyword);
-    return store.name.includes(keyword);
+    return store.name.includes(keyword) || store.feature.includes(keyword);
   });
 };
 watch(keyword, (keyword) => {
@@ -113,10 +114,17 @@ input[type="text"] {
 }
 :deep(#storeTable thead th) {
   padding: 8px 16px;
+  background-color: white;
   /* border: 1px solid gray; */
 }
 :deep(#storeTable tbody td) {
   padding: 8px 16px;
   /* border: 1px solid gray; */
+}
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  :deep(#storeTable thead th) {
+    background-color: rgb(53, 53, 53);
+  }
 }
 </style>
