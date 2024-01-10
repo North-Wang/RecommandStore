@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper flex flex-col">
+  <div class="flex flex-col">
     <Header class="" />
     <routerView class="p-6 flex-1"></routerView>
     <!-- <Footer class="" /> -->
@@ -68,8 +68,4 @@ onMounted(async function () {
 });
 </script>
 
-<style scoped>
-.app-wrapper {
-  max-width: 1440px;
-}
-</style>
+<style scoped></style>

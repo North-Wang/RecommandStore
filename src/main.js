@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import PrimeVue from 'primevue/config';
+import PrimeVue from "primevue/config";
 //pinia
 import { createPinia, storeToRefs } from "pinia";
 const pinia = createPinia();
@@ -18,7 +18,14 @@ import "animate.css";
 import App from "./App.vue";
 import router from "./router";
 
-//dataTable
+//PrimeVue DataTable start
+import "primeicons/primeicons.css";
+import "primevue/resources/primevue.min.css";
+import "primeflex/primeflex.css";
+//各種內建的表格主題：https://primevue.org/theming/
+import "primevue/resources/themes/md-light-deeppurple/theme.css";
+// import "primevue/resources/themes/arya-orange/theme.css";
+//PrimeVue DataTable end
 
 // Vue.config.productionTip = false; //禁止開發模式的提示
 const app = createApp(App);

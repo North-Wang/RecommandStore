@@ -15,20 +15,26 @@
         id="storeTable"
         :value="storeTable"
         class="mt-4"
+        showGridlines
         scrollable
         scrollHeight="flex"
         :loading="loadingTable"
       >
+        <template #loading>
+          <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+        </template>
         <Column :field="'name'" header="店家名稱" sortable>
           <template #body="{ data, index }">
             <div class="text-start">
               <h4 class="font-bold" style="line-height: 1.1">
                 {{ data.name }}
               </h4>
-              <h5 class="text-blue-900 font-[500] dark:text-white mt-2">
+              <div
+                class="text-red-400 font-[500] mt-1 dark:text-white lg:text-[20px]"
+              >
                 {{ data.feature }}
-              </h5>
-              <h5 class="mt-1">{{ data.address }}</h5>
+              </div>
+              <div class="mt-2 lg:text-[20px]">{{ data.address }}</div>
             </div>
           </template>
         </Column>
@@ -85,7 +91,7 @@ const isMobile = computed(() => {
 const testList = ref([{ name: "測試" }]);
 const keyword = ref("");
 const rows = ref(10);
-const loadingTable = ref(false);
+let loadingTable = false;
 
 const search = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {
@@ -115,10 +121,10 @@ input[type="text"] {
 }
 :deep(#storeTable thead th) {
   padding: 8px 16px;
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
 }
 :deep(#storeTable tbody td) {
   padding: 8px 16px;
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
 }
 </style>
