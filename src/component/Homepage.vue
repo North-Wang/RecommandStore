@@ -6,16 +6,29 @@
       class="w-full p-6 rounded-lg border-[1px] border-white flex flex-col justify-center items-center mt-4 text-center"
     >
       <h2 class="h-[72px] leading-tight whitespace-break-spaces text-start">
-        {{ storeName }}
+        {{ answerStore.name }}
       </h2>
-      <button
-        class="w-[300px] border-[0.5px] border-white p-2 rounded-l mt-2 overflow-hidden"
+      <h5 class="text-yellow-400">{{ answerStore?.feature }}</h5>
+      <div
+        class="w-[300px] flex items-center justify-center gap-x-2 mt-2 relative"
       >
-        <h5 ref="answerAddress" class="text- whitespace-nowrap">
-          {{ address }}
-        </h5>
-      </button>
-      <button @click="copyText()">copy</button>
+        <button
+          class="border-[0.5px] border-white p-2 rounded-l overflow-hidden"
+        >
+          <h5 ref="answerAddress" class="text- whitespace-nowrap">
+            {{ answerStore.address }}
+          </h5>
+        </button>
+        <button class="h-10 leading-5" @click.stop="copyText()">copy</button>
+        <transition>
+          <div
+            class="absolute right-0 top-[48px] dark:bg-gray-700 p-2 px-3 rounded-md z-20"
+            v-if="showSuccessCopy"
+          >
+            已經複製地址
+          </div>
+        </transition>
+      </div>
     </li>
     <!-- <div class="relative flex items-center justify-center mt-20">
       <img
@@ -102,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, watch, computed, Transition } from "vue";
 import axios from "axios";
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import { storeToRefs } from "pinia";
@@ -119,25 +132,20 @@ import settingIconWhite from "../assets/setting_icon_white.svg";
 import animationSettingIconBlack from "../assets/animate_setting_icon_black.gif";
 import animationSettingIconWhite from "../assets/animate_setting_icon_white.gif";
 
-const storeName = ref("Dreamers Coffee Roasters 微風復興店");
-const address = ref(" 10556台北市松山區復興南路一段45號4428293777");
 const isDarkMode = detectiveDarkMode();
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
+const answerStore = ref({});
 
 const showAnimateSettingIcon = ref(false);
+const showSuccessCopy = ref(false);
 
 const lotteryStore = () => {
   console.log("全部的店家資料", storeList.value);
   const randomNumber = Math.floor(Math.random() * storeList.value.length);
-  const answerStore = storeList.value[randomNumber];
-  if (answerStore) {
-    storeName.value = answerStore.name || "";
-    address.value = answerStore.address || "";
-  } else {
-    console.warn("出現不存在的店家", storeList.value, randomNumber);
-  }
+  const answer = storeList.value[randomNumber];
+  answerStore.value = answer || {};
 };
 
 const addNewStore = async function () {
@@ -172,10 +180,18 @@ const addNewStore = async function () {
 };
 
 const copyText = async function (text) {
+  showSuccessCopy.value = true;
   console.log("text：", answerAddress.value.innerText);
   const address = answerAddress.value.innerText;
   navigator.clipboard.writeText(address);
+  setTimeout(() => {
+    showSuccessCopy.value = false;
+  }, 2000);
 };
+
+onMounted(() => {
+  lotteryStore();
+});
 </script>
 <style scoped>
 .lottery-button {
