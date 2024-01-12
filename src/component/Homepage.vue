@@ -3,114 +3,79 @@
     <!-- <li class="text-3xl font-bold"></li> -->
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
-      class="w-full p-6 rounded-lg border-[1px] border-white flex flex-col justify-center items-center mt-4 text-center"
+      class="w-full flex flex-col justify-center items-center mt-4 text-center"
     >
       <h2 class="h-[72px] leading-tight whitespace-break-spaces text-start">
         {{ answerStore.name }}
       </h2>
-      <h5 class="text-yellow-400">{{ answerStore?.feature }}</h5>
+      <h5 class="text-blue-400 dark:text-yellow-400">
+        {{ answerStore?.feature }}
+      </h5>
       <div
-        class="w-[300px] flex items-center justify-center gap-x-2 mt-2 relative"
+        class="w-[96%] flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
       >
         <button
-          class="border-[0.5px] border-white p-2 rounded-l overflow-hidden"
+          class="border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
         >
-          <h5 ref="answerAddress" class="text- whitespace-nowrap">
+          <h5 ref="answerAddress" class="text-start whitespace-nowrap px-2">
             {{ answerStore.address }}
           </h5>
         </button>
-        <button class="h-10 leading-5" @click.stop="copyText()">copy</button>
-        <transition>
-          <div
-            class="absolute right-0 top-[48px] dark:bg-gray-700 p-2 px-3 rounded-md z-20"
-            v-if="showSuccessCopy"
-          >
-            已經複製地址
-          </div>
-        </transition>
+        <i
+          class="w-[32px] pi pi-copy relative cursor-pointer"
+          style="font-size: 2rem"
+          @click.stop="copyText()"
+        >
+          <transition>
+            <div
+              class="absolute right-0 top-[48px] dark:bg-gray-700 p-2 px-3 rounded-md z-20 whitespace-nowrap text-[16px]"
+              v-if="showSuccessCopy"
+            >
+              已經複製地址
+            </div>
+          </transition>
+        </i>
       </div>
     </li>
-    <!-- <div class="relative flex items-center justify-center mt-20">
-      <img
-        :src="blackBlurButton"
-        alt="blackBlurButton"
-        class="w-[100px] h-[100px] cursor-pointer pointer-events-none"
-        oncontextmenu="return false"
-      />
-      <h5
-        class="text-white absolute z-20 select-none whitespace-nowrap"
-        @click="lotteryStore"
-      >
-        search
-      </h5>
-    </div> -->
-    <!-- <h3 class="btn select-none text-white mt-10" @click="lotteryStore">抽選</h3> -->
     <h4
-      class="w-[140px] bg-blue-400 border-2 py-1 rounded-lg select-none text-white mt-10 cursor-pointer hover:bg-blue-600"
+      class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-10 cursor-pointer flex items-center justify-center hover:bg-blue-600"
       @click="lotteryStore"
     >
       抽選
     </h4>
 
-    <li class="w-16 h-16 mt-4 cursor-pointer relative">
-      <img
-        class=" "
-        :src="settingIconWhite"
-        alt="setting-icon"
-        @mouseover.passive="showAnimateSettingIcon = true"
-        @mouseleave.passive="showAnimateSettingIcon = false"
-        @touchstart.passive="showAnimateSettingIcon = true"
-        @touchend.passive="showAnimateSettingIcon = false"
-        oncontextmenu="return false"
-        v-if="isDarkMode && !showAnimateSettingIcon"
-      />
-      <img
-        class=" "
-        :src="settingIconBlack"
-        alt="setting-icon"
-        @mouseover.passive="showAnimateSettingIcon = true"
-        @mouseleave.passive="showAnimateSettingIcon = false"
-        @touchstart.passive="showAnimateSettingIcon = true"
-        @touchend.passive="showAnimateSettingIcon = false"
-        oncontextmenu="return false"
-        v-if="!isDarkMode && !showAnimateSettingIcon"
-      />
-      <img
-        class=" "
-        :src="animationSettingIconWhite"
-        alt="animate-setting-icon"
-        @mouseover.passive="showAnimateSettingIcon = true"
-        @mouseleave.passive="showAnimateSettingIcon = false"
-        @touchstart.passive="showAnimateSettingIcon = true"
-        @touchend.passive="showAnimateSettingIcon = false"
-        oncontextmenu="return false"
-        v-if="isDarkMode && showAnimateSettingIcon"
-      />
-      <img
-        class=" "
-        :src="animationSettingIconBlack"
-        alt="animate-setting-icon"
-        @mouseover.passive="showAnimateSettingIcon = true"
-        @mouseleave.passive="showAnimateSettingIcon = false"
-        @touchstart.passive="showAnimateSettingIcon = true"
-        @touchend.passive="showAnimateSettingIcon = false"
-        oncontextmenu="return false"
-        v-if="!isDarkMode && showAnimateSettingIcon"
-      />
-      <!-- <div
-        class="w-20 h-20 bg-blue-400 rounded-full absolute top-3 left-3 z-10 flex justify-center items-center"
-        style="transform: translate(48px, 48px)"
-      >
-        feature
-      </div>
-      <div
-        class="w-20 h-20 bg-blue-600 rounded-full absolute top-3 left-3 z-10 translate-x-[101.82px] flex justify-center items-center"
-        style="transform: translate(67.812px, 0px)"
-      >
-        purpose
-      </div> -->
+    <li class="w-16 mt-4 cursor-pointer relative">
+      <i
+        class="pi pi-bars"
+        style="font-size: 2rem"
+        @click="showMoreOptions = !showMoreOptions"
+      ></i>
     </li>
-    <div class="w-[250px] h-[250px] bg-slate-600 rounded-lg mt-4"></div>
+    <li class="overflow-hidden">
+      <Transition
+        enter-active-class="animate__animated animate__fadeInDown animate__fast"
+        leave-active-class="animate__animated animate__fadeOutUp"
+      >
+        <div
+          class="flex justify-center"
+          v-if="showMoreOptions"
+          ref="moreOptionDropdown"
+        >
+          <div
+            class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-4"
+          >
+            <div
+              v-for="types in filterButtonList"
+              :key="types"
+              class="moreOptionButton w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
+              style="border: 1px solid gray"
+            >
+              {{ types }}
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </li>
   </ul>
 </template>
 
@@ -121,6 +86,7 @@ import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import "animate.css";
+import { onClickOutside } from "@vueuse/core";
 
 //picture
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
@@ -132,17 +98,26 @@ import settingIconWhite from "../assets/setting_icon_white.svg";
 import animationSettingIconBlack from "../assets/animate_setting_icon_black.gif";
 import animationSettingIconWhite from "../assets/animate_setting_icon_white.gif";
 
+const moreOptionDropdown = ref(null);
+onClickOutside(moreOptionDropdown, () => {
+  showMoreOptions.value = false;
+});
 const isDarkMode = detectiveDarkMode();
+const isMobile = computed(() => {
+  const info = navigator.userAgent;
+  return /mobile/i.test(info);
+});
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
 const answerStore = ref({});
+const filterButtonList = ref(["類型", "目的", "地點", "特色", "種類"]);
 
-const showAnimateSettingIcon = ref(false);
 const showSuccessCopy = ref(false);
+const showMoreOptions = ref(false);
 
 const lotteryStore = () => {
-  console.log("全部的店家資料", storeList.value);
+  console.log("抽選");
   const randomNumber = Math.floor(Math.random() * storeList.value.length);
   const answer = storeList.value[randomNumber];
   answerStore.value = answer || {};
@@ -180,6 +155,9 @@ const addNewStore = async function () {
 };
 
 const copyText = async function (text) {
+  if (isMobile.value) {
+    return;
+  }
   showSuccessCopy.value = true;
   console.log("text：", answerAddress.value.innerText);
   const address = answerAddress.value.innerText;
@@ -217,5 +195,9 @@ onMounted(() => {
 .btn:hover {
   box-shadow: 0 0 1px 15px rgba(138, 59, 88, 0.4),
     0 0 1px 30px rgba(138, 59, 88, 0.1), 0 0 1px 45px rgba(138, 59, 88, 0.1);
+}
+.moreOptionButton:hover {
+  background-color: #4baaf5;
+  color: white;
 }
 </style>

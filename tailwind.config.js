@@ -21,6 +21,10 @@ module.exports = {
         // => @media (min-width: 1536px) { ... }
       },
     },
+
+    // colors: {
+    // "hover-blue": "#4baaf5", //button hover background-color
+    // },
   },
   plugins: [require("tailwindcss")],
 };
