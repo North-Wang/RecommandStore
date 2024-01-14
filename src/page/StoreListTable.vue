@@ -131,8 +131,6 @@ watch([keywordStore, keywordFeature], (keywordList) => {
 });
 
 onMounted(() => {
-  console.log("全部的店家資訊", storeList.value);
-  console.log("欄位標題", titleList.value);
   storeTable.value = storeList.value || [];
 });
 </script>

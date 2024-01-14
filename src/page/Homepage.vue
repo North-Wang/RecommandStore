@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-col items-center">
+  <ul class="flex flex-col items-center" id="homepage">
     <!-- <li class="text-3xl font-bold"></li> -->
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
@@ -51,36 +51,91 @@
         @click="showMoreOptions = !showMoreOptions"
       ></i>
     </li>
-    <li class="overflow-hidden">
+    <li class="w-full flex justify-center overflow-hidden">
       <Transition
         enter-active-class="animate__animated animate__fadeInDown animate__fast"
         leave-active-class="animate__animated animate__fadeOutUp"
       >
-        <div
-          class="flex justify-center"
+        <ul
+          class="w-4/5 flex flex-col justify-center items-center"
           v-if="showMoreOptions"
           ref="moreOptionDropdown"
         >
-          <div
-            class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-4"
+          <li class="">篩選條件</li>
+          <li
+            class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
           >
-            <div
+            <ul
               v-for="types in filterButtonList"
               :key="types"
               class="moreOptionButton w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
-              {{ types }}
-            </div>
-          </div>
-        </div>
+              {{
+                types
+              }}
+              <li
+                v-if="types === '類型'"
+                class="grid grid-cols-3 gap-2 justify-center mt-2"
+              >
+                <div
+                  v-for="options in storeInfo.allTypeOption"
+                  :key="options"
+                  class="button-option border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-600"
+                >
+                  <input
+                    type="radio"
+                    :id="options"
+                    :value="options"
+                    class="cursor-pointer w-[20px]"
+                    v-model="selectedType"
+                  />
+                  <label :for="options" class="cursor-pointer pl-1"
+                    >{{ options }}
+                  </label>
+                </div>
+              </li>
+              <li
+                v-if="types === '目的'"
+                class="grid grid-cols-3 gap-2 justify-center mt-2"
+              >
+                <div
+                  v-for="options in storeInfo.allPurpleOption"
+                  :key="options"
+                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                >
+                  <input
+                    type="radio"
+                    :id="options"
+                    :value="options"
+                    class="cursor-pointer w-[20px]"
+                    v-model="selectedPurple"
+                  />
+                  <label :for="options" class="cursor-pointer pl-1"
+                    >{{ options }}
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </Transition>
     </li>
   </ul>
+
+  <Teleport to="#homepage">
+    <ul
+      class="w-screen h-screen bg-slate-500 absolute top-0 left-0 opacity-50"
+      v-if="showOptionModal"
+    >
+      <li class="text-white">彈窗</li>
+      <li></li>
+    </ul>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, Transition } from "vue";
+import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
 import axios from "axios";
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import { storeToRefs } from "pinia";
@@ -111,10 +166,20 @@ const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
 const answerStore = ref({});
-const filterButtonList = ref(["類型", "目的", "地點", "特色", "種類"]);
+const filterButtonList = ref(["類型", "目的", "特色", "種類"]);
 
 const showSuccessCopy = ref(false);
 const showMoreOptions = ref(false);
+const showOptionModal = ref(false);
+
+const selectedType = ref("餐廳");
+const selectedPurple = ref("");
+
+const allFilterFactor = ref({
+  type:[],
+  purple:[],
+  feature:[],
+})
 
 const lotteryStore = () => {
   console.log("抽選");
@@ -171,7 +236,7 @@ onMounted(() => {
   lotteryStore();
 });
 </script>
-<style scoped>
+<style scoped lang="scss">
 .lottery-button {
   display: flex;
   justify-content: center;
@@ -199,5 +264,12 @@ onMounted(() => {
 .moreOptionButton:hover {
   background-color: #4baaf5;
   color: white;
+}
+input[type="radio"]:checked {
+  background-color: blue !important;
+  color: white;
+  div {
+    background-color: blue !important;
+  }
 }
 </style>

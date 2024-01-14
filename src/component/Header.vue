@@ -11,8 +11,6 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
-import Homepage from "./Homepage.vue";
-import StoreListTable from "./StoreListTable.vue";
 </script>
 <style scoped>
 header {

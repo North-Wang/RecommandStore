@@ -42,11 +42,14 @@ const getStoreList = async function () {
             category: store[8],
           });
         });
-        // console.log("全部的店家資訊", allStoreInfo.value);
+        console.log("全部的店家資訊", allStoreInfo.value);
 
         //update data to Pinia
         storeInfo.storeList = allStoreInfo.value;
         storeInfo.titleList = titleList;
+
+        //get all options
+        storeInfo.setAllOption();
       });
   } catch (error) {
     console.log("連線有誤", error);
