@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-screen">
-    <Header class="" />
+    <Header></Header>
     <routerView class="px-3 py-4 flex-1 lg:px-6 lg:py-4"></routerView>
     <!-- <Footer class="" /> -->
   </div>

@@ -6,19 +6,22 @@
       class="w-full flex flex-col justify-center items-center mt-4 text-center"
     >
       <h2 class="h-[72px] leading-tight whitespace-break-spaces text-start">
-        {{ answerStore.name }}
+        {{ lotteryResult?.name }}
+        <span v-if="lotteryResult?.name === undefined" class="text-red-500"
+          >沒有匹配的店家</span
+        >
       </h2>
       <h5 class="text-blue-400 dark:text-yellow-400">
-        {{ answerStore?.feature }}
+        {{ lotteryResult?.feature }}
       </h5>
       <div
         class="w-[96%] flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
       >
         <button
-          class="border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
+          class="min-h-[54px] border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
         >
           <h5 ref="answerAddress" class="text-start whitespace-nowrap px-2">
-            {{ answerStore.address }}
+            {{ lotteryResult?.address }}
           </h5>
         </button>
         <i
@@ -39,7 +42,7 @@
     </li>
     <h4
       class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-10 cursor-pointer flex items-center justify-center hover:bg-blue-600"
-      @click="lotteryStore"
+      @click="pickup()"
     >
       抽選
     </h4>
@@ -88,7 +91,8 @@
                     :id="options"
                     :value="options"
                     class="cursor-pointer w-[20px]"
-                    v-model="selectedType"
+                    v-model="allFilterFactor.type"
+                    :checked="options === allFilterFactor.type"
                   />
                   <label :for="options" class="cursor-pointer pl-1"
                     >{{ options }}
@@ -105,11 +109,12 @@
                   class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
                 >
                   <input
-                    type="radio"
+                    type="checkbox"
                     :id="options"
                     :value="options"
                     class="cursor-pointer w-[20px]"
-                    v-model="selectedPurple"
+                    v-model="allFilterFactor.purple"
+                    :checked="options === allFilterFactor.purple"
                   />
                   <label :for="options" class="cursor-pointer pl-1"
                     >{{ options }}
@@ -165,27 +170,37 @@ const isMobile = computed(() => {
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
-const answerStore = ref({});
 const filterButtonList = ref(["類型", "目的", "特色", "種類"]);
+const suitableStoreList = ref({});
+const lotteryResult = ref({});
 
 const showSuccessCopy = ref(false);
-const showMoreOptions = ref(false);
+const showMoreOptions = ref(true);
 const showOptionModal = ref(false);
 
-const selectedType = ref("餐廳");
-const selectedPurple = ref("");
-
 const allFilterFactor = ref({
-  type:[],
-  purple:[],
-  feature:[],
-})
+  type: "餐廳",
+  purple: [],
+  feature: [],
+  category: [],
+});
 
-const lotteryStore = () => {
-  console.log("抽選");
-  const randomNumber = Math.floor(Math.random() * storeList.value.length);
-  const answer = storeList.value[randomNumber];
-  answerStore.value = answer || {};
+const filterType = () => {
+  suitableStoreList.value = storeList.value.filter((store) => {
+    return store.type === allFilterFactor.value.type;
+  });
+};
+const filterFactor = (factor) => {
+  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+    return allFilterFactor.value[factor].includes(store[factor]);
+  });
+};
+const filterAllFactor = async function (filterGroup) {
+  await filterType();
+  if (filterGroup.purple.length) filterFactor("purple");
+  if (filterGroup.feature.length) filterFactor("feature");
+  // if (filterGroup.category.length) filterFactor("category");
+  console.log("符合條件的店家名單", suitableStoreList.value);
 };
 
 const addNewStore = async function () {
@@ -231,10 +246,44 @@ const copyText = async function (text) {
     showSuccessCopy.value = false;
   }, 2000);
 };
+const pickup = () => {
+  const randomNumber = Math.floor(
+    Math.random() * suitableStoreList.value.length
+  );
+  const answer = suitableStoreList.value[randomNumber];
+  if (!answer) {
+    console.warn("沒有匹配的結果");
+  }
+  console.log("抽選結果", answer);
+  lotteryResult.value = answer || {};
+};
 
-onMounted(() => {
-  lotteryStore();
+watch(storeList, async function (list) {
+  //when go into this page, will do this function first
+  if (list.length != 0) {
+    await filterType();
+    pickup();
+  }
 });
+watch(
+  allFilterFactor,
+  async function (filterGroup) {
+    console.log("篩選條件變化", filterGroup);
+    if (
+      filterGroup.purple.length === 0 ||
+      filterGroup.purple.feature === 0 ||
+      filterGroup.purple.category === 0
+    ) {
+      await filterType();
+      console.log("沒有選擇篩選條件", suitableStoreList.value);
+    } else {
+      await filterAllFactor(filterGroup);
+    }
+    pickup();
+  },
+  { deep: true }
+);
+onMounted(() => {});
 </script>
 <style scoped lang="scss">
 .lottery-button {
