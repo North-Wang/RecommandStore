@@ -144,6 +144,28 @@
                   </label>
                 </div>
               </li>
+              <li
+                v-if="types === '餐廳種類'"
+                class="grid grid-cols-3 gap-2 justify-start mt-2"
+              >
+                <div
+                  v-for="category in storeInfo.allCategoryOption"
+                  :key="category"
+                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                >
+                  <input
+                    type="checkbox"
+                    :id="category"
+                    :value="category"
+                    class="cursor-pointer w-[20px]"
+                    v-model="allFilterFactor.category"
+                    :checked="category === allFilterFactor.category"
+                  />
+                  <label :for="category" class="cursor-pointer pl-1"
+                    >{{ category }}
+                  </label>
+                </div>
+              </li>
             </ul>
           </li>
         </ul>
@@ -237,11 +259,19 @@ const filterFeature = (factorList) => {
     return isMatch;
   });
 };
+const filterCategory = (factorList) => {
+  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+    const isMatch = allFilterFactor.value.category.some((category) => {
+      return store.category.indexOf(category) != -1;
+    });
+    return isMatch;
+  });
+};
 const filterAllFactor = async function (filterGroup) {
   await filterType();
   if (filterGroup.purple.length) filterFactor("purple");
-  if (filterGroup.feature.length) filterFeature(filterGroup.feature);
-  // if (filterGroup.category.length) filterFactor("category");
+  if (filterGroup.feature.length) filterFeature();
+  if (filterGroup.category.length) filterCategory();
   console.log("符合條件的店家名單", suitableStoreList.value);
 };
 
@@ -312,12 +342,12 @@ watch(
   async function (filterGroup) {
     console.log("篩選條件變化", filterGroup);
     if (
-      filterGroup.purple.length === 0 ||
-      filterGroup.feature.length === 0 ||
+      filterGroup.purple.length === 0 &&
+      filterGroup.feature.length === 0 &&
       filterGroup.category.length === 0
     ) {
       await filterType();
-      console.log("沒有選擇篩選條件", suitableStoreList.value);
+      console.log("沒有選擇篩選條件");
     } else {
       await filterAllFactor(filterGroup);
     }

@@ -53,7 +53,7 @@
             <h5 class="text-start whitespace-nowrap">{{ data.purple }}</h5>
           </template>
         </Column>
-        <Column :field="'category'" header="種類" sortable style="flex: 2">
+        <Column :field="'category'" header="餐廳種類" sortable style="flex: 2">
           <template #body="{ data, index }">
             <h5 class="text-start">{{ data.category }}</h5>
           </template>
