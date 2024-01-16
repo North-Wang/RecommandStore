@@ -40,13 +40,14 @@
         </i>
       </div>
     </li>
+
     <h4
       class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-10 cursor-pointer flex items-center justify-center hover:bg-blue-600"
       @click="pickup()"
     >
       抽選
     </h4>
-
+    <h5>總共匹配到{{ suitableStoreList.length }}筆資料</h5>
     <li class="w-16 mt-4 cursor-pointer relative">
       <i
         class="pi pi-bars"
@@ -78,7 +79,7 @@
                 types
               }}
               <li
-                v-if="types === '類型'"
+                v-if="types === '地點類型'"
                 class="grid grid-cols-3 gap-2 justify-center mt-2"
               >
                 <div
@@ -118,6 +119,28 @@
                   />
                   <label :for="options" class="cursor-pointer pl-1"
                     >{{ options }}
+                  </label>
+                </div>
+              </li>
+              <li
+                v-if="types === '特色'"
+                class="grid grid-cols-3 gap-2 justify-center mt-2"
+              >
+                <div
+                  v-for="features in featureList"
+                  :key="features"
+                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                >
+                  <input
+                    type="checkbox"
+                    :id="features"
+                    :value="features"
+                    class="cursor-pointer w-[20px]"
+                    v-model="allFilterFactor.feature"
+                    :checked="features === allFilterFactor.purple"
+                  />
+                  <label :for="features" class="cursor-pointer pl-1"
+                    >{{ features }}
                   </label>
                 </div>
               </li>
@@ -170,7 +193,17 @@ const isMobile = computed(() => {
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
-const filterButtonList = ref(["類型", "目的", "特色", "種類"]);
+const filterButtonList = ref(["地點類型", "目的", "特色", "餐廳種類"]);
+const featureList = ref([
+  "划算",
+  "老店",
+  "人氣",
+  "久坐",
+  "插座",
+  "特色",
+  "道地",
+  "好吃",
+]);
 const suitableStoreList = ref({});
 const lotteryResult = ref({});
 
@@ -179,6 +212,7 @@ const showMoreOptions = ref(true);
 const showOptionModal = ref(false);
 
 const allFilterFactor = ref({
+  //選擇的各種篩選條件
   type: "餐廳",
   purple: [],
   feature: [],
@@ -195,10 +229,18 @@ const filterFactor = (factor) => {
     return allFilterFactor.value[factor].includes(store[factor]);
   });
 };
+const filterFeature = (factorList) => {
+  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+    const isMatch = allFilterFactor.value.feature.some((feature) => {
+      return store.feature.indexOf(feature) != -1;
+    });
+    return isMatch;
+  });
+};
 const filterAllFactor = async function (filterGroup) {
   await filterType();
   if (filterGroup.purple.length) filterFactor("purple");
-  if (filterGroup.feature.length) filterFactor("feature");
+  if (filterGroup.feature.length) filterFeature(filterGroup.feature);
   // if (filterGroup.category.length) filterFactor("category");
   console.log("符合條件的店家名單", suitableStoreList.value);
 };
@@ -271,8 +313,8 @@ watch(
     console.log("篩選條件變化", filterGroup);
     if (
       filterGroup.purple.length === 0 ||
-      filterGroup.purple.feature === 0 ||
-      filterGroup.purple.category === 0
+      filterGroup.feature.length === 0 ||
+      filterGroup.category.length === 0
     ) {
       await filterType();
       console.log("沒有選擇篩選條件", suitableStoreList.value);
