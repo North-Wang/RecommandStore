@@ -3,24 +3,24 @@
     <!-- <li class="text-3xl font-bold"></li> -->
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
-      class="w-full flex flex-col justify-center items-center mt-4 text-center"
+      class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
     >
-      <h2 class="h-[72px] leading-tight whitespace-break-spaces text-start">
+      <h1 class="h-[72px] leading-tight whitespace-break-spaces text-start">
         {{ lotteryResult?.name }}
         <span v-if="lotteryResult?.name === undefined" class="text-red-500"
           >沒有匹配的店家</span
         >
-      </h2>
-      <h5 class="text-blue-400 dark:text-yellow-400">
-        {{ lotteryResult?.feature }}
+      </h1>
+      <h5 class="mt-4 text-blue-400 dark:text-yellow-400">
+        {{ lotteryResult?.feature || "- -" }}
       </h5>
       <div
-        class="w-[96%] flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
+        class="w-full flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
       >
         <button
           class="min-h-[54px] border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
         >
-          <h5 ref="answerAddress" class="text-start whitespace-nowrap px-2">
+          <h5 ref="answerAddress" class="text-start whitespace-wrap px-2">
             {{ lotteryResult?.address }}
           </h5>
         </button>
@@ -40,14 +40,15 @@
         </i>
       </div>
     </li>
+    <h5 class="mt-2">總共匹配到{{ suitableStoreList.length || 0 }}筆資料</h5>
 
     <h4
-      class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-10 cursor-pointer flex items-center justify-center hover:bg-blue-600"
+      class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-[80px] cursor-pointer flex items-center justify-center hover:bg-blue-600 lg:mt-[40px]"
       @click="pickup()"
     >
       抽選
     </h4>
-    <h5>總共匹配到{{ suitableStoreList.length }}筆資料</h5>
+
     <li class="w-16 mt-4 cursor-pointer relative">
       <i
         class="pi pi-bars"
@@ -55,7 +56,7 @@
         @click="showMoreOptions = !showMoreOptions"
       ></i>
     </li>
-    <li class="w-full flex justify-center overflow-hidden">
+    <li class="w-full mb-[40px] flex justify-center overflow-hidden">
       <Transition
         enter-active-class="animate__animated animate__fadeInDown animate__fast"
         leave-active-class="animate__animated animate__fadeOutUp"
@@ -65,7 +66,7 @@
           v-if="showMoreOptions"
           ref="moreOptionDropdown"
         >
-          <li class="">篩選條件</li>
+          <h4 class="">篩選條件</h4>
           <li
             class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
           >
@@ -75,9 +76,8 @@
               class="moreOptionButton w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
-              {{
-                types
-              }}
+              <h4>{{ types }}</h4>
+
               <li
                 v-if="types === '地點類型'"
                 class="grid grid-cols-3 gap-2 justify-center mt-2"
@@ -144,26 +144,52 @@
                   </label>
                 </div>
               </li>
-              <li
-                v-if="types === '餐廳種類'"
-                class="grid grid-cols-3 gap-2 justify-start mt-2"
-              >
+
+              <li v-if="types === '餐廳種類'">
+                <div class="text-start">已經選擇</div>
                 <div
-                  v-for="category in storeInfo.allCategoryOption"
-                  :key="category"
-                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
                 >
-                  <input
-                    type="checkbox"
-                    :id="category"
-                    :value="category"
-                    class="cursor-pointer w-[20px]"
-                    v-model="allFilterFactor.category"
-                    :checked="category === allFilterFactor.category"
-                  />
-                  <label :for="category" class="cursor-pointer pl-1"
-                    >{{ category }}
-                  </label>
+                  <div
+                    v-for="selected in selectedCategoryList"
+                    :key="selected"
+                    class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                  >
+                    <input
+                      type="checkbox"
+                      :id="selected"
+                      :value="selected"
+                      class="cursor-pointer w-[20px]"
+                      v-model="allFilterFactor.category"
+                      :checked="selected === allFilterFactor.category"
+                    />
+                    <label :for="selected" class="cursor-pointer pl-1"
+                      >{{ selected }}
+                    </label>
+                  </div>
+                </div>
+
+                <hr />
+                <div
+                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
+                >
+                  <div
+                    v-for="category in storeInfo.allCategoryOption"
+                    :key="category"
+                    class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                  >
+                    <input
+                      type="checkbox"
+                      :id="category"
+                      :value="category"
+                      class="cursor-pointer w-[20px]"
+                      v-model="allFilterFactor.category"
+                      :checked="category === allFilterFactor.category"
+                    />
+                    <label :for="category" class="cursor-pointer pl-1"
+                      >{{ category }}
+                    </label>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -215,7 +241,7 @@ const isMobile = computed(() => {
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const { storeList } = storeToRefs(storeInfo);
-const filterButtonList = ref(["地點類型", "目的", "特色", "餐廳種類"]);
+
 const featureList = ref([
   "划算",
   "老店",
@@ -240,6 +266,16 @@ const allFilterFactor = ref({
   feature: [],
   category: [],
 });
+const selectedCategoryList = ref([]);
+const filterButtonList = computed(() => {
+  switch (allFilterFactor.value.type) {
+    case "餐廳":
+      return ["地點類型", "目的", "特色", "餐廳種類"];
+
+    default:
+      return ["地點類型", "目的", "特色"];
+  }
+});
 
 const filterType = () => {
   suitableStoreList.value = storeList.value.filter((store) => {
@@ -259,6 +295,9 @@ const filterFeature = (factorList) => {
     return isMatch;
   });
 };
+const setHadSelectedCategory = () => {
+  selectedCategoryList.value = allFilterFactor.value.category;
+};
 const filterCategory = (factorList) => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
     const isMatch = allFilterFactor.value.category.some((category) => {
@@ -266,6 +305,7 @@ const filterCategory = (factorList) => {
     });
     return isMatch;
   });
+  setHadSelectedCategory();
 };
 const filterAllFactor = async function (filterGroup) {
   await filterType();
@@ -307,9 +347,6 @@ const addNewStore = async function () {
 };
 
 const copyText = async function (text) {
-  if (isMobile.value) {
-    return;
-  }
   showSuccessCopy.value = true;
   console.log("text：", answerAddress.value.innerText);
   const address = answerAddress.value.innerText;
@@ -341,6 +378,12 @@ watch(
   allFilterFactor,
   async function (filterGroup) {
     console.log("篩選條件變化", filterGroup);
+    if (filterGroup.type != "餐廳") {
+      filterGroup.category = []; //reset
+    }
+    if (filterGroup.category.length === 0) {
+      selectedCategoryList.value = []; //reset
+    }
     if (
       filterGroup.purple.length === 0 &&
       filterGroup.feature.length === 0 &&
@@ -382,10 +425,7 @@ onMounted(() => {});
   box-shadow: 0 0 1px 15px rgba(138, 59, 88, 0.4),
     0 0 1px 30px rgba(138, 59, 88, 0.1), 0 0 1px 45px rgba(138, 59, 88, 0.1);
 }
-.moreOptionButton:hover {
-  background-color: #4baaf5;
-  color: white;
-}
+
 input[type="radio"]:checked {
   background-color: blue !important;
   color: white;

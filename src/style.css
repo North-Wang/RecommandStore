@@ -72,6 +72,12 @@ img {
   -ms-user-select: none;
   user-select: none;
 }
+hr {
+  margin: 1rem 0;
+}
+hr:not {
+  height: 16px;
+}
 
 #app {
   /* max-width: 1280px; */
