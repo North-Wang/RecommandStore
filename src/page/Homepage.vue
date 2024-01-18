@@ -63,7 +63,7 @@
       >
         <ul
           class="w-4/5 flex flex-col justify-center items-center"
-          v-if="showMoreOptions"
+          v-show="showMoreOptions"
           ref="moreOptionDropdown"
         >
           <h4 class="">篩選條件</h4>
@@ -83,20 +83,25 @@
                 class="grid grid-cols-3 gap-2 justify-center mt-2"
               >
                 <div
-                  v-for="options in storeInfo.allTypeOption"
-                  :key="options"
-                  class="button-option border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-600"
+                  v-for="types in storeInfo.allTypeOption"
+                  :key="types"
+                  class="button-option border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
+                  :class="
+                    allFilterFactor.type.indexOf(types) != -1
+                      ? 'bg-blue-400 text-white'
+                      : ''
+                  "
                 >
                   <input
                     type="radio"
-                    :id="options"
-                    :value="options"
+                    :id="types"
+                    :value="types"
                     class="cursor-pointer w-[20px]"
                     v-model="allFilterFactor.type"
-                    :checked="options === allFilterFactor.type"
+                    :checked="types === allFilterFactor.type"
                   />
-                  <label :for="options" class="cursor-pointer pl-1"
-                    >{{ options }}
+                  <label :for="types" class="cursor-pointer pl-1"
+                    >{{ types }}
                   </label>
                 </div>
               </li>
@@ -105,20 +110,25 @@
                 class="grid grid-cols-3 gap-2 justify-center mt-2"
               >
                 <div
-                  v-for="options in storeInfo.allPurpleOption"
-                  :key="options"
-                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                  v-for="purples in storeInfo.allPurpleOption"
+                  :key="purples"
+                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-400 hover:text-white flex justify-center"
+                  :class="
+                    allFilterFactor.purple.indexOf(purples) != -1
+                      ? 'bg-blue-400 text-white'
+                      : ''
+                  "
                 >
                   <input
                     type="checkbox"
-                    :id="options"
-                    :value="options"
+                    :id="purples"
+                    :value="purples"
                     class="cursor-pointer w-[20px]"
                     v-model="allFilterFactor.purple"
-                    :checked="options === allFilterFactor.purple"
+                    :checked="purples === allFilterFactor.purple"
                   />
-                  <label :for="options" class="cursor-pointer pl-1"
-                    >{{ options }}
+                  <label :for="purples" class="cursor-pointer pl-1"
+                    >{{ purples }}
                   </label>
                 </div>
               </li>
@@ -129,7 +139,12 @@
                 <div
                   v-for="features in featureList"
                   :key="features"
-                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-400 hover:text-white flex justify-center"
+                  :class="
+                    allFilterFactor.feature.indexOf(features) != -1
+                      ? 'bg-blue-400 text-white'
+                      : ''
+                  "
                 >
                   <input
                     type="checkbox"
@@ -146,48 +161,46 @@
               </li>
 
               <li v-if="types === '餐廳種類'">
-                <div class="text-start">已經選擇</div>
                 <div
-                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
+                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto rounded-lg p-3"
+                  style="border: 1px solid rgb(194, 194, 194)"
+                  v-show="selectedCategoryList.length"
                 >
                   <div
                     v-for="selected in selectedCategoryList"
                     :key="selected"
-                    class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                    class="border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
                   >
-                    <input
-                      type="checkbox"
-                      :id="selected"
-                      :value="selected"
-                      class="cursor-pointer w-[20px]"
-                      v-model="allFilterFactor.category"
-                      :checked="selected === allFilterFactor.category"
-                    />
                     <label :for="selected" class="cursor-pointer pl-1"
                       >{{ selected }}
+                      <i class="pi pi-times" style="font-size: 1rem"></i>
                     </label>
                   </div>
                 </div>
 
-                <hr />
+                <hr v-if="selectedCategoryList.length" />
                 <div
                   class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
                 >
                   <div
                     v-for="category in storeInfo.allCategoryOption"
                     :key="category"
-                    class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-600 flex justify-center"
+                    class="border-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
+                    :class="
+                      allFilterFactor.category.indexOf(category) != -1
+                        ? 'bg-blue-400 text-white'
+                        : ''
+                    "
                   >
-                    <input
-                      type="checkbox"
-                      :id="category"
-                      :value="category"
-                      class="cursor-pointer w-[20px]"
-                      v-model="allFilterFactor.category"
-                      :checked="category === allFilterFactor.category"
-                    />
-                    <label :for="category" class="cursor-pointer pl-1"
-                      >{{ category }}
+                    <label :for="category" class="cursor-pointer pl-1 p-2">
+                      <input
+                        type="checkbox"
+                        :id="category"
+                        :value="category"
+                        class="cursor-pointer w-[20px]"
+                        v-model="allFilterFactor.category"
+                        :checked="category === allFilterFactor.category"
+                      />{{ category }}
                     </label>
                   </div>
                 </div>
