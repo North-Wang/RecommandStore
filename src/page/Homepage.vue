@@ -11,7 +11,10 @@
           >沒有匹配的店家</span
         >
       </h1>
-      <h5 class="mt-4 text-blue-400 dark:text-yellow-400">
+      <h3 class="mt-4 text-blue-400 dark:text-yellow-400">
+        {{ lotteryResult?.category || "- -" }}
+      </h3>
+      <h5 class="text-blue-400 dark:text-yellow-400">
         {{ lotteryResult?.feature || "- -" }}
       </h5>
       <div
@@ -62,7 +65,7 @@
         leave-active-class="animate__animated animate__fadeOutUp"
       >
         <ul
-          class="w-4/5 flex flex-col justify-center items-center"
+          class="w-[92%] flex flex-col justify-center items-center"
           v-show="showMoreOptions"
           ref="moreOptionDropdown"
         >
@@ -87,7 +90,7 @@
                   :key="types"
                   class="button-option border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
                   :class="
-                    allFilterFactor.type.indexOf(types) != -1
+                    selectedType.indexOf(types) != -1
                       ? 'bg-blue-400 text-white'
                       : ''
                   "
@@ -97,8 +100,8 @@
                     :id="types"
                     :value="types"
                     class="cursor-pointer w-[20px]"
-                    v-model="allFilterFactor.type"
-                    :checked="types === allFilterFactor.type"
+                    v-model="selectedType"
+                    :checked="types === selectedType"
                   />
                   <label :for="types" class="cursor-pointer pl-1"
                     >{{ types }}
@@ -107,7 +110,7 @@
               </li>
               <li
                 v-if="types === '目的'"
-                class="grid grid-cols-3 gap-2 justify-center mt-2"
+                class="grid grid-cols-3 gap-2 justify-start mt-2"
               >
                 <div
                   v-for="purples in storeInfo.allPurpleOption"
@@ -134,7 +137,7 @@
               </li>
               <li
                 v-if="types === '特色'"
-                class="grid grid-cols-3 gap-2 justify-center mt-2"
+                class="grid grid-cols-3 gap-2 justify-start mt-2"
               >
                 <div
                   v-for="features in featureList"
@@ -160,13 +163,13 @@
                 </div>
               </li>
 
-              <li v-if="types === '餐廳種類'">
-                <div
-                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto rounded-lg p-3"
+              <li v-if="types === '種類'">
+                <ul
+                  class="grid grid-cols-3 gap-2 justify-start my-3 overflow-y-auto rounded-lg p-3"
                   style="border: 1px solid rgb(194, 194, 194)"
                   v-show="selectedCategoryList.length"
                 >
-                  <div
+                  <li
                     v-for="selected in selectedCategoryList"
                     :key="selected"
                     class="border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
@@ -175,14 +178,13 @@
                       >{{ selected }}
                       <i class="pi pi-times" style="font-size: 1rem"></i>
                     </label>
-                  </div>
-                </div>
+                  </li>
+                </ul>
 
-                <hr v-if="selectedCategoryList.length" />
-                <div
+                <ul
                   class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
                 >
-                  <div
+                  <li
                     v-for="category in storeInfo.allCategoryOption"
                     :key="category"
                     class="border-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
@@ -202,8 +204,8 @@
                         :checked="category === allFilterFactor.category"
                       />{{ category }}
                     </label>
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </li>
             </ul>
           </li>
@@ -253,18 +255,13 @@ const isMobile = computed(() => {
 });
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
-const { storeList } = storeToRefs(storeInfo);
+const { storeList, StoreListAfterFilterType } = storeToRefs(storeInfo);
 
-const featureList = ref([
-  "划算",
-  "老店",
-  "人氣",
-  "久坐",
-  "插座",
-  "特色",
-  "道地",
-  "好吃",
-]);
+const featureList = computed(() => {
+  const list = ["划算", "老店", "人氣", "久坐", "插座", "特色", "道地", "好吃"];
+  return list;
+});
+
 const suitableStoreList = ref({});
 const lotteryResult = ref({});
 
@@ -272,29 +269,21 @@ const showSuccessCopy = ref(false);
 const showMoreOptions = ref(true);
 const showOptionModal = ref(false);
 
+const selectedType = ref("餐廳");
 const allFilterFactor = ref({
   //選擇的各種篩選條件
-  type: "餐廳",
   purple: [],
   feature: [],
   category: [],
 });
+const selectedFeatureList = ref([]);
 const selectedCategoryList = ref([]);
 const filterButtonList = computed(() => {
-  switch (allFilterFactor.value.type) {
-    case "餐廳":
-      return ["地點類型", "目的", "特色", "餐廳種類"];
-
+  switch (selectedType.value) {
     default:
-      return ["地點類型", "目的", "特色"];
+      return ["地點類型", "目的", "特色", "種類"];
   }
 });
-
-const filterType = () => {
-  suitableStoreList.value = storeList.value.filter((store) => {
-    return store.type === allFilterFactor.value.type;
-  });
-};
 const filterFactor = (factor) => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
     return allFilterFactor.value[factor].includes(store[factor]);
@@ -321,7 +310,6 @@ const filterCategory = (factorList) => {
   setHadSelectedCategory();
 };
 const filterAllFactor = async function (filterGroup) {
-  await filterType();
   if (filterGroup.purple.length) filterFactor("purple");
   if (filterGroup.feature.length) filterFeature();
   if (filterGroup.category.length) filterCategory();
@@ -369,6 +357,7 @@ const copyText = async function (text) {
   }, 2000);
 };
 const pickup = () => {
+  // console.log("原始篩選完type的表格資料", StoreListAfterFilterType.value);
   const randomNumber = Math.floor(
     Math.random() * suitableStoreList.value.length
   );
@@ -380,20 +369,21 @@ const pickup = () => {
   lotteryResult.value = answer || {};
 };
 
-watch(storeList, async function (list) {
+watch(StoreListAfterFilterType, async function (list) {
   //when go into this page, will do this function first
-  if (list.length != 0) {
-    await filterType();
-    pickup();
-  }
+  suitableStoreList.value = list;
+  pickup();
+});
+watch(selectedType, (type) => {
+  allFilterFactor.value.category = [];
+  storeInfo.filterStoreType(type);
+  pickup();
 });
 watch(
   allFilterFactor,
-  async function (filterGroup) {
-    console.log("篩選條件變化", filterGroup);
-    if (filterGroup.type != "餐廳") {
-      filterGroup.category = []; //reset
-    }
+  async (filterGroup) => {
+    console.log("watch 篩選條件", filterGroup);
+
     if (filterGroup.category.length === 0) {
       selectedCategoryList.value = []; //reset
     }
@@ -402,7 +392,6 @@ watch(
       filterGroup.feature.length === 0 &&
       filterGroup.category.length === 0
     ) {
-      await filterType();
       console.log("沒有選擇篩選條件");
     } else {
       await filterAllFactor(filterGroup);
