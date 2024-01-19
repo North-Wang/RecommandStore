@@ -81,6 +81,7 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
+import { useLoading } from "../store/useLoading";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Paginator from "primevue/paginator";
@@ -95,6 +96,7 @@ import "primevue/resources/themes/vela-blue/theme.css";
 const storeInfo = useStoreInfo();
 const { storeList, titleList } = storeToRefs(storeInfo);
 const storeTable = ref([]);
+const loading = useLoading();
 const isMobile = computed(() => {
   const info = navigator.userAgent;
   return /mobile/i.test(info);

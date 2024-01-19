@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col w-screen">
+    <Loading v-if="isLoading" />
     <Header></Header>
     <routerView class="px-2 py-4 flex-1 lg:px-6 lg:py-4"></routerView>
     <!-- <Footer class="" /> -->
@@ -10,11 +11,15 @@
 import { ref, onMounted, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "./store/useStoreInfo.js";
+import { useLoading } from "./store/useLoading";
 import axios from "axios";
 import Header from "./component/Header.vue";
 import Footer from "./component/Footer.vue";
+import Loading from "./component/Loading.vue";
 
 const storeInfo = useStoreInfo();
+const loading = useLoading();
+const { isLoading } = storeToRefs(loading);
 const allStoreInfo = ref([]); //全部的店家資訊
 
 const setOption = async function () {

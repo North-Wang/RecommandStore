@@ -35,7 +35,7 @@
           <transition>
             <div
               class="absolute right-0 top-[48px] dark:bg-gray-700 p-2 px-3 rounded-md z-20 whitespace-nowrap text-[16px]"
-              v-if="showSuccessCopy"
+              v-if="showSuccessCopy && !isMobile"
             >
               已經複製地址
             </div>
@@ -79,134 +79,31 @@
               class="moreOptionButton w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
-              <h4>{{ types }}</h4>
-
-              <li
+              <Radio
+                :title="types"
+                :optionList="storeInfo.allTypeOption"
+                :vModel="selectedType"
                 v-if="types === '地點類型'"
-                class="grid grid-cols-3 gap-2 justify-center mt-2"
-              >
-                <div
-                  v-for="types in storeInfo.allTypeOption"
-                  :key="types"
-                  class="button-option border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
-                  :class="
-                    selectedType.indexOf(types) != -1
-                      ? 'bg-blue-400 text-white'
-                      : ''
-                  "
-                >
-                  <input
-                    type="radio"
-                    :id="types"
-                    :value="types"
-                    class="cursor-pointer w-[20px]"
-                    v-model="selectedType"
-                    :checked="types === selectedType"
-                  />
-                  <label :for="types" class="cursor-pointer pl-1"
-                    >{{ types }}
-                  </label>
-                </div>
-              </li>
-              <li
+              />
+              <CheckboxOption
+                :title="types"
+                :optionList="storeInfo.allPurpleOption"
+                :vModel="allFilterFactor.purple"
                 v-if="types === '目的'"
-                class="grid grid-cols-3 gap-2 justify-start mt-2"
-              >
-                <div
-                  v-for="purples in storeInfo.allPurpleOption"
-                  :key="purples"
-                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-400 hover:text-white flex justify-center"
-                  :class="
-                    allFilterFactor.purple.indexOf(purples) != -1
-                      ? 'bg-blue-400 text-white'
-                      : ''
-                  "
-                >
-                  <input
-                    type="checkbox"
-                    :id="purples"
-                    :value="purples"
-                    class="cursor-pointer w-[20px]"
-                    v-model="allFilterFactor.purple"
-                    :checked="purples === allFilterFactor.purple"
-                  />
-                  <label :for="purples" class="cursor-pointer pl-1"
-                    >{{ purples }}
-                  </label>
-                </div>
-              </li>
-              <li
+              />
+              <CheckboxOption
+                :title="types"
+                :optionList="featureList"
+                :vModel="allFilterFactor.feature"
                 v-if="types === '特色'"
-                class="grid grid-cols-3 gap-2 justify-start mt-2"
-              >
-                <div
-                  v-for="features in featureList"
-                  :key="features"
-                  class="border-2 p-2 rounded-lg cursor-pointer hover:bg-blue-400 hover:text-white flex justify-center"
-                  :class="
-                    allFilterFactor.feature.indexOf(features) != -1
-                      ? 'bg-blue-400 text-white'
-                      : ''
-                  "
-                >
-                  <input
-                    type="checkbox"
-                    :id="features"
-                    :value="features"
-                    class="cursor-pointer w-[20px]"
-                    v-model="allFilterFactor.feature"
-                    :checked="features === allFilterFactor.purple"
-                  />
-                  <label :for="features" class="cursor-pointer pl-1"
-                    >{{ features }}
-                  </label>
-                </div>
-              </li>
-
-              <li v-if="types === '種類'">
-                <ul
-                  class="grid grid-cols-3 gap-2 justify-start my-3 overflow-y-auto rounded-lg p-3"
-                  style="border: 1px solid rgb(194, 194, 194)"
-                  v-show="selectedCategoryList.length"
-                >
-                  <li
-                    v-for="selected in selectedCategoryList"
-                    :key="selected"
-                    class="border-2 p-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
-                  >
-                    <label :for="selected" class="cursor-pointer pl-1"
-                      >{{ selected }}
-                      <i class="pi pi-times" style="font-size: 1rem"></i>
-                    </label>
-                  </li>
-                </ul>
-
-                <ul
-                  class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
-                >
-                  <li
-                    v-for="category in storeInfo.allCategoryOption"
-                    :key="category"
-                    class="border-2 rounded-lg cursor-pointer flex justify-center hover:bg-blue-400 hover:text-white"
-                    :class="
-                      allFilterFactor.category.indexOf(category) != -1
-                        ? 'bg-blue-400 text-white'
-                        : ''
-                    "
-                  >
-                    <label :for="category" class="cursor-pointer pl-1 p-2">
-                      <input
-                        type="checkbox"
-                        :id="category"
-                        :value="category"
-                        class="cursor-pointer w-[20px]"
-                        v-model="allFilterFactor.category"
-                        :checked="category === allFilterFactor.category"
-                      />{{ category }}
-                    </label>
-                  </li>
-                </ul>
-              </li>
+              />
+              <CheckboxOption
+                :title="types"
+                :optionList="storeInfo.allCategoryOption"
+                :vModel="allFilterFactor.category"
+                @update=""
+                v-if="types === '種類'"
+              />
             </ul>
           </li>
         </ul>
@@ -228,11 +125,15 @@
 <script setup>
 import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
 import axios from "axios";
-import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
-import "animate.css";
+import { useLoading } from "../store/useLoading";
 import { onClickOutside } from "@vueuse/core";
+import Radio from "../component/Radio.vue";
+import CheckboxOption from "../component/CheckboxOption.vue";
+import "animate.css";
+
+import detectiveDarkMode from "../js/detectiveDarkMode.js";
 
 //picture
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
@@ -255,6 +156,7 @@ const isMobile = computed(() => {
 });
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
+const loading = useLoading();
 const { storeList, StoreListAfterFilterType } = storeToRefs(storeInfo);
 
 const featureList = computed(() => {
@@ -262,11 +164,11 @@ const featureList = computed(() => {
   return list;
 });
 
-const suitableStoreList = ref({});
+const suitableStoreList = ref({}); //符合篩選條件的所有資料
 const lotteryResult = ref({});
 
 const showSuccessCopy = ref(false);
-const showMoreOptions = ref(true);
+const showMoreOptions = ref(false);
 const showOptionModal = ref(false);
 
 const selectedType = ref("餐廳");
@@ -296,9 +198,8 @@ const filterFeature = (factorList) => {
     });
     return isMatch;
   });
-};
-const setHadSelectedCategory = () => {
-  selectedCategoryList.value = allFilterFactor.value.category;
+  //set has selected feature
+  selectedFeatureList.value = allFilterFactor.value.feature;
 };
 const filterCategory = (factorList) => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
@@ -307,7 +208,8 @@ const filterCategory = (factorList) => {
     });
     return isMatch;
   });
-  setHadSelectedCategory();
+  //set has selected category
+  selectedCategoryList.value = allFilterFactor.value.category;
 };
 const filterAllFactor = async function (filterGroup) {
   if (filterGroup.purple.length) filterFactor("purple");
@@ -357,7 +259,7 @@ const copyText = async function (text) {
   }, 2000);
 };
 const pickup = () => {
-  // console.log("原始篩選完type的表格資料", StoreListAfterFilterType.value);
+  console.log("抽選的資料總筆數", StoreListAfterFilterType.value.length);
   const randomNumber = Math.floor(
     Math.random() * suitableStoreList.value.length
   );
@@ -367,13 +269,9 @@ const pickup = () => {
   }
   console.log("抽選結果", answer);
   lotteryResult.value = answer || {};
+  loading.isLoading = false;
 };
 
-watch(StoreListAfterFilterType, async function (list) {
-  //when go into this page, will do this function first
-  suitableStoreList.value = list;
-  pickup();
-});
 watch(selectedType, (type) => {
   allFilterFactor.value.category = [];
   storeInfo.filterStoreType(type);
@@ -400,7 +298,10 @@ watch(
   },
   { deep: true }
 );
-onMounted(() => {});
+onMounted(() => {
+  suitableStoreList.value = StoreListAfterFilterType.value;
+  pickup();
+});
 </script>
 <style scoped lang="scss">
 .lottery-button {
