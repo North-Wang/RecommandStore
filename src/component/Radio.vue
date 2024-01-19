@@ -44,8 +44,8 @@ const props = defineProps({
     default: [],
   },
   vModel: {
-    type: Array,
-    default: [],
+    type: String,
+    default: "餐廳",
   },
 });
 

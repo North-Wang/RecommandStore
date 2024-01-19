@@ -10,11 +10,15 @@
           >沒有匹配的店家</span
         >
       </h1>
+      <h4 v-if="testText">觸碰手機板</h4>
       <h3 class="mt-4 text-blue-400 dark:text-yellow-400">
         {{ lotteryResult?.category || "- -" }}
       </h3>
       <h5 class="text-blue-400 dark:text-yellow-400">
         {{ lotteryResult?.feature || "- -" }}
+      </h5>
+      <h5 class="text-blue-400 dark:text-yellow-400">
+        {{ lotteryResult?.purple || "- -" }}
       </h5>
       <div
         class="w-full flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
@@ -29,12 +33,13 @@
         <i
           class="w-[32px] pi pi-copy relative cursor-pointer"
           style="font-size: 2rem"
-          @click.stop="copyText()"
+          @click.prevent="copyText()"
+          v-if="!isMobile"
         >
           <transition>
             <div
-              class="absolute right-0 top-[48px] dark:bg-gray-700 p-2 px-3 rounded-md z-20 whitespace-nowrap text-[16px]"
-              v-if="showSuccessCopy && !isMobile"
+              class="absolute right-0 top-[48px] text-white bg-gray-400 dark:bg-gray-400 p-2 px-3 rounded-md z-20 whitespace-nowrap text-[16px]"
+              v-if="showSuccessCopy"
             >
               已經複製地址
             </div>
@@ -45,24 +50,28 @@
     <h5 class="mt-2">總共匹配到{{ suitableStoreList.length || 0 }}筆資料</h5>
 
     <h4
-      class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none text-white mt-[80px] cursor-pointer flex items-center justify-center hover:bg-blue-600 lg:mt-[40px]"
+      class="h-[80px] w-[80px] bg-blue-400 py-1 rounded-full select-none mt-[80px] text-white cursor-pointer flex items-center justify-center hover:bg-blue-600 lg:mt-[40px]"
       @click="pickup()"
     >
       抽選
     </h4>
 
-    <li
-      class="w-16 mt-4 cursor-pointer relative"
-      @click="showMoreOptions = !showMoreOptions"
-    >
-      <i class="pi pi-bars" style="font-size: 2rem" />
+    <li class="w-16 mt-4 cursor-pointer relative">
+      <i
+        class="pi pi-bars"
+        style="font-size: 2rem"
+        v-if="showMoreOptions"
+        @click.stop="showMoreOptions = false"
+      />
+      <i
+        class="pi pi-bars"
+        style="font-size: 2rem"
+        v-else
+        @click.stop="showMoreOptions = true"
+      />
     </li>
     <li class="w-full mb-[40px] flex justify-center overflow-hidden">
-      <Transition
-        name="slide"
-        enter-active-class="animate__animated animate__fadeInDown animate__fast"
-        leave-active-class="animate__animated animate__fadeOutUp"
-      >
+      <Transition name="slide">
         <ul
           class="w-[92%] flex flex-col justify-center items-center"
           v-if="showMoreOptions"
@@ -254,7 +263,7 @@ const addNewStore = async function () {
 
 const copyText = async function (text) {
   showSuccessCopy.value = true;
-  console.log("text：", answerAddress.value.innerText);
+  // console.log("copy text：", answerAddress.value.innerText);
   const address = answerAddress.value.innerText;
   navigator.clipboard.writeText(address);
   setTimeout(() => {
@@ -341,5 +350,19 @@ input[type="radio"]:checked {
   div {
     background-color: blue !important;
   }
+}
+.slide-enter-active {
+  transition: all 0.5s ease;
+}
+.slide-leave-active {
+  transition: all 0.5s ease-in;
+}
+.slide-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>
