@@ -1,6 +1,5 @@
 <template>
   <ul class="flex flex-col items-center" id="homepage">
-    <!-- <li class="text-3xl font-bold"></li> -->
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
       class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
@@ -116,15 +115,14 @@
     </li>
   </ul>
 
-  <Teleport to="#homepage">
+  <!-- <Teleport to="#homepage">
     <ul
       class="w-screen h-screen bg-slate-500 absolute top-0 left-0 opacity-50"
       v-if="showOptionModal"
     >
       <li class="text-white">彈窗</li>
-      <li></li>
     </ul>
-  </Teleport>
+  </Teleport> -->
 </template>
 
 <script setup>
