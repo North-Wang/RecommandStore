@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select-none">
     <h4>{{ title }}</h4>
     <div class="grid grid-cols-3 gap-2 justify-center mt-2">
       <div
@@ -11,10 +11,11 @@
           type="radio"
           :id="options"
           :value="options"
-          :name="props.title"
+          :name="title"
           class="cursor-pointer w-[20px]"
           :v-model="vModel"
           :checked="options === vModel"
+          @input="update(options)"
         />
         <label :for="options" class="cursor-pointer pl-1">{{ options }} </label>
       </div>
@@ -23,7 +24,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, defineProps, Transition } from "vue";
+import {
+  ref,
+  onMounted,
+  watch,
+  computed,
+  defineProps,
+  defineEmits,
+  Transition,
+} from "vue";
 
 const props = defineProps({
   title: {
@@ -39,6 +48,13 @@ const props = defineProps({
     default: [],
   },
 });
+
+const emits = defineEmits(["update"]);
+
+const update = (option) => {
+  console.log("aaa option", option);
+  emits("update", option);
+};
 </script>
 
 <style scoped></style>

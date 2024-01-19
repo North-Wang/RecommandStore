@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <ul class="select-none">
     <h4 @click="showOptions = !showOptions">{{ title }}</h4>
     <li
       class="grid grid-cols-3 gap-2 justify-start my-3 overflow-y-auto rounded-lg p-3"

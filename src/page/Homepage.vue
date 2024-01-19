@@ -52,21 +52,21 @@
       抽選
     </h4>
 
-    <li class="w-16 mt-4 cursor-pointer relative">
-      <i
-        class="pi pi-bars"
-        style="font-size: 2rem"
-        @click="showMoreOptions = !showMoreOptions"
-      ></i>
+    <li
+      class="w-16 mt-4 cursor-pointer relative"
+      @click="showMoreOptions = !showMoreOptions"
+    >
+      <i class="pi pi-bars" style="font-size: 2rem" />
     </li>
     <li class="w-full mb-[40px] flex justify-center overflow-hidden">
       <Transition
+        name="slide"
         enter-active-class="animate__animated animate__fadeInDown animate__fast"
         leave-active-class="animate__animated animate__fadeOutUp"
       >
         <ul
           class="w-[92%] flex flex-col justify-center items-center"
-          v-show="showMoreOptions"
+          v-if="showMoreOptions"
           ref="moreOptionDropdown"
         >
           <h4 class="">篩選條件</h4>
@@ -76,13 +76,18 @@
             <ul
               v-for="types in filterButtonList"
               :key="types"
-              class="moreOptionButton w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
+              class="w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
               <Radio
                 :title="types"
                 :optionList="storeInfo.allTypeOption"
                 :vModel="selectedType"
+                @update="
+                  (option) => {
+                    selectedType = option;
+                  }
+                "
                 v-if="types === '地點類型'"
               />
               <CheckboxOption
@@ -271,15 +276,18 @@ const pickup = () => {
   lotteryResult.value = answer || {};
   loading.isLoading = false;
 };
-
-watch(selectedType, (type) => {
+watch(StoreListAfterFilterType, (list) => {
+  suitableStoreList.value = list;
+});
+watch(selectedType, async function (type) {
+  console.log("watch type change", type);
   allFilterFactor.value.category = [];
-  storeInfo.filterStoreType(type);
+  await storeInfo.filterStoreType(type);
   pickup();
 });
 watch(
   allFilterFactor,
-  async (filterGroup) => {
+  async (filterGroup, oldGroup) => {
     console.log("watch 篩選條件", filterGroup);
 
     if (filterGroup.category.length === 0) {
