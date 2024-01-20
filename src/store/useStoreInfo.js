@@ -4,7 +4,7 @@ export const useStoreInfo = defineStore({
   id: "storeInfo",
   state: () => ({
     storeList: ["default"], //全部的店家資料
-    StoreListAfterFilterType: [], //篩選完的店家資料
+    storeListAfterFilterType: [], //篩選完的店家資料
     titleList: [], //所有標題
     allTypeOption: [],
     allPurpleOption: [],
@@ -13,12 +13,11 @@ export const useStoreInfo = defineStore({
     allCategoryOption: [],
   }),
   actions: {
-    filterStoreType(type = "餐廳") {
-      //type改變時，要重新調整各個項目出現的選項
-      this.StoreListAfterFilterType = this.storeList.filter((store) => {
+    filterStoreType (type) {
+      //根據type來決定其他option要出現出現什麼選項
+      this.storeListAfterFilterType = this.storeList.filter((store) => {
         return store.type === type;
-      });
-      this.setAllOption();
+      });      
     },
     setTypeOption() {
       const allType = new Set();
@@ -36,10 +35,7 @@ export const useStoreInfo = defineStore({
       const allAddress = new Set();
       const allCategory = new Set();
 
-      this.StoreListAfterFilterType.forEach((store) => {
-        if (!allPurple.has(store.purple)) {
-          allPurple.add(store.purple);
-        }
+      this.storeListAfterFilterType.forEach((store) => {
         if (!allFeature.has(store.feature)) {
           allFeature.add(store.feature);
         }
@@ -47,6 +43,13 @@ export const useStoreInfo = defineStore({
           allAddress.add(store.address);
         }
 
+         //get all purple options
+         const purpleArray = store.purple.split(/[,，、]/);
+        purpleArray.forEach((item) => {
+          if (!allPurple.has(item)) {
+            allPurple.add(item);
+          }
+        });
         //get all category options
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
@@ -60,10 +63,6 @@ export const useStoreInfo = defineStore({
       this.allFeatureOption = Array.from(allFeature);
       this.allAddressOption = Array.from(allAddress);
       this.allCategoryOption = Array.from(allCategory);
-      // console.log("all purple", this.allPurpleOption);
-      // console.log("all feature", this.allFeatureOption);
-      // console.log("all address",this.allAddressOption, )
-      // console.log("all category", this.allCategoryOption);
     },
   },
   persist: true,

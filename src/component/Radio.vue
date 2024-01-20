@@ -52,7 +52,6 @@ const props = defineProps({
 const emits = defineEmits(["update"]);
 
 const update = (option) => {
-  console.log("aaa option", option);
   emits("update", option);
 };
 </script>

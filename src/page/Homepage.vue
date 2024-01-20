@@ -10,7 +10,6 @@
           >沒有匹配的店家</span
         >
       </h1>
-      <h4 v-if="testText">觸碰手機板</h4>
       <h3 class="mt-4 text-blue-400 dark:text-yellow-400">
         {{ lotteryResult?.category || "- -" }}
       </h3>
@@ -82,7 +81,7 @@
             class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
           >
             <ul
-              v-for="types in filterButtonList"
+              v-for="types in allOptions"
               :key="types"
               class="w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
@@ -92,29 +91,34 @@
                 :optionList="storeInfo.allTypeOption"
                 :vModel="selectedType"
                 @update="
-                  (option) => {
-                    selectedType = option;
+                  (radio) => {
+                    selectedType = radio;
                   }
                 "
                 v-if="types === '地點類型'"
               />
-              <CheckboxOption
+              <Checkbox
                 :title="types"
                 :optionList="storeInfo.allPurpleOption"
                 :vModel="allFilterFactor.purple"
+                :type="'purple'"
+                @update="(list) => (allFilterFactor.purple = list)"
                 v-if="types === '目的'"
               />
-              <CheckboxOption
+              <Checkbox
                 :title="types"
                 :optionList="featureList"
                 :vModel="allFilterFactor.feature"
+                :type="'feature'"
+                @update="(list) => (allFilterFactor.feature = list)"
                 v-if="types === '特色'"
               />
-              <CheckboxOption
+              <Checkbox
                 :title="types"
                 :optionList="storeInfo.allCategoryOption"
                 :vModel="allFilterFactor.category"
-                @update=""
+                :type="'category'"
+                @update="(list) => (allFilterFactor.category = list)"
                 v-if="types === '種類'"
               />
             </ul>
@@ -135,14 +139,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
+import {
+  ref,
+  onMounted,
+  watch,
+  computed,
+  Transition,
+  Teleport,
+  provide,
+} from "vue";
 import axios from "axios";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
 import { onClickOutside } from "@vueuse/core";
 import Radio from "../component/Radio.vue";
-import CheckboxOption from "../component/CheckboxOption.vue";
+import Checkbox from "../component/Checkbox.vue";
 import "animate.css";
 
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
@@ -169,7 +181,7 @@ const isMobile = computed(() => {
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const loading = useLoading();
-const { storeList, StoreListAfterFilterType } = storeToRefs(storeInfo);
+const { storeList, storeListAfterFilterType } = storeToRefs(storeInfo);
 
 const featureList = computed(() => {
   const list = ["划算", "老店", "人氣", "久坐", "插座", "特色", "道地", "好吃"];
@@ -192,15 +204,16 @@ const allFilterFactor = ref({
 });
 const selectedFeatureList = ref([]);
 const selectedCategoryList = ref([]);
-const filterButtonList = computed(() => {
+const allOptions = computed(() => {
+  //有哪些篩選條件的列表
   switch (selectedType.value) {
     default:
       return ["地點類型", "目的", "特色", "種類"];
   }
 });
-const filterFactor = (factor) => {
+const filterPurple = () => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
-    return allFilterFactor.value[factor].includes(store[factor]);
+    return allFilterFactor.value.purple.includes(store.purple);
   });
 };
 const filterFeature = (factorList) => {
@@ -223,98 +236,72 @@ const filterCategory = (factorList) => {
   //set has selected category
   selectedCategoryList.value = allFilterFactor.value.category;
 };
-const filterAllFactor = async function (filterGroup) {
-  if (filterGroup.purple.length) filterFactor("purple");
+const doFilter = async function (filterGroup) {
+  if (filterGroup.purple.length) filterPurple();
   if (filterGroup.feature.length) filterFeature();
   if (filterGroup.category.length) filterCategory();
   console.log("符合條件的店家名單", suitableStoreList.value);
 };
 
-const addNewStore = async function () {
-  const newStore = {
-    name: "北大荒水餃店",
-    type: "日式",
-    peopleLimit: "10",
-    purple: "普通吃飯",
-    lowPrice: "60",
-    highPrice: "300",
-    address: "115台北市南港區南港路一段201號",
-    feature: "划算",
-    category: "滷味,水餃",
-  };
-  const config = {
-    method: "POST",
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Request-Method": "POST",
-    },
-    body: JSON.stringify(newStore),
-  };
-  const url =
-    "https://script.google.com/macros/s/AKfycby861bkJ2z38iybFkkTBcIRaoyirXrk9wMc-XKtSbg8QTtc4o9tEFoW_BPpnDWpOIYJqA/exec";
-
-  try {
-    const result = fetch(url, config);
-    console.log("result", result);
-  } catch (error) {
-    console.log("error", error);
-  }
-};
-
 const copyText = async function (text) {
   showSuccessCopy.value = true;
-  // console.log("copy text：", answerAddress.value.innerText);
   const address = answerAddress.value.innerText;
   navigator.clipboard.writeText(address);
   setTimeout(() => {
     showSuccessCopy.value = false;
   }, 2000);
 };
+const resetOption = () => {
+  //清空已經選擇的選項
+  allFilterFactor.value.purple = [];
+  allFilterFactor.value.feature = [];
+  allFilterFactor.value.category = [];
+};
 const pickup = () => {
-  console.log("抽選的資料總筆數", StoreListAfterFilterType.value.length);
   const randomNumber = Math.floor(
     Math.random() * suitableStoreList.value.length
   );
   const answer = suitableStoreList.value[randomNumber];
-  if (!answer) {
+  if (answer) {
+    console.log("抽選結果", answer);
+    lotteryResult.value = answer;
+  } else {
     console.warn("沒有匹配的結果");
+    lotteryResult.value = {};
   }
-  console.log("抽選結果", answer);
-  lotteryResult.value = answer || {};
   loading.isLoading = false;
 };
-watch(StoreListAfterFilterType, (list) => {
+
+watch(storeListAfterFilterType, (list) => {
+  //監聽到pinia 根據type篩選完成之後的店家資料
   suitableStoreList.value = list;
 });
 watch(selectedType, async function (type) {
-  console.log("watch type change", type);
-  allFilterFactor.value.category = [];
+  //type 改變之後
   await storeInfo.filterStoreType(type);
+  storeInfo.setAllOption();
+  resetOption();
   pickup();
 });
 watch(
   allFilterFactor,
   async (filterGroup, oldGroup) => {
     console.log("watch 篩選條件", filterGroup);
-
-    if (filterGroup.category.length === 0) {
-      selectedCategoryList.value = []; //reset
-    }
     if (
       filterGroup.purple.length === 0 &&
       filterGroup.feature.length === 0 &&
       filterGroup.category.length === 0
     ) {
-      console.log("沒有選擇篩選條件");
+      await storeInfo.filterStoreType(selectedType.value);
     } else {
-      await filterAllFactor(filterGroup);
+      await doFilter(filterGroup);
     }
     pickup();
   },
   { deep: true }
 );
 onMounted(() => {
-  suitableStoreList.value = StoreListAfterFilterType.value;
+  suitableStoreList.value = storeListAfterFilterType.value;
   pickup();
 });
 </script>
