@@ -44,11 +44,12 @@ const getStoreList = async function () {
           allStoreInfo.value.push({
             name: store[0],
             type: store[1],
-            purple: store[3],
-            address: store[6],
-            feature: store[7],
-            category: store[8],
-            weight: store[9],
+            purple: store[2],
+            address: store[3],
+            addressTag: store[4],
+            feature: store[5],
+            category: store[6],
+            weight: store[7],
           });
         });
         // console.log("全部的店家資訊", allStoreInfo.value);

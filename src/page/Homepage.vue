@@ -6,7 +6,7 @@
     >
       <h1 class="h-[72px] leading-tight whitespace-break-spaces text-start">
         {{ lotteryResult?.name }}
-        <span v-if="lotteryResult?.name === undefined" class="text-red-500"
+        <span v-if="!lotteryResult?.name" class="text-red-500"
           >沒有匹配的店家</span
         >
       </h1>
@@ -59,14 +59,14 @@
       <i
         class="pi pi-bars"
         style="font-size: 2rem"
-        v-if="showMoreOptions"
-        @click.stop="showMoreOptions = false"
+        v-if="!showMoreOptions"
+        @click.stop="showMoreOptions = true"
       />
       <i
         class="pi pi-bars"
         style="font-size: 2rem"
         v-else
-        @click.stop="showMoreOptions = true"
+        @click.stop="showMoreOptions = false"
       />
     </li>
     <li class="w-full mb-[40px] flex justify-center overflow-hidden">
@@ -77,13 +77,21 @@
           ref="moreOptionDropdown"
         >
           <h4 class="">篩選條件</h4>
+          <input
+            type="text"
+            placeholder="請輸入地址"
+            v-model="address"
+            class="w-full min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6"
+            style="border: 1px solid gray"
+          />
+
           <li
             class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
           >
             <ul
               v-for="types in allOptions"
               :key="types"
-              class="w-full px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
+              class="w-full min-h-[48px] px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
               <Radio
@@ -127,15 +135,6 @@
       </Transition>
     </li>
   </ul>
-
-  <!-- <Teleport to="#homepage">
-    <ul
-      class="w-screen h-screen bg-slate-500 absolute top-0 left-0 opacity-50"
-      v-if="showOptionModal"
-    >
-      <li class="text-white">彈窗</li>
-    </ul>
-  </Teleport> -->
 </template>
 
 <script setup>
@@ -193,8 +192,8 @@ const lotteryResult = ref({});
 
 const showSuccessCopy = ref(false);
 const showMoreOptions = ref(false);
-const showOptionModal = ref(false);
 
+const address = ref("");
 const selectedType = ref("餐廳");
 const allFilterFactor = ref({
   //選擇的各種篩選條件
@@ -204,13 +203,7 @@ const allFilterFactor = ref({
 });
 const selectedFeatureList = ref([]);
 const selectedCategoryList = ref([]);
-const allOptions = computed(() => {
-  //有哪些篩選條件的列表
-  switch (selectedType.value) {
-    default:
-      return ["地點類型", "目的", "特色", "種類"];
-  }
-});
+const allOptions = ref(["地點類型", "目的", "特色", "種類"]);
 const filterPurple = () => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
     return allFilterFactor.value.purple.includes(store.purple);
@@ -266,7 +259,7 @@ const pickup = () => {
     console.log("抽選結果", answer);
     lotteryResult.value = answer;
   } else {
-    console.warn("沒有匹配的結果");
+    //沒有匹配的結果
     lotteryResult.value = {};
   }
   loading.isLoading = false;
