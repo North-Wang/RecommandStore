@@ -201,12 +201,13 @@ const allFilterFactor = ref({
   feature: [],
   category: [],
 });
-const selectedFeatureList = ref([]);
-const selectedCategoryList = ref([]);
 const allOptions = ref(["地點類型", "目的", "特色", "種類"]);
 const filterPurple = () => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
-    return allFilterFactor.value.purple.includes(store.purple);
+    const isMatch = allFilterFactor.value.purple.some((purple) => {
+      return store.purple.indexOf(purple) != -1;
+    });
+    return isMatch;
   });
 };
 const filterFeature = (factorList) => {
@@ -216,8 +217,6 @@ const filterFeature = (factorList) => {
     });
     return isMatch;
   });
-  //set has selected feature
-  selectedFeatureList.value = allFilterFactor.value.feature;
 };
 const filterCategory = (factorList) => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
@@ -226,8 +225,6 @@ const filterCategory = (factorList) => {
     });
     return isMatch;
   });
-  //set has selected category
-  selectedCategoryList.value = allFilterFactor.value.category;
 };
 const doFilter = async function (filterGroup) {
   if (filterGroup.purple.length) filterPurple();
@@ -287,6 +284,7 @@ watch(
     ) {
       await storeInfo.filterStoreType(selectedType.value);
     } else {
+      suitableStoreList.value = storeListAfterFilterType.value; //reset
       await doFilter(filterGroup);
     }
     pickup();
