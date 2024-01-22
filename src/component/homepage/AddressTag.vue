@@ -23,7 +23,7 @@
               type="radio"
               :id="options"
               :value="options"
-              :name="title"
+              :name="'商圈標籤'"
               class="cursor-pointer w-[20px]"
               :checked="options === selectedTag"
               @input="update(options)"

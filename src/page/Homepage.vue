@@ -221,7 +221,7 @@ const filterAddress = (address) => {
   });
 };
 const filterAddressTag = (tag) => {
-  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+  suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
     return store.addressTag.includes(tag);
   });
 };
@@ -302,8 +302,14 @@ watch(
 watch(address, (val) => {
   filterAddress(val);
 });
-watch(selectedAddressTag, (tag) => {
-  filterAddressTag(tag);
+watch(selectedAddressTag, async function (tag) {
+  if (tag === "") {
+    await storeInfo.filterStoreByType(selectedType.value);
+  } else {
+    await storeInfo.filterStoreByAddressTag(tag);
+  }
+  await storeInfo.setAllOption();
+  pickup();
 });
 onMounted(() => {
   suitableStoreList.value = storeListAfterFilterType.value;

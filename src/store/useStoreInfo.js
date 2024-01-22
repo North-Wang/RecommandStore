@@ -16,9 +16,19 @@ export const useStoreInfo = defineStore({
   actions: {
     filterStoreByType(type) {
       //根據type來決定其他option要出現出現什麼選項
+      //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
       this.storeListAfterFilterType = this.storeList.filter((store) => {
         return store.type === type;
       });
+    },
+    filterStoreByAddressTag(tag) {
+      //根據商圈標籤來決定其他option要出現出現什麼選項
+      //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
+      this.storeListAfterFilterType = this.storeListAfterFilterType.filter(
+        (store) => {
+          return store.addressTag.includes(tag);
+        }
+      );
     },
     setTypeOption() {
       const allType = new Set();
