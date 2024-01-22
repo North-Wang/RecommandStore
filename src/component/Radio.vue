@@ -1,7 +1,9 @@
 <template>
   <div class="select-none">
     <h4>{{ title }}</h4>
-    <div class="grid grid-cols-3 gap-2 justify-center mt-2">
+    <div
+      class="grid grid-cols-3 gap-2 justify-center mt-2 max-h-[200px] overflow-y-auto"
+    >
       <div
         v-for="options in optionList"
         :key="options"

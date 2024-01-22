@@ -3,21 +3,22 @@ import { defineStore } from "pinia";
 export const useStoreInfo = defineStore({
   id: "storeInfo",
   state: () => ({
-    storeList: ["default"], //全部的店家資料
+    storeList: [], //全部的店家資料
     storeListAfterFilterType: [], //篩選完的店家資料
     titleList: [], //所有標題
     allTypeOption: [],
     allPurpleOption: [],
-    allFeatureOption: [],
+    // allFeatureOption: [],
     allAddressOption: [],
     allCategoryOption: [],
+    allAddressTag: [], //所有的商圈標籤
   }),
   actions: {
-    filterStoreType (type) {
+    filterStoreByType(type) {
       //根據type來決定其他option要出現出現什麼選項
       this.storeListAfterFilterType = this.storeList.filter((store) => {
         return store.type === type;
-      });      
+      });
     },
     setTypeOption() {
       const allType = new Set();
@@ -31,20 +32,23 @@ export const useStoreInfo = defineStore({
     },
     setAllOption() {
       const allPurple = new Set();
-      const allFeature = new Set();
+      // const allFeature = new Set();
       const allAddress = new Set();
       const allCategory = new Set();
+      const allAddressTag = new Set();
 
       this.storeListAfterFilterType.forEach((store) => {
-        if (!allFeature.has(store.feature)) {
-          allFeature.add(store.feature);
-        }
+        //get all feature options
+        // if (!allFeature.has(store.feature)) {
+        //   allFeature.add(store.feature);
+        // }
+        //get all address options
         if (!allAddress.has(store.address)) {
           allAddress.add(store.address);
         }
 
-         //get all purple options
-         const purpleArray = store.purple.split(/[,，、]/);
+        //get all purple options
+        const purpleArray = store.purple.split(/[,，、]/);
         purpleArray.forEach((item) => {
           if (!allPurple.has(item)) {
             allPurple.add(item);
@@ -57,12 +61,20 @@ export const useStoreInfo = defineStore({
             allCategory.add(item);
           }
         });
+        //get all address tag options
+        store.addressTag.forEach((item) => {
+          if (item === "") return;
+          if (!allAddressTag.has(item)) {
+            allAddressTag.add(item);
+          }
+        });
       });
 
       this.allPurpleOption = Array.from(allPurple);
-      this.allFeatureOption = Array.from(allFeature);
+      // this.allFeatureOption = Array.from(allFeature);
       this.allAddressOption = Array.from(allAddress);
       this.allCategoryOption = Array.from(allCategory);
+      this.allAddressTag = Array.from(allAddressTag);
     },
   },
   persist: true,

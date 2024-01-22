@@ -4,20 +4,26 @@
     <li
       class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
     >
-      <h1 class="h-[72px] leading-tight whitespace-break-spaces text-start">
-        {{ lotteryResult?.name }}
-        <span v-if="!lotteryResult?.name" class="text-red-500"
-          >沒有匹配的店家</span
-        >
+      <h1 class="min-h-[72px] leading-tight whitespace-break-spaces text-start">
+        <span v-if="answer.name">{{ answer.name }}</span>
+        <span v-else class="text-red-500">沒有匹配的店家</span>
       </h1>
+      <ul class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-center mt-2">
+        <li v-for="tags in answer?.addressTag">
+          <h5 class="px-3 py-1 rounded-lg bg-slate-200 dark:text-black">
+            {{ tags }}
+          </h5>
+        </li>
+      </ul>
+
       <h3 class="mt-4 text-blue-400 dark:text-yellow-400">
-        {{ lotteryResult?.category || "- -" }}
+        {{ answer?.category || "- -" }}
       </h3>
       <h5 class="text-blue-400 dark:text-yellow-400">
-        {{ lotteryResult?.feature || "- -" }}
+        {{ answer?.feature || "- -" }}
       </h5>
       <h5 class="text-blue-400 dark:text-yellow-400">
-        {{ lotteryResult?.purple || "- -" }}
+        {{ answer?.purple || "- -" }}
       </h5>
       <div
         class="w-full flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
@@ -26,7 +32,7 @@
           class="min-h-[54px] border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
         >
           <h5 ref="answerAddress" class="text-start whitespace-wrap px-2">
-            {{ lotteryResult?.address }}
+            {{ answer?.address }}
           </h5>
         </button>
         <i
@@ -77,13 +83,15 @@
           ref="moreOptionDropdown"
         >
           <h4 class="">篩選條件</h4>
-          <input
-            type="text"
-            placeholder="請輸入地址"
-            v-model="address"
-            class="w-full min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6"
-            style="border: 1px solid gray"
-          />
+          <li class="w-full">
+            <input
+              type="text"
+              placeholder="請輸入地址"
+              v-model="address"
+              class="w-full min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6"
+              style="border: 1px solid gray"
+            />
+          </li>
 
           <li
             class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
@@ -94,6 +102,11 @@
               class="w-full min-h-[48px] px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
               style="border: 1px solid gray"
             >
+              <AddressTag
+                :optionList="storeInfo.allAddressTag"
+                @update="(option) => (selectedAddressTag = option)"
+                v-if="types === '商圈標籤'"
+              />
               <Radio
                 :title="types"
                 :optionList="storeInfo.allTypeOption"
@@ -154,9 +167,11 @@ import { useLoading } from "../store/useLoading";
 import { onClickOutside } from "@vueuse/core";
 import Radio from "../component/Radio.vue";
 import Checkbox from "../component/Checkbox.vue";
+import AddressTag from "../component/homepage/AddressTag.vue";
 import "animate.css";
 
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
+import isMobileDevice from "../js/isMobileDevice.js";
 
 //picture
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
@@ -173,10 +188,7 @@ onClickOutside(moreOptionDropdown, () => {
   showMoreOptions.value = false;
 });
 const isDarkMode = detectiveDarkMode();
-const isMobile = computed(() => {
-  const info = navigator.userAgent;
-  return /mobile/i.test(info);
-});
+const isMobile = isMobileDevice();
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const loading = useLoading();
@@ -188,12 +200,13 @@ const featureList = computed(() => {
 });
 
 const suitableStoreList = ref({}); //符合篩選條件的所有資料
-const lotteryResult = ref({});
+const answer = ref({});
 
 const showSuccessCopy = ref(false);
 const showMoreOptions = ref(false);
 
 const address = ref("");
+const selectedAddressTag = ref("");
 const selectedType = ref("餐廳");
 const allFilterFactor = ref({
   //選擇的各種篩選條件
@@ -201,35 +214,30 @@ const allFilterFactor = ref({
   feature: [],
   category: [],
 });
-const allOptions = ref(["地點類型", "目的", "特色", "種類"]);
-const filterPurple = () => {
+const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "種類"]);
+const filterAddress = (address) => {
   suitableStoreList.value = suitableStoreList.value.filter((store) => {
-    const isMatch = allFilterFactor.value.purple.some((purple) => {
-      return store.purple.indexOf(purple) != -1;
+    return store.address.includes(address);
+  });
+};
+const filterAddressTag = (tag) => {
+  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+    return store.addressTag.includes(tag);
+  });
+};
+const filterMultiOptionInTheFactor = (factor) => {
+  //篩選同種篩選條件，多種選項
+  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+    const isMatch = allFilterFactor.value[factor].some((option) => {
+      return store[factor].indexOf(option) != -1;
     });
     return isMatch;
   });
 };
-const filterFeature = (factorList) => {
-  suitableStoreList.value = suitableStoreList.value.filter((store) => {
-    const isMatch = allFilterFactor.value.feature.some((feature) => {
-      return store.feature.indexOf(feature) != -1;
-    });
-    return isMatch;
-  });
-};
-const filterCategory = (factorList) => {
-  suitableStoreList.value = suitableStoreList.value.filter((store) => {
-    const isMatch = allFilterFactor.value.category.some((category) => {
-      return store.category.indexOf(category) != -1;
-    });
-    return isMatch;
-  });
-};
-const doFilter = async function (filterGroup) {
-  if (filterGroup.purple.length) filterPurple();
-  if (filterGroup.feature.length) filterFeature();
-  if (filterGroup.category.length) filterCategory();
+const filterStore = async function (filterGroup) {
+  if (filterGroup.purple.length) filterMultiOptionInTheFactor("purple");
+  if (filterGroup.feature.length) filterMultiOptionInTheFactor("feature");
+  if (filterGroup.category.length) filterMultiOptionInTheFactor("category");
   console.log("符合條件的店家名單", suitableStoreList.value);
 };
 
@@ -251,13 +259,13 @@ const pickup = () => {
   const randomNumber = Math.floor(
     Math.random() * suitableStoreList.value.length
   );
-  const answer = suitableStoreList.value[randomNumber];
-  if (answer) {
-    console.log("抽選結果", answer);
-    lotteryResult.value = answer;
+  const result = suitableStoreList.value[randomNumber];
+  if (result) {
+    console.log("抽選結果", result);
+    answer.value = result;
   } else {
     //沒有匹配的結果
-    lotteryResult.value = {};
+    answer.value = {};
   }
   loading.isLoading = false;
 };
@@ -268,7 +276,7 @@ watch(storeListAfterFilterType, (list) => {
 });
 watch(selectedType, async function (type) {
   //type 改變之後
-  await storeInfo.filterStoreType(type);
+  await storeInfo.filterStoreByType(type);
   storeInfo.setAllOption();
   resetOption();
   pickup();
@@ -282,15 +290,21 @@ watch(
       filterGroup.feature.length === 0 &&
       filterGroup.category.length === 0
     ) {
-      await storeInfo.filterStoreType(selectedType.value);
+      await storeInfo.filterStoreByType(selectedType.value);
     } else {
       suitableStoreList.value = storeListAfterFilterType.value; //reset
-      await doFilter(filterGroup);
+      await filterStore(filterGroup);
     }
     pickup();
   },
   { deep: true }
 );
+watch(address, (val) => {
+  filterAddress(val);
+});
+watch(selectedAddressTag, (tag) => {
+  filterAddressTag(tag);
+});
 onMounted(() => {
   suitableStoreList.value = storeListAfterFilterType.value;
   pickup();
