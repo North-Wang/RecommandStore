@@ -69,6 +69,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  addressTag: {
+    type: String,
+    default: "",
+  },
 });
 
 const emits = defineEmits(["update"]);
@@ -79,6 +83,13 @@ const update = (option) => {
   selectedTag.value = option;
   emits("update", option);
 };
+
+watch(
+  () => props.addressTag,
+  (tag) => {
+    selectedTag.value = tag;
+  }
+);
 </script>
 
 <style scoped>

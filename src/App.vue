@@ -25,6 +25,7 @@ const allStoreInfo = ref([]); //全部的店家資訊
 const setOption = async function () {
   storeInfo.setTypeOption();
   await storeInfo.filterStoreByType("餐廳");
+  await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 };
 const getStoreList = async function () {

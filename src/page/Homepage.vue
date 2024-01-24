@@ -86,7 +86,7 @@
           <li class="w-full">
             <input
               type="text"
-              placeholder="請輸入地址"
+              placeholder="以地址搜尋"
               v-model="address"
               class="w-full min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6"
               style="border: 1px solid gray"
@@ -104,6 +104,7 @@
             >
               <AddressTag
                 :optionList="storeInfo.allAddressTag"
+                :addressTag="selectedAddressTag"
                 @update="(option) => (selectedAddressTag = option)"
                 v-if="types === '商圈標籤'"
               />
@@ -124,7 +125,10 @@
                 :vModel="allFilterFactor.purple"
                 :type="'purple'"
                 @update="(list) => (allFilterFactor.purple = list)"
-                v-if="types === '目的'"
+                v-if="
+                  types === '目的' &&
+                  Object.keys(storeInfo.allPurpleOption).length
+                "
               />
               <Checkbox
                 :title="types"
@@ -216,7 +220,7 @@ const allFilterFactor = ref({
 });
 const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "種類"]);
 const filterAddress = (address) => {
-  suitableStoreList.value = suitableStoreList.value.filter((store) => {
+  suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
     return store.address.includes(address);
   });
 };
@@ -251,6 +255,7 @@ const copyText = async function (text) {
 };
 const resetOption = () => {
   //清空已經選擇的選項
+  selectedAddressTag.value = "";
   allFilterFactor.value.purple = [];
   allFilterFactor.value.feature = [];
   allFilterFactor.value.category = [];
@@ -259,9 +264,10 @@ const pickup = () => {
   const randomNumber = Math.floor(
     Math.random() * suitableStoreList.value.length
   );
+  console.log("符合篩選條件的所有店家", suitableStoreList.value);
   const result = suitableStoreList.value[randomNumber];
   if (result) {
-    console.log("抽選結果", result);
+    // console.log("抽選結果", result);
     answer.value = result;
   } else {
     //沒有匹配的結果
@@ -285,6 +291,7 @@ watch(
   allFilterFactor,
   async (filterGroup, oldGroup) => {
     console.log("watch 篩選條件", filterGroup);
+
     if (
       filterGroup.purple.length === 0 &&
       filterGroup.feature.length === 0 &&
@@ -299,13 +306,21 @@ watch(
   },
   { deep: true }
 );
-watch(address, (val) => {
-  filterAddress(val);
+watch(address, async function (val) {
+  if (val != "") {
+    console.log("watch 搜尋地址", val);
+    selectedAddressTag.value = ""; //reset
+    await resetOption();
+    filterAddress(val);
+  }
 });
 watch(selectedAddressTag, async function (tag) {
+  console.log("watch 商圈標籤", tag);
   if (tag === "") {
     await storeInfo.filterStoreByType(selectedType.value);
   } else {
+    address.value = ""; //reset
+    await storeInfo.filterStoreByType(selectedType.value);
     await storeInfo.filterStoreByAddressTag(tag);
   }
   await storeInfo.setAllOption();

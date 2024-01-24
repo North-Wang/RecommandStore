@@ -24,6 +24,7 @@ export const useStoreInfo = defineStore({
     filterStoreByAddressTag(tag) {
       //根據商圈標籤來決定其他option要出現出現什麼選項
       //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
+      if (tag === "" || !tag) return;
       this.storeListAfterFilterType = this.storeListAfterFilterType.filter(
         (store) => {
           return store.addressTag.includes(tag);
@@ -40,12 +41,23 @@ export const useStoreInfo = defineStore({
       this.allTypeOption = Array.from(allType);
       // console.log("all type", this.allTypeOption);
     },
+    setAddressTag() {
+      const allAddressTag = new Set();
+      this.storeListAfterFilterType.forEach((store) => {
+        store.addressTag.forEach((item) => {
+          if (item === "") return;
+          if (!allAddressTag.has(item)) {
+            allAddressTag.add(item);
+          }
+        });
+      });
+      this.allAddressTag = Array.from(allAddressTag);
+    },
     setAllOption() {
       const allPurple = new Set();
       // const allFeature = new Set();
       const allAddress = new Set();
       const allCategory = new Set();
-      const allAddressTag = new Set();
 
       this.storeListAfterFilterType.forEach((store) => {
         //get all feature options
@@ -60,6 +72,7 @@ export const useStoreInfo = defineStore({
         //get all purple options
         const purpleArray = store.purple.split(/[,，、]/);
         purpleArray.forEach((item) => {
+          if (item === "") return;
           if (!allPurple.has(item)) {
             allPurple.add(item);
           }
@@ -67,15 +80,9 @@ export const useStoreInfo = defineStore({
         //get all category options
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
+          if (item === "") return;
           if (!allCategory.has(item)) {
             allCategory.add(item);
-          }
-        });
-        //get all address tag options
-        store.addressTag.forEach((item) => {
-          if (item === "") return;
-          if (!allAddressTag.has(item)) {
-            allAddressTag.add(item);
           }
         });
       });
@@ -84,7 +91,7 @@ export const useStoreInfo = defineStore({
       // this.allFeatureOption = Array.from(allFeature);
       this.allAddressOption = Array.from(allAddress);
       this.allCategoryOption = Array.from(allCategory);
-      this.allAddressTag = Array.from(allAddressTag);
+      console.log("所有目的的選項", this.allPurpleOption);
     },
   },
   persist: true,
