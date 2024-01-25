@@ -91,7 +91,7 @@ export const useStoreInfo = defineStore({
       // this.allFeatureOption = Array.from(allFeature);
       this.allAddressOption = Array.from(allAddress);
       this.allCategoryOption = Array.from(allCategory);
-      console.log("所有目的的選項", this.allPurpleOption);
+      console.log("所有目的的選項", this.allPurpleOption.length);
     },
   },
   persist: true,

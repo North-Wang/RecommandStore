@@ -125,10 +125,7 @@
                 :vModel="allFilterFactor.purple"
                 :type="'purple'"
                 @update="(list) => (allFilterFactor.purple = list)"
-                v-if="
-                  types === '目的' &&
-                  Object.keys(storeInfo.allPurpleOption).length
-                "
+                v-if="types === '目的'"
               />
               <Checkbox
                 :title="types"

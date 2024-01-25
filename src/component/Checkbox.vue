@@ -1,6 +1,8 @@
 <template>
   <ul class="select-none">
-    <h4 @click="showOptions = !showOptions">{{ title }}</h4>
+    <h4 @click="showOptions = !showOptions">
+      {{ title }}
+    </h4>
     <Transition name="slide">
       <li
         class="grid grid-cols-3 gap-2 justify-start my-3 overflow-y-auto rounded-lg p-3"
@@ -23,7 +25,7 @@
     <Transition name="slide">
       <li
         class="grid grid-cols-3 gap-2 justify-start mt-2 max-h-[200px] overflow-y-auto"
-        v-if="showOptions"
+        v-if="showOptions && optionList.length != 0"
       >
         <div
           v-for="options in optionList"
@@ -43,6 +45,9 @@
         </div>
       </li>
     </Transition>
+    <li class="text-center text-gray-600" v-if="optionList.length === 0">
+      沒有符合的資料
+    </li>
   </ul>
 </template>
 
