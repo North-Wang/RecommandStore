@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-col items-center" id="homepage">
+  <ul class="flex flex-col items-center select-none" id="homepage">
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
       class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
@@ -141,7 +141,7 @@
                 :vModel="allFilterFactor.category"
                 :type="'category'"
                 @update="(list) => (allFilterFactor.category = list)"
-                v-if="types === '種類'"
+                v-if="types === '地點標籤'"
               />
             </ul>
           </li>
@@ -215,7 +215,7 @@ const allFilterFactor = ref({
   feature: [],
   category: [],
 });
-const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "種類"]);
+const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "地點標籤"]);
 const filterAddress = (address) => {
   suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
     return store.address.includes(address);

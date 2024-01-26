@@ -12,14 +12,37 @@
       <input
         type="text"
         v-model="keywordFeature"
-        placeholder="搜尋店家描述"
+        placeholder="搜尋店家特色"
         class="flex-1 text-center"
       />
     </div>
+    <Dropdown
+      v-model="searchAddressTag"
+      :options="allAddressTag"
+      placeholder="Select a Address tag"
+      class="w-full"
+    />
+    <ul class="flex gap-2 mt-2">
+      <Dropdown
+        v-model="searchType"
+        :options="allTypeOption"
+        placeholder="Select a Purple"
+        class="flex-1"
+      />
+      <Dropdown
+        v-model="searchPurple"
+        :options="allPurpleOption"
+        placeholder="Select a Purple"
+        class="flex-1"
+      />
+    </ul>
+    <ul class="flex gap-x-2"></ul>
+
     <div class="mt-[12px] lg:mt-4">
       <DataTable
         id="storeTable"
         :value="storeTable"
+        v-model:filters="filters"
         class="rounded-lg overflow-hidden"
         stripedRows
         scrollable
@@ -28,6 +51,7 @@
         template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         :loading="loadingTable"
         resizableColumns
+        removableSort
       >
         <template #loading>
           <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
@@ -48,6 +72,13 @@
           </template>
         </Column>
 
+        <Column :field="'addressTag'" header="商圈標籤" sortable class="flex-1">
+          <template #body="{ data, index }">
+            <h5 class="text-start whitespace-nowrap">
+              {{ data.addressTag?.toString() }}
+            </h5>
+          </template>
+        </Column>
         <Column :field="'purple'" header="目的" sortable class="flex-1">
           <template #body="{ data, index }">
             <h5 class="text-start whitespace-nowrap">{{ data.purple }}</h5>
@@ -87,6 +118,10 @@ import Column from "primevue/column";
 import Paginator from "primevue/paginator";
 import Dropdown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
+
+import detectiveDarkMode from "../js/detectiveDarkMode.js";
+import isMobileDevice from "../js/isMobileDevice.js";
+
 // import "primevue/resources/themes/arya-orange/theme.css"; //黑底白字 hightlight橘
 // import "primevue/resources/themes/lara-light-blue/theme.css"; //白底藍字
 // import "primevue/resources/themes/lara-dark-blue/theme.css"; //深藍底白字
@@ -94,17 +129,21 @@ import { FilterMatchMode } from "primevue/api";
 import "primevue/resources/themes/vela-blue/theme.css";
 
 const storeInfo = useStoreInfo();
-const { storeList, titleList } = storeToRefs(storeInfo);
+const { storeList, titleList, allTypeOption, allPurpleOption, allAddressTag } =
+  storeToRefs(storeInfo);
 const storeTable = ref([]);
 const loading = useLoading();
-const isMobile = computed(() => {
-  const info = navigator.userAgent;
-  return /mobile/i.test(info);
-});
-const testList = ref([{ name: "測試" }]);
+const isDarkMode = detectiveDarkMode();
+const isMobile = isMobileDevice();
 const keywordStore = ref("");
 const keywordFeature = ref("");
 const loadingTable = ref(false);
+
+const searchType = ref("");
+const searchAddressTag = ref("");
+const searchPurple = ref("");
+// const searchFeature = ref("");
+const searchCategory = ref("");
 
 const searchNameAndCategory = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {

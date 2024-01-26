@@ -1,10 +1,10 @@
 <template>
-  <header class="bg-sky-700 gap-x-5 text-white">
-    <router-link to="/" class="text-white">
-      <h4>HOME</h4>
+  <header class="bg-sky-700 gap-x-5">
+    <router-link to="/" class="select-none">
+      <h4 class="text-white select-none">HOME</h4>
     </router-link>
-    <router-link to="/StoreListTable">
-      <h4 class="text-white">店家列表</h4>
+    <router-link to="/StoreListTable" class="select-none">
+      <h4 class="text-white select-none">店家列表</h4>
     </router-link>
   </header>
 </template>
