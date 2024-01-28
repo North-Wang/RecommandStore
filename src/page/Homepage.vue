@@ -193,7 +193,8 @@ const isMobile = isMobileDevice();
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const loading = useLoading();
-const { storeList, storeListAfterFilterType } = storeToRefs(storeInfo);
+const { storeList, titleList, storeListAfterFilterType } =
+  storeToRefs(storeInfo);
 
 const featureList = computed(() => {
   const list = ["划算", "老店", "人氣", "久坐", "插座", "特色", "道地", "好吃"];
@@ -272,7 +273,11 @@ const pickup = () => {
   }
   loading.isLoading = false;
 };
-
+watch(titleList, (newTitleList) => {
+  /* first time pick up when open the webstie */
+  suitableStoreList.value = storeListAfterFilterType.value;
+  pickup();
+});
 watch(storeListAfterFilterType, (list) => {
   //監聽到pinia 根據type篩選完成之後的店家資料
   suitableStoreList.value = list;
@@ -323,10 +328,7 @@ watch(selectedAddressTag, async function (tag) {
   await storeInfo.setAllOption();
   pickup();
 });
-onMounted(() => {
-  suitableStoreList.value = storeListAfterFilterType.value;
-  pickup();
-});
+onMounted(() => {});
 </script>
 <style scoped lang="scss">
 .lottery-button {

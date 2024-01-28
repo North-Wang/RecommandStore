@@ -38,8 +38,6 @@ const getStoreList = async function () {
         console.log("成功取得店家資訊", result);
         const titleList = result.data.values[0];
         const storeList = result.data.values.slice(1);
-        // console.log("標題", titleList);
-        // console.log("店家", storeList);
 
         storeList.forEach((store) => {
           allStoreInfo.value.push({
