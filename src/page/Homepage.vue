@@ -201,7 +201,7 @@ const featureList = computed(() => {
   return list;
 });
 
-const suitableStoreList = ref({}); //符合篩選條件的所有資料
+const suitableStoreList = ref([]); //符合篩選條件的所有資料
 const answer = ref({});
 
 const showSuccessCopy = ref(false);
@@ -220,11 +220,6 @@ const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "地
 const filterAddress = (address) => {
   suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
     return store.address.includes(address);
-  });
-};
-const filterAddressTag = (tag) => {
-  suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
-    return store.addressTag.includes(tag);
   });
 };
 const filterMultiOptionInTheFactor = (factor) => {
@@ -273,10 +268,14 @@ const pickup = () => {
   }
   loading.isLoading = false;
 };
-watch(titleList, (newTitleList) => {
-  /* first time pick up when open the webstie */
+const firstTimePickup = () => {
+  /* when go into the website, do pick up first */
   suitableStoreList.value = storeListAfterFilterType.value;
   pickup();
+};
+
+watch(titleList, () => {
+  firstTimePickup();
 });
 watch(storeListAfterFilterType, (list) => {
   //監聽到pinia 根據type篩選完成之後的店家資料
@@ -310,7 +309,6 @@ watch(
 );
 watch(address, async function (val) {
   if (val != "") {
-    console.log("watch 搜尋地址", val);
     selectedAddressTag.value = ""; //reset
     await resetOption();
     filterAddress(val);
@@ -328,7 +326,9 @@ watch(selectedAddressTag, async function (tag) {
   await storeInfo.setAllOption();
   pickup();
 });
-onMounted(() => {});
+onMounted(() => {
+  if (storeListAfterFilterType.value.length !== 0) firstTimePickup();
+});
 </script>
 <style scoped lang="scss">
 .lottery-button {
