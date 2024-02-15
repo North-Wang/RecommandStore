@@ -2,7 +2,7 @@
   <div class="select-none">
     <h3 class="text-3xl font-bold">店家列表</h3>
     <h5>總共{{ storeTable.length }}筆資料</h5>
-    <div class="w-full flex flex-wrap gap-x-2 gap-y-2 my-2 lg:my-2 lg:gap-y-0">
+    <!-- <div class="w-full flex flex-wrap gap-x-2 gap-y-2 my-2 lg:my-2 lg:gap-y-0">
       <input
         type="text"
         v-model="keywordStore"
@@ -35,26 +35,44 @@
         placeholder="Select a Purple"
         class="flex-1"
       />
-    </ul>
-    <ul class="flex gap-x-2"></ul>
+    </ul> -->
 
     <div class="mt-[12px] lg:mt-4">
       <DataTable
         id="storeTable"
         :value="storeTable"
         v-model:filters="filters"
+        :globalFilterFields="['name', 'type', 'addressTag']"
+        filterDisplay="menu"
         class="rounded-lg overflow-hidden"
         stripedRows
         scrollable
         paginator
         :rows="10"
-        template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink JumpToPageInput"
         :loading="loadingTable"
         resizableColumns
         removableSort
       >
         <template #loading>
           <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+        </template>
+        <template #header>
+          <div class="flex justify-center items-center gap-2 py-3">
+            <InputIcon @click.prevent="filters.global.value = ''">
+              <i class="pi pi-times text-slate-900 dark:text-slate-300" />
+            </InputIcon>
+            <IconField iconPosition="right">
+              <InputText
+                v-model="filters.global.value"
+                class="text-center text-[16px] py-2 lg:text-[24px]"
+                placeholder="請輸入店家名稱或商圈標籤"
+              />
+              <InputIcon class="ml-2">
+                <i class="pi pi-search text-slate-900 dark:text-slate-300" />
+              </InputIcon>
+            </IconField>
+          </div>
         </template>
         <Column :field="'name'" header="店家名稱" sortable class="max-w-[80vw]">
           <template #body="{ data, index }">
@@ -71,12 +89,47 @@
             </div>
           </template>
         </Column>
-
-        <Column :field="'addressTag'" header="商圈標籤" sortable class="flex-1">
+        <Column
+          :field="'type'"
+          header="類型"
+          sortable
+          style="min-width: 80px"
+        ></Column>
+        <Column :field="'feature'" header="店家特色" sortable></Column>
+        <Column
+          :field="'addressTag'"
+          header="商圈標籤"
+          sortable
+          class="flex-1"
+          showFilterMatchModes
+        >
           <template #body="{ data, index }">
             <h5 class="text-start whitespace-nowrap">
               {{ data.addressTag?.toString() }}
             </h5>
+          </template>
+          <template #filter="{ filterModel }">
+            <MultiSelect
+              v-model="filterModel.value"
+              :options="representatives"
+              optionLabel="name"
+              placeholder="Any"
+              class="p-column-filter"
+              style=""
+              :maxSelectedLabels="1"
+            >
+              <template #option="slotProps">
+                <div class="flex align-items-center gap-2">
+                  <!-- <img
+                    :alt="slotProps.option.name"
+                    :src="`https://primefaces.org/cdn/primevue/images/avatar/${slotProps.option.image}`"
+                    style="width: 32px"
+                  /> -->
+                  <span>{{ slotProps.option.name }}</span>
+                  aaaTest
+                </div>
+              </template>
+            </MultiSelect>
           </template>
         </Column>
         <Column :field="'purple'" header="目的" sortable class="flex-1">
@@ -89,21 +142,13 @@
             <h5 class="text-start">{{ data.category }}</h5>
           </template>
         </Column>
-        <Column :field="'type'" header="類型" sortable class="flex-1"></Column>
-        <!-- <Column :field="'feature'" header="店家特色" sortable></Column> -->
+
         <template #empty>
           <div class="h-[360px] flex items-center justify-center">
             沒有符合的店家資料
           </div>
         </template>
       </DataTable>
-      <!-- <Paginator
-          :rows="rows"
-          :totalRecords="Math.ceil(storeTable.length / rows)"
-          template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} of {totalRecords}"
-          class="mt-4"
-        /> -->
     </div>
   </div>
 </template>
@@ -115,8 +160,10 @@ import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import Paginator from "primevue/paginator";
 import Dropdown from "primevue/dropdown";
+import InputText from "primevue/inputtext";
+import MultiSelect from "primevue/multiselect";
+
 import { FilterMatchMode } from "primevue/api";
 
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
@@ -144,7 +191,15 @@ const searchAddressTag = ref("");
 const searchPurple = ref("");
 // const searchFeature = ref("");
 const searchCategory = ref("");
-
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  type: { value: null, matchMode: FilterMatchMode.EQUALS },
+  addressTag: { value: null, matchMode: FilterMatchMode.EQUALS },
+});
+const representatives = ref({
+  name: "樹林車站",
+  name: "南港軟體園區",
+});
 const searchNameAndCategory = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {
     return store.name.includes(keyword) || store.category.includes(keyword);
@@ -185,7 +240,6 @@ input[type="text"] {
   thead {
     th {
       padding: 16px 16px;
-      /* border: 1px solid gray; */
       .p-column-title {
         font-size: 20px;
         font-weight: 700;
@@ -196,10 +250,14 @@ input[type="text"] {
       }
     }
   }
+  .p-datatable-header {
+    padding-top: unset;
+    padding-bottom: unset;
+    background-color: unset;
+  }
   tbody {
     td {
       padding: 16px 16px;
-      /* border: 1px solid gray; */
     }
   }
   //loading
@@ -207,7 +265,6 @@ input[type="text"] {
     background-color: black;
     opacity: 0.5;
   }
-  //paginator
   .p-paginator {
     .p-paginator-element {
       @media (max-width: 1280px) {

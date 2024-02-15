@@ -4,7 +4,9 @@
     <li
       class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
     >
-      <h1 class="min-h-[72px] leading-tight whitespace-break-spaces text-start">
+      <h1
+        class="min-h-[72px] leading-tight whitespace-break-spaces text-start line-clamp-2"
+      >
         <span v-if="answer.name">{{ answer.name }}</span>
         <span v-else class="text-red-500">沒有匹配的店家</span>
       </h1>
@@ -25,16 +27,12 @@
       <h5 class="text-blue-400 dark:text-yellow-400">
         {{ answer?.purple || "- -" }}
       </h5>
-      <div
-        class="w-full flex items-center justify-center gap-x-2 mt-2 relative lg:w-full"
+      <ul
+        class="flex items-center justify-center gap-x-2 mt-2 relative w-[100%] lg:w-[500px]"
       >
-        <button
-          class="min-h-[54px] border-[0.5px] flex-1 border-white p-2 rounded-l overflow-hidden lg:max-w-[600px]"
-        >
-          <h5 ref="answerAddress" class="text-start whitespace-wrap px-2">
-            {{ answer?.address }}
-          </h5>
-        </button>
+        <h5 ref="answerAddress" class="address">
+          {{ answer?.address }}
+        </h5>
         <i
           class="w-[32px] pi pi-copy relative cursor-pointer"
           style="font-size: 2rem"
@@ -50,7 +48,7 @@
             </div>
           </transition>
         </i>
-      </div>
+      </ul>
     </li>
     <h5 class="mt-2">總共匹配到{{ suitableStoreList.length || 0 }}筆資料</h5>
 
@@ -83,23 +81,21 @@
           ref="moreOptionDropdown"
         >
           <h4 class="">篩選條件</h4>
-          <li class="w-full">
-            <input
-              type="text"
-              placeholder="以地址搜尋"
-              v-model="address"
-              class="w-full min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6"
-              style="border: 1px solid gray"
-            />
-          </li>
+          <input
+            type="text"
+            placeholder="以地址搜尋"
+            v-model="address"
+            class="w-[100%] min-h-[48px] p-2 text-center text-4 rounded-lg lg:text-6 lg:w-[500px]"
+            style="border: 1px solid gray"
+          />
 
           <li
-            class="w-full grid grid-cols-1 grid-rows-5 gap-2 justify-start mt-2"
+            class="flex flex-col gap-2 justify-start mt-2 w-[100%] lg:w-[500px]"
           >
             <ul
               v-for="types in allOptions"
               :key="types"
-              class="w-full min-h-[48px] px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-blue"
+              class="min-h-[48px] px-4 py-2 rounded-lg whitespace-nowrap cursor-pointer text-[black] hover:light:text-white dark:text-white dark:bg-black dark:hover:text-"
               style="border: 1px solid gray"
             >
               <AddressTag
@@ -362,6 +358,15 @@ input[type="radio"]:checked {
   div {
     background-color: blue !important;
   }
+}
+.address {
+  flex-grow: 1;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: nowrap;
+  background-color: #f9f9f9;
 }
 .slide-enter-active {
   transition: all 0.5s ease;

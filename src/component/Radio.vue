@@ -1,5 +1,5 @@
 <template>
-  <div class="select-none">
+  <div class="select-none w-full">
     <h4>{{ title }}</h4>
     <div
       class="grid grid-cols-3 gap-2 justify-center mt-2 max-h-[200px] overflow-y-auto"

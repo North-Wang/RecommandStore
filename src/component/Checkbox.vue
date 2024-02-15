@@ -1,5 +1,5 @@
 <template>
-  <ul class="select-none">
+  <ul class="select-none w-full">
     <h4 @click="showOptions = !showOptions">
       {{ title }}
     </h4>
