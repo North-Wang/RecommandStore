@@ -2,41 +2,13 @@
   <div class="select-none">
     <h3 class="text-3xl font-bold">店家列表</h3>
     <h5>總共{{ storeTable.length }}筆資料</h5>
-    <!-- <div class="w-full flex flex-wrap gap-x-2 gap-y-2 my-2 lg:my-2 lg:gap-y-0">
-      <input
-        type="text"
-        v-model="keywordStore"
-        placeholder="搜尋店家名稱或種類"
-        class="flex-1 text-center"
+    <!-- <div class="grid grid-cols-3">
+      <DropdownCheckbox
+        :options="allAddressTag"
+        :placeholder="'商圈標籤'"
+        @change="filterTable(option)"
       />
-      <input
-        type="text"
-        v-model="keywordFeature"
-        placeholder="搜尋店家特色"
-        class="flex-1 text-center"
-      />
-    </div>
-    <Dropdown
-      v-model="searchAddressTag"
-      :options="allAddressTag"
-      placeholder="Select a Address tag"
-      class="w-full"
-    />
-    <ul class="flex gap-2 mt-2">
-      <Dropdown
-        v-model="searchType"
-        :options="allTypeOption"
-        placeholder="Select a Purple"
-        class="flex-1"
-      />
-      <Dropdown
-        v-model="searchPurple"
-        :options="allPurpleOption"
-        placeholder="Select a Purple"
-        class="flex-1"
-      />
-    </ul> -->
-
+    </div> -->
     <div class="mt-[12px] lg:mt-4">
       <DataTable
         id="storeTable"
@@ -59,19 +31,13 @@
         </template>
         <template #header>
           <div class="flex justify-center items-center gap-2 py-3">
-            <InputIcon @click.prevent="filters.global.value = ''">
-              <i class="pi pi-times text-slate-900 dark:text-slate-300" />
-            </InputIcon>
-            <IconField iconPosition="right">
-              <InputText
-                v-model="filters.global.value"
-                class="text-center text-[16px] py-2 lg:text-[24px]"
-                placeholder="請輸入店家名稱或商圈標籤"
-              />
-              <InputIcon class="ml-2">
-                <i class="pi pi-search text-slate-900 dark:text-slate-300" />
-              </InputIcon>
-            </IconField>
+            <i class="pi pi-times text-slate-900 dark:text-slate-300" />
+            <InputText
+              v-model="filters.global.value"
+              class="text-center text-[16px] py-2 lg:text-[24px]"
+              placeholder="請輸入店家名稱或商圈標籤"
+            />
+            <i class="pi pi-search text-slate-900 dark:text-slate-300" />
           </div>
         </template>
         <Column :field="'name'" header="店家名稱" sortable class="max-w-[80vw]">
@@ -96,40 +62,11 @@
           style="min-width: 80px"
         ></Column>
         <Column :field="'feature'" header="店家特色" sortable></Column>
-        <Column
-          :field="'addressTag'"
-          header="商圈標籤"
-          sortable
-          class="flex-1"
-          showFilterMatchModes
-        >
+        <Column :field="'addressTag'" header="商圈標籤" sortable class="flex-1">
           <template #body="{ data, index }">
             <h5 class="text-start whitespace-nowrap">
               {{ data.addressTag?.toString() }}
             </h5>
-          </template>
-          <template #filter="{ filterModel }">
-            <MultiSelect
-              v-model="filterModel.value"
-              :options="representatives"
-              optionLabel="name"
-              placeholder="Any"
-              class="p-column-filter"
-              style=""
-              :maxSelectedLabels="1"
-            >
-              <template #option="slotProps">
-                <div class="flex align-items-center gap-2">
-                  <!-- <img
-                    :alt="slotProps.option.name"
-                    :src="`https://primefaces.org/cdn/primevue/images/avatar/${slotProps.option.image}`"
-                    style="width: 32px"
-                  /> -->
-                  <span>{{ slotProps.option.name }}</span>
-                  aaaTest
-                </div>
-              </template>
-            </MultiSelect>
           </template>
         </Column>
         <Column :field="'purple'" header="目的" sortable class="flex-1">
@@ -158,13 +95,12 @@ import { ref, onMounted, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
+import { FilterMatchMode } from "primevue/api";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Dropdown from "primevue/dropdown";
 import InputText from "primevue/inputtext";
-import MultiSelect from "primevue/multiselect";
-
-import { FilterMatchMode } from "primevue/api";
+import DropdownCheckbox from "../component/DropdownCheckbox.vue";
 
 import detectiveDarkMode from "../js/detectiveDarkMode.js";
 import isMobileDevice from "../js/isMobileDevice.js";
@@ -186,19 +122,11 @@ const keywordStore = ref("");
 const keywordFeature = ref("");
 const loadingTable = ref(false);
 
-const searchType = ref("");
-const searchAddressTag = ref("");
-const searchPurple = ref("");
-// const searchFeature = ref("");
-const searchCategory = ref("");
+const allFilterOption = ref([]);
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   type: { value: null, matchMode: FilterMatchMode.EQUALS },
   addressTag: { value: null, matchMode: FilterMatchMode.EQUALS },
-});
-const representatives = ref({
-  name: "樹林車站",
-  name: "南港軟體園區",
 });
 const searchNameAndCategory = (keyword) => {
   storeTable.value = storeTable.value.filter((store) => {
@@ -210,6 +138,10 @@ const searchFeature = (keyword) => {
     return store.feature.includes(keyword);
   });
 };
+
+function filterTable(option) {
+  console.log("篩選條件", option);
+}
 
 watch([keywordStore, keywordFeature], (keywordList) => {
   console.log("搜尋：", keywordList);
