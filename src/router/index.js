@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Homepage from "../page/Homepage.vue";
 import StoreListTable from "../page/StoreListTable.vue";
+import TestPage from "../page/TestPage.vue";
 
 const router = createRouter({
   history: createWebHashHistory(""), //如果填入"/object"，這樣進去每個分頁的前面都會有/object
@@ -24,6 +25,11 @@ const router = createRouter({
       path: "/StoreListTable",
       name: "StoreListTable",
       component: StoreListTable,
+    },
+    {
+      path: "/TestPage",
+      name: "TestPage",
+      component: TestPage,
     },
   ],
 });

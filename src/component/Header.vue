@@ -6,6 +6,9 @@
     <router-link to="/StoreListTable" class="select-none">
       <h4 class="text-white select-none">店家列表</h4>
     </router-link>
+    <router-link to="/TestPage" class="select-none">
+      <h4 class="text-white select-none">測試</h4>
+    </router-link>
   </header>
 </template>
 
