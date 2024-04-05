@@ -74,6 +74,7 @@ const stopCopyImage = () => {
   imageElement.setAttribute("style", "user-select: none;");
 };
 
+console.log(process.env.NODE_ENV);
 onMounted(async function () {
   Promise.all([getStoreList(), stopCopyImage()]);
 });

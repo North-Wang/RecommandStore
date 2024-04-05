@@ -6,7 +6,7 @@
     <router-link to="/StoreListTable" class="select-none">
       <h4 class="text-white select-none">店家列表</h4>
     </router-link>
-    <router-link to="/TestPage" class="select-none">
+    <router-link to="/TestPage" class="select-none" v-if="env === 'development'">
       <h4 class="text-white select-none">測試</h4>
     </router-link>
   </header>
@@ -14,6 +14,10 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
+
+const env = computed(()=>{
+  return process.env.NODE_ENV
+})
 </script>
 <style scoped>
 header {
