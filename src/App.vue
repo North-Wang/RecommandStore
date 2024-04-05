@@ -29,11 +29,10 @@ const setOption = async function () {
   storeInfo.setAllOption();
 };
 const getStoreList = async function () {
+  const url = "https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/餐廳?key=AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
   try {
     axios
-      .get(
-        "https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/工作表1?key=AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
-      )
+      .get(url)
       .then((result) => {
         console.log("成功取得店家資訊", result);
         const titleList = result.data.values[0];
