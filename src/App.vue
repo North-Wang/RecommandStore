@@ -29,7 +29,8 @@ const setOption = async function () {
   storeInfo.setAllOption();
 };
 const getStoreList = async function () {
-  const url = "https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/餐廳?key=AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
+  const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/餐廳?key=${sheetId}`
   try {
     axios
       .get(url)
@@ -74,7 +75,6 @@ const stopCopyImage = () => {
   imageElement.setAttribute("style", "user-select: none;");
 };
 
-console.log(process.env.NODE_ENV);
 onMounted(async function () {
   Promise.all([getStoreList(), stopCopyImage()]);
 });

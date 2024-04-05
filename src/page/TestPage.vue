@@ -19,26 +19,19 @@ const testStore = ref({
   tag: "划算、吃飽",
   權重: 1,
 });
+const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
 const url = ref(
-  "https://script.google.com/macros/s/AKfycbx-XiVtX2xlSdyIlfF7CoAsBau8Q6rJ4gQtMJeMG0gA0De4Tr_rojqBE-egZEw2u7xsFQ/exec"
+  `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/住宿`
 );
-console.log("google script:", url.value);
+
 function addStore() {
-  const data = {
-    redirect: "follow",
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8",
-    },
-    body: JSON.stringify(testStore.value),
-  };
-  try {
-    axios.post(url.value, data).then((res) => {
-      console.log("res", res);
-    });
-  } catch (error) {
-    console.log("連線有誤", error);
-  }
+ try {
+  axios.post(url, testStore).then((res)=>{
+    console.log("res", res)
+  })
+ } catch (error) {
+  console.log("新增店家失敗", error)
+ }
 }
 </script>
 
