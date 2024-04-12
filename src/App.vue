@@ -29,37 +29,36 @@ const setOption = async function () {
   storeInfo.setAllOption();
 };
 const getStoreList = async function () {
-  const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/餐廳?key=${sheetId}`
+  const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
+  const name = "餐廳";
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/${name}?key=${sheetId}`;
   try {
-    axios
-      .get(url)
-      .then((result) => {
-        console.log("成功取得店家資訊", result);
-        const titleList = result.data.values[0];
-        const storeList = result.data.values.slice(1);
+    axios.get(url).then((result) => {
+      console.log("成功取得店家資訊", result);
+      const titleList = result.data.values[0];
+      const storeList = result.data.values.slice(1);
 
-        storeList.forEach((store) => {
-          allStoreInfo.value.push({
-            name: store[0],
-            type: store[1],
-            purple: store[2],
-            address: store[3],
-            addressTag: store[4].split(/[,，、]/),
-            feature: store[5],
-            category: store[6],
-            weight: store[7],
-          });
+      storeList.forEach((store) => {
+        allStoreInfo.value.push({
+          name: store[0],
+          type: store[1],
+          purple: store[2],
+          address: store[3],
+          addressTag: store[4].split(/[,，、]/),
+          feature: store[5],
+          category: store[6],
+          weight: store[7],
         });
-        // console.log("全部的店家資訊", allStoreInfo.value);
-
-        //update data to Pinia
-        storeInfo.storeList = allStoreInfo.value;
-        storeInfo.titleList = titleList;
-
-        //get all options
-        setOption();
       });
+      // console.log("全部的店家資訊", allStoreInfo.value);
+
+      //update data to Pinia
+      storeInfo.storeList = allStoreInfo.value;
+      storeInfo.titleList = titleList;
+
+      //get all options
+      setOption();
+    });
   } catch (error) {
     console.log("連線有誤", error);
   }
