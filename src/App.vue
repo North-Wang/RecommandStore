@@ -2,7 +2,7 @@
   <div class="flex flex-col w-screen">
     <Loading v-if="isLoading" />
     <Header></Header>
-    <routerView class="px-2 py-4 flex-1 lg:px-6 lg:py-4"></routerView>
+    <routerView class="flex-1"></routerView>
     <!-- <Footer class="" /> -->
   </div>
 </template>
@@ -64,18 +64,8 @@ const getStoreList = async function () {
   }
 };
 
-const stopCopyImage = () => {
-  const imageElement = document.querySelectorAll("img");
-  if (imageElement.length === 0) {
-    return;
-  }
-  imageElement.setAttribute("oncentextmenu", "return false");
-  imageElement.setAttribute("style", "pointer-events: none;");
-  imageElement.setAttribute("style", "user-select: none;");
-};
-
 onMounted(async function () {
-  Promise.all([getStoreList(), stopCopyImage()]);
+  Promise.all([getStoreList()]);
 });
 </script>
 

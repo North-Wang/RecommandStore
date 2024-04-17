@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Homepage from "../page/Homepage.vue";
+// import Homepage from "../page/Homepage.vue";
+import Homepage from "../page/HomepageNew.vue";
+import FilterResult from "../page/FilterResult.vue";
 import StoreListTable from "../page/StoreListTable.vue";
 import TestPage from "../page/TestPage.vue";
 
@@ -20,6 +22,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Homepage,
+    },
+    {
+      path: "/",
+      name: "FilterResult",
+      component: FilterResult,
     },
     {
       path: "/StoreListTable",

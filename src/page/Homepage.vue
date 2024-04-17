@@ -1,5 +1,9 @@
 <template>
-  <ul class="flex flex-col items-center select-none" id="homepage">
+  <ul
+    class="flex flex-col items-center select-none bg-gradient-to-b from-[#ffffff] to-[#81b8ff]"
+    id="homepage"
+    style=""
+  >
     <!-- <button @click="addNewStore">新增店家</button> -->
     <li
       class="w-[96%] flex flex-col justify-center items-center mt-4 text-center"
