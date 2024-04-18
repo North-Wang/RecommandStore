@@ -1,6 +1,8 @@
 <template>
   <!-- bg-sky-700 -->
-  <header class="gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a]">
+  <header
+    class="w-dvw gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a]"
+  >
     <img
       :src="moreOptionWhite"
       alt="更多選項"
@@ -35,7 +37,6 @@ const showMoreOption = ref(false);
 <style scoped>
 header {
   height: 60px;
-  width: 100dvw;
   display: flex;
   justify-content: center;
   align-items: center;

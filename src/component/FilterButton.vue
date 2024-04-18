@@ -13,9 +13,13 @@
 
 <script setup>
 import { ref, Teleport, defineEmits } from "vue";
+import { useRouter } from "vue-router";
 
 const emits = defineEmits("filter");
+const router = useRouter();
+
 function deFilter() {
   //   emits("filter");
+  router.push("/FilterResult");
 }
 </script>

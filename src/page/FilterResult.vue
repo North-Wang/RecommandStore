@@ -1,5 +1,5 @@
 <template>
-  <div>篩選結果</div>
+  <div class="from-[#fdfbfb] to-[#ebedee]">篩選結果</div>
 </template>
 
 <script setup>

@@ -24,7 +24,7 @@ const router = createRouter({
       component: Homepage,
     },
     {
-      path: "/",
+      path: "/FilterResult",
       name: "FilterResult",
       component: FilterResult,
     },
