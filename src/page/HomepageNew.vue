@@ -5,9 +5,10 @@
     <div
       class="w-screen h-2/5 bg-[#1B1A1A]/90 text-white flex flex-column items-center justify-between"
     >
-      <div class="w-[80%] mt-[56px]">
-        <h1 class="">RECOMMEND</h1>
-        <h1 class="">STORE</h1>
+      <div class="w-[80%] mt-[56px]">        
+        <h1 class="" v-if="isMobile">RECOMMEND</h1>
+        <h1 class="" v-if="isMobile">STORE</h1>
+        <h1 class="text-center" v-if="!isMobile">RECOMMEND STORE</h1>
         <h2>Choose the best place</h2>
       </div>
       <input
@@ -30,11 +31,10 @@ import {
   Transition,
   Teleport,
 } from "vue";
-
-
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
+import isMobileDevice from "../js/isMobileDevice"
 
 import FilterButton from "../component/FilterButton.vue";
 
@@ -42,9 +42,13 @@ const storeInfo = useStoreInfo();
 const loading = useLoading();
 const { storeList, titleList, storeListAfterFilterType } =
   storeToRefs(storeInfo);
-
+const isMobile = isMobileDevice()
 
 function doFilter(params) {}
+
+onMounted(()=>{
+  
+})
 </script>
 
 <style scoped>

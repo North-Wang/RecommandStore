@@ -16,7 +16,8 @@ module.exports = {
         "2xl": "1536px",
       },
       colors: {
-        blue: "#4baaf5",
+        blue:"#4baaf5", 
+        secondBlue:"#87D4FF",
       },
     },
   },
