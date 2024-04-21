@@ -6,9 +6,9 @@
       class="w-screen h-2/5 bg-[#1B1A1A]/90 text-white flex flex-column items-center justify-between"
     >
       <div class="w-[80%] mt-[56px]">        
-        <h1 class="" v-if="isMobile">RECOMMEND</h1>
-        <h1 class="" v-if="isMobile">STORE</h1>
-        <h1 class="text-center" v-if="!isMobile">RECOMMEND STORE</h1>
+        <!-- <h1 class="" v-if="isMobile">RECOMMEND</h1>
+        <h1 class="" v-if="isMobile">STORE</h1> -->
+        <h1 class="text-left break-keep text-[48px] md:text-[64px]" >RECOMMEND STORE</h1>
         <h2>Choose the best place</h2>
       </div>
       <input
@@ -58,7 +58,6 @@ onMounted(()=>{
   background-size:contain;
 } */
 h1 {
-  font-size: 64px;
   line-height: 1;
   text-wrap: wrap;
   text-align: left;

@@ -4,8 +4,9 @@
             <h3 class="py-[20px]">
                 店家列表
             </h3>
-            <div class="flex justify-between px-2 pb-2">
+            <div class="flex justify-between px-2 pb-2 relative">
                 <input type="text" placeholder="請輸入店家名稱">
+                <span class="pi pi-search absolute"></span>
                 <span>共{{storeList.length?.toLocaleString()}}筆資料</span>
                 
             </div>
@@ -15,10 +16,12 @@
             :first="0" 
             :rows="rows" 
             :pageLinkSize="3"
-            template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink " 
+            template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink  " 
             @page="onPage($event)"
-        />
-        <div v-for="(store, index) in currentPageStore" :key="index" class="store">
+        >
+        </Paginator>
+        <div v-for="(store, index) in currentPageStore" :key="index" class="store" v-if="isMobile">
+            
             <h3 class="title">{{ store?.name }}</h3>
             <!-- v-if="store?.address && moreOptionMap.has(store?.name)" -->
             <h4 class="address"  > 
@@ -43,11 +46,16 @@
                <div class="text-left my-1">備註：</div> 
                <textarea name="" id="" cols="5" rows="5"  /> 
             </ul>
-            <ul class="flex justify-end">
-                <button class="h-8 w-[72px] text-left bg-inherit text-blue  hover:bg-[#4baaf5] hover:text-white" @click="toggleShowMoreOption(store?.name)">                        
+            <ul class="flex justify-end items-center h-8 mt-2">
+                <li class="flex gap-x-2 items-center">
+                    <img :src="editIcon" alt="editIcon" class="h-6 ursor-not-allowed">
+                
+                    <button class=" w-[72px] text-left bg-inherit text-blue  hover:bg-[#4baaf5] hover:text-white" @click="toggleShowMoreOption(store?.name)">                        
                         <div v-if="moreOptionMap.has(store?.name)">close</div>
                         <div v-else>more...</div>    
                     </button>
+                </li>
+                
             </ul>
             
         </div>
@@ -66,7 +74,12 @@
 import {ref, computed,watch, onMounted} from "vue"
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
+import isMobileDevice from "../js/isMobileDevice";
 import Paginator from 'primevue/paginator';
+import 'primeicons/primeicons.css'
+
+//picure
+import editIcon from "../assets/editIcon.svg"
 
 const storeInfo = useStoreInfo();
 const { storeList, titleList, allTypeOption, allPurpleOption, allAddressTag } =
@@ -77,7 +90,7 @@ const total = computed(()=>{
 const rows = ref(10) //一頁顯示幾筆資料
 const currentPageStore = ref([]) //篩選完的店家資料
 const moreOptionMap = ref(new Map())
-const buttonText = ref("more...")
+const isMobile = isMobileDevice()
 
 console.log("所有店家", storeList.value)
 
@@ -105,10 +118,16 @@ section{
     background-color: black;
     color: white;
 }
+input[type="text"]{
+    border-radius: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
 .store{
     padding: 12px 20px;
     border-bottom: 0.5px solid black;
     position: relative;
+    background: white;
     h3{
         border-bottom: 0.5px solid #929292;
     }
@@ -152,6 +171,8 @@ section{
         width: 100%;
         padding: 8px;
         height: 56px;
+        border: 1px solid gray;
+        border-radius: 5px;
     }
     
 }
