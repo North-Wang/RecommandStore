@@ -12,6 +12,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createPersistedState } from "pinia-plugin-persistedstate";
 
 //ccs
+import "./reset.css"
 import "./style.css";
 import "animate.css";
 

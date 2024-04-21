@@ -1,5 +1,5 @@
 <template>
-  <div class="from-[#fdfbfb] to-[#ebedee]">篩選結果</div>
+  <div class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">篩選結果</div>
 </template>
 
 <script setup>

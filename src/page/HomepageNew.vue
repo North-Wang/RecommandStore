@@ -1,5 +1,5 @@
 <template>
-  <div
+  <main
     class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] relative flex justify-center"
   >
     <div
@@ -18,7 +18,7 @@
       />
     </div>
     <FilterButton />
-  </div>
+  </main>
 </template>
 
 <script setup>
@@ -29,8 +29,8 @@ import {
   computed,
   Transition,
   Teleport,
-  provide,
 } from "vue";
+
 
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
@@ -43,10 +43,16 @@ const loading = useLoading();
 const { storeList, titleList, storeListAfterFilterType } =
   storeToRefs(storeInfo);
 
+
 function doFilter(params) {}
 </script>
 
 <style scoped>
+/* main{
+  background-image: url("../assets/cityView.png");
+  background-repeat: no-repeat;
+  background-size:contain;
+} */
 h1 {
   font-size: 64px;
   line-height: 1;

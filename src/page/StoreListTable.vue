@@ -116,8 +116,6 @@ const { storeList, titleList, allTypeOption, allPurpleOption, allAddressTag } =
   storeToRefs(storeInfo);
 const storeTable = ref([]);
 const loading = useLoading();
-const isDarkMode = detectiveDarkMode();
-const isMobile = isMobileDevice();
 const keywordStore = ref("");
 const keywordFeature = ref("");
 const loadingTable = ref(false);

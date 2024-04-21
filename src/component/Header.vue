@@ -1,7 +1,6 @@
 <template>
-  <!-- bg-sky-700 -->
   <header
-    class="w-dvw gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a]"
+    class="header w-dvw gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a] text-base"
   >
     <img
       :src="moreOptionWhite"
@@ -9,15 +8,11 @@
       class="w-[32px] absolute left-3 top-[15px] rotate-90 cursor-pointer"
       @click="showMoreOption = !showMoreOption"
     />
-    <router-link to="/" class="select-none">
-      <h4 class="text-white select-none">HOME</h4>
+    <div v-for="route in routerList" :key="route">
+      <router-link :to="route.path" class="select-none">
+      <span class="text-white select-none">{{ route.name }}</span>
     </router-link>
-    <router-link to="/" class="select-none">
-      <h4 class="text-white select-none">測試挑選</h4>
-    </router-link>
-    <router-link to="/StoreListTable" class="select-none">
-      <h4 class="text-white select-none">店家列表</h4>
-    </router-link>
+    </div>
   </header>
 </template>
 
@@ -33,9 +28,18 @@ const env = computed(() => {
 });
 
 const showMoreOption = ref(false);
+const routerList = ref([
+  {path:"/", name:"首頁", },
+  // {path:"/", name:"測驗跳選", },
+  {path:"/StoreListTable", name:"店家列表", }
+])
+
+
 </script>
-<style scoped>
-header {
+
+
+<style scoped lang="scss">
+.header {
   height: 60px;
   display: flex;
   justify-content: center;

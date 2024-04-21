@@ -1,9 +1,8 @@
 <template>
-  <div class="flex flex-col w-screen h-dvh">
+  <div class="flex flex-col w-screen min-h-screen">   
     <Loading v-if="isLoading" />
     <Header></Header>
     <routerView class="flex-1"></routerView>
-    <!-- <Footer class="" /> -->
   </div>
 </template>
 

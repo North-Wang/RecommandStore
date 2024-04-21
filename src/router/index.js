@@ -1,12 +1,13 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 // import Homepage from "../page/Homepage.vue";
 import Homepage from "../page/HomepageNew.vue";
 import FilterResult from "../page/FilterResult.vue";
-import StoreListTable from "../page/StoreListTable.vue";
+// import StoreListTable from "../page/StoreListTable.vue";
+import StoreListTable from "../page/StoreListTableNew.vue"
 import TestPage from "../page/TestPage.vue";
 
 const router = createRouter({
-  history: createWebHashHistory(""), //如果填入"/object"，這樣進去每個分頁的前面都會有/object
+  history: createWebHashHistory(), //如果填入"/object"，這樣進去每個分頁的前面都會有/object
   scrollBehavior(to, from, savedPosition) {
     //進到頁面都會回到頂端
     return { top: 0, behavior: "smooth" };
@@ -21,6 +22,11 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
+      component: Homepage,
+    },
+    {
+      path: "/home",
+      name: "Homepage",
       component: Homepage,
     },
     {

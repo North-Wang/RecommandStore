@@ -1,8 +1,8 @@
 <template>
   <Teleport to="#app">
-    <ul class="w-dvw h-[96px] flex justify-center fixed bottom-[160px]">
+    <ul class="w-full h-[96px] flex justify-center fixed bottom-[150px]">
       <h3
-        class="w-[96px] h-[96px] rounded-full bg-red-300 flex justify-center items-center text-white"
+        class="w-[96px] h-[96px] rounded-full bg-[#FF6B6B] flex justify-center items-center text-white cursor-pointer select-none"
         @click.prevent="deFilter()"
       >
         抽選
