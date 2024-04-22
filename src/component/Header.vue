@@ -10,8 +10,8 @@
     />
     <div v-for="route in routerList" :key="route">
       <router-link :to="route.path" class="select-none">
-      <span class="text-white select-none">{{ route.name }}</span>
-    </router-link>
+        <span class="text-white select-none">{{ route.name }}</span>
+      </router-link>
     </div>
   </header>
 </template>
@@ -29,14 +29,12 @@ const env = computed(() => {
 
 const showMoreOption = ref(false);
 const routerList = ref([
-  {path:"/", name:"首頁", },
+  { path: "/", name: "首頁" },
   // {path:"/", name:"測驗跳選", },
-  {path:"/StoreListTable", name:"店家列表", }
-])
-
-
+  { path: "/StoreListTable", name: "店家列表" },
+  { path: "/ContactMe", name: "聯絡我" },
+]);
 </script>
-
 
 <style scoped lang="scss">
 .header {
