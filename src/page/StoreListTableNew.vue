@@ -4,14 +4,14 @@
   >
     <section>
       <h3 class="py-[20px]">店家列表</h3>
-      <div class="flex justify-between px-2 pb-2 relative">
+      <div class="flex justify-center px-2 pb-2 relative">
         <input
           type="text"
           placeholder="請輸入店家名稱"
-          class="w-full text-center"
+          class="w-full text-center max-w-[300px] text-black dark:text-white"
         />
         <span
-          class="pi pi-search absolute left-[50px] top-[10px] text-black"
+          class="pi pi-search absolute left-[50px] top-[10px]text-black"
         ></span>
       </div>
       <div>共{{ storeList.length?.toLocaleString() }}筆資料</div>
@@ -76,6 +76,7 @@
       </ul>
     </div>
     <Paginator
+      class="fixed bottom-0 w-full"
       :totalRecords="total"
       :first="0"
       :rows="rows"
@@ -197,6 +198,8 @@ input[type="text"] {
   justify-content: center;
   background-color: black;
   color: white;
+  padding-top: 8px;
+  padding-bottom: 8px;
   .p-paginator-element {
     padding: 8px 12px;
   }
