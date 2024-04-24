@@ -59,9 +59,10 @@ button {
   justify-content: center;
   align-items: center;
 }
-/* button:hover {
-  border-color: #646cff;
+button:hover {
+  background-color: #c1e4ff;
 }
+/*
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

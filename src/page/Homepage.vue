@@ -152,15 +152,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  watch,
-  computed,
-  Transition,
-  Teleport,
-  provide,
-} from "vue";
+import { ref, onMounted, watch, computed, Transition } from "vue";
 import axios from "axios";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";

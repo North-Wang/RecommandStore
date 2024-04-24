@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li>test</li>
-    <button @click="addStore">送出</button>
+    <!-- <button @click="addStore">送出</button> -->
   </ul>
 </template>
 
@@ -19,19 +19,19 @@ const testStore = ref({
   tag: "划算、吃飽",
   權重: 1,
 });
-const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU"
+const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
 const url = ref(
   `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/住宿`
 );
 
 function addStore() {
- try {
-  axios.post(url, testStore).then((res)=>{
-    console.log("res", res)
-  })
- } catch (error) {
-  console.log("新增店家失敗", error)
- }
+  try {
+    axios.post(url, testStore).then((res) => {
+      console.log("res", res);
+    });
+  } catch (error) {
+    console.log("新增店家失敗", error);
+  }
 }
 </script>
 

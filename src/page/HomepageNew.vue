@@ -5,50 +5,43 @@
     <div
       class="w-screen h-2/5 bg-[#1B1A1A]/90 text-white flex flex-column items-center justify-between"
     >
-      <div class="w-[80%] mt-[56px]">        
-        <!-- <h1 class="" v-if="isMobile">RECOMMEND</h1>
-        <h1 class="" v-if="isMobile">STORE</h1> -->
-        <h1 class="text-left break-keep text-[48px] md:text-[64px]" >RECOMMEND STORE</h1>
-        <h2>Choose the best place</h2>
+      <div class="w-[80%] mt-[56px]">
+        <h1 class="text-left break-keep text-[48px] md:text-[64px] font-black">
+          RECOMMEND STORE
+        </h1>
+        <h2 class="font-bold">Choose the best place</h2>
       </div>
-      <input
-        type="text"
-        value="尋找理想中的地點"
-        class="w-[80%] rounded-lg"
-        readonly
-      />
     </div>
-    <FilterButton />
+    <!-- <FilterButton /> -->
+    <button
+      class="fixed bottom-[150px] z-40 w-3/5"
+      @click="router.push('/FilterResult')"
+    >
+      START
+    </button>
   </main>
 </template>
 
 <script setup>
-import {
-  ref,
-  onMounted,
-  watch,
-  computed,
-  Transition,
-  Teleport,
-} from "vue";
+import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
-import isMobileDevice from "../js/isMobileDevice"
+import { useRouter } from "vue-router";
+import isMobileDevice from "../js/isMobileDevice";
 
 import FilterButton from "../component/FilterButton.vue";
 
 const storeInfo = useStoreInfo();
 const loading = useLoading();
-const { storeList, titleList, storeListAfterFilterType } =
+const { storeList, titleList, storeListAfterFilterType, allTypeOption } =
   storeToRefs(storeInfo);
-const isMobile = isMobileDevice()
+const isMobile = isMobileDevice();
+const router = useRouter();
 
 function doFilter(params) {}
 
-onMounted(()=>{
-  
-})
+onMounted(() => {});
 </script>
 
 <style scoped>
