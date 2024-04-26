@@ -1,11 +1,23 @@
 <template>
-  <div class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
+  <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
     篩選結果
     <FilterButton />
-  </div>
+  </main>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import FilterButton from "../component/FilterButton.vue";
 </script>
+
+<style scoped>
+main {
+  background-image: linear-gradient(
+      rgba(255, 255, 253, 0.5),
+      rgba(32, 60, 90, 0.5)
+    ),
+    url("../assets/bgMap.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
