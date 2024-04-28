@@ -30,18 +30,23 @@ body {
 
 h1 {
   font-size: 36px;
+  line-height: 36px;
 }
 h2 {
   font-size: 28px;
+  line-height: 28px;
 }
 h3 {
   font-size: 24px;
+  line-height: 24px;
 }
 h4 {
   font-size: 16px;
+  line-height: 16px;
 }
 h5 {
   font-size: 12px;
+  line-height: 12px;
 }
 
 button {
@@ -62,13 +67,9 @@ button {
   line-height: 40px;
 }
 button:hover {
-  background-color: #c1e4ff;
+  background-color: #4baaf5;
+  color: white;
 }
-/*
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
 
 .card {
   padding: 2em;
@@ -85,9 +86,12 @@ hr {
 hr:not {
   height: 16px;
 }
+.tag{
+  padding: 10px 12px;
+  border-radius: 5px;
+}
 
 #app {
-  /* max-width: 1280px; */
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -109,17 +113,22 @@ hr:not {
 @media (min-width: 1000px) {
   h1 {
     font-size: 48px;
+    line-height: 48px;
   }
   h2 {
     font-size: 40px;
+    line-height: 40px;
   }
   h3 {
     font-size: 36px;
+    line-height: 36px;
   }
   h4 {
     font-size: 32px;
+    line-height: 32px;
   }
   h5 {
     font-size: 24px;
+    line-height: 24px;
   }
 }

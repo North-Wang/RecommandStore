@@ -4,16 +4,14 @@
   >
     <section>
       <h3 class="py-[20px]">店家列表</h3>
-      <div class="flex justify-center px-2 pb-2 relative">
+      <span
+          class="pi pi-search absolute left-[50px] top-[10px]text-black"
+        ></span>
         <input
           type="text"
           placeholder="請輸入店家名稱"
-          class="w-full text-center max-w-[300px] text-black dark:text-white"
+          class=" text-center  text-black dark:text-white lg:max-w-[300px]"
         />
-        <span
-          class="pi pi-search absolute left-[50px] top-[10px]text-black"
-        ></span>
-      </div>
       <div>共{{ storeList.length?.toLocaleString() }}筆資料</div>
     </section>
     <Paginator
@@ -42,10 +40,10 @@
 
       <ul class="tag-wraaper mt-[12px]">
         <li v-for="purples in store?.purple.split('、')" v-if="store?.purple">
-          <div class="tag bg-[#FFDA7B]">{{ purples }}</div>
+          <div class="tag bg-yellow">{{ purples }}</div>
         </li>
         <li v-for="addressTags in store?.addressTag" v-if="store?.addressTag">
-          <div class="tag bg-secondBlue">{{ addressTags }}</div>
+          <div class="tag bg-blue">{{ addressTags }}</div>
         </li>
       </ul>
       <li class="tag-wraaper mt-2">
