@@ -2,7 +2,7 @@
 <template>
   <Teleport to="body">
     <ul class="wrapper-filter">
-      <li class="px-[20px] py-[16px]">
+      <li class="px-[12px] py-[12px]" style="border-bottom: 1px solid white">
         <img
           :src="iconX"
           alt="x"
@@ -15,7 +15,7 @@
       </h3>
       <li class="container">
         <h3 class="title">LOCATION 地點</h3>
-        <ul>
+        <ul class="">
           <li></li>
         </ul>
       </li>
@@ -43,9 +43,13 @@
           <li></li>
         </ul>
       </li>
-      <li class="px-[20px] py-[24px] text-white flex justify-between">
+      <li
+        class="w-screen px-[20px] py-[24px] text-white flex justify-between fixed bottom-[76px]"
+      >
         <button class="bg-red">確認</button>
-        <button class="bg-red" @click.self="closeModal()">取消</button>
+        <button class="bg-white text-red" @click.self="closeModal()">
+          取消
+        </button>
       </li>
     </ul>
   </Teleport>
@@ -87,6 +91,12 @@ function closeModal() {
     .title {
       font-family: "Francois One", "Arial Narrow", Arial, sans-serif;
     }
+    > ul {
+      display: grid;
+    }
   }
+}
+button {
+  width: 144px;
 }
 </style>
