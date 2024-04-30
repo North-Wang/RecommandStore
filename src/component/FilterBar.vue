@@ -33,22 +33,21 @@
     </li>
     <li class="container">
       <h3 class="title">SHOPPING AREA 商圈標籤</h3>
-      <ul class="wrapper-tag">
-        <li
+      <div class="wrapper-tag">
+        <label
+          :for="items"
           class="tag bg-slate-200 flex-1"
           v-for="items in allAddressTag"
           :key="items"
-        >
-          <input
+          >{{ items
+          }}<input
             type="radio"
             :value="items"
             :id="items"
             name="address-tag"
             class="text-[16px] mr-1"
-          />
-          <label :for="items">{{ items }}</label>
-        </li>
-      </ul>
+        /></label>
+      </div>
     </li>
     <li class="container">
       <h3 class="title">PURPLE 目的</h3>
@@ -122,7 +121,7 @@ function closeModal() {
   }
 }
 .wrapper-tag {
-  max-height: 132px;
+  max-height: 136px;
   display: flex;
   flex-wrap: wrap;
   column-gap: 8px;
@@ -134,7 +133,8 @@ function closeModal() {
   overflow: auto;
   .tag {
     padding: 8px 12px;
-    // flex-grow: 1;
+    white-space: nowrap;
+    text-wrap: nowrap;
   }
 }
 </style>
