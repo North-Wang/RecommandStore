@@ -5,13 +5,13 @@
     <section>
       <h3 class="py-[20px]">店家列表</h3>
       <span
-          class="pi pi-search absolute left-[50px] top-[10px]text-black"
-        ></span>
-        <input
-          type="text"
-          placeholder="請輸入店家名稱"
-          class=" text-center  text-black dark:text-white lg:max-w-[300px]"
-        />
+        class="pi pi-search absolute left-[50px] top-[10px]text-black"
+      ></span>
+      <input
+        type="text"
+        placeholder="請輸入店家名稱"
+        class="text-center text-black dark:text-white lg:max-w-[300px]"
+      />
       <div>共{{ storeList.length?.toLocaleString() }}筆資料</div>
     </section>
     <Paginator
@@ -38,7 +38,7 @@
         {{ store?.feature }}
       </h4>
 
-      <ul class="tag-wraaper mt-[12px]">
+      <ul class="wrapper-tag mt-[12px]">
         <li v-for="purples in store?.purple.split('、')" v-if="store?.purple">
           <div class="tag bg-yellow">{{ purples }}</div>
         </li>
@@ -46,7 +46,7 @@
           <div class="tag bg-blue">{{ addressTags }}</div>
         </li>
       </ul>
-      <li class="tag-wraaper mt-2">
+      <li class="wrapper-tag mt-2">
         <ul v-for="cates in store?.category.split('、')" v-if="store?.category">
           <li class="tag bg-[#d6d6d6]">{{ cates }}</li>
         </ul>
@@ -169,7 +169,7 @@ input[type="text"] {
     overflow: hidden;
     padding-bottom: 8px;
   }
-  .tag-wraaper {
+  .wrapper-tag {
     display: flex;
     flex-wrap: wrap;
     column-gap: 8px;

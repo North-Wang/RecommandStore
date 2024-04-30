@@ -1,6 +1,5 @@
 <template>
   <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
-    <FilterBar />
     <section class="">
       <h3 class="py-[20px]">篩選結果</h3>
       <h4>
@@ -8,7 +7,9 @@
       </h4>
       <ul class="flex justify-center mt-5">
         <li class="rounded-lg wrapper-result">
-          <h3 class="" :v-tooltip.bottom="result?.name">{{ result?.name }}</h3>
+          <h3 class="" :v-tooltip.bottom="result?.name">
+            {{ result?.name }}
+          </h3>
           <h3 class="text-darkYellow" v-if="result?.feature">
             {{ result?.feature }}
           </h3>
@@ -54,8 +55,6 @@ import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import Tooltip from "primevue/tooltip";
-
-import FilterBar from "../component/FilterBar.vue";
 
 import copyIcon from "../assets/copy.svg";
 

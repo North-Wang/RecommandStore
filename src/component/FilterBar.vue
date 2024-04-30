@@ -1,58 +1,82 @@
 <!-- 篩選器彈窗 -->
 <template>
-  <Teleport to="body">
-    <ul class="wrapper-filter">
-      <li class="px-[12px] py-[12px]" style="border-bottom: 1px solid white">
-        <img
-          :src="iconX"
-          alt="x"
-          class="w-[30px] h-[32px] cursor-pointer"
-          @click.self="closeModal"
-        />
-      </li>
-      <h3 class="container text-center">
-        總共有{{ storeListAfterFilterType.length || "- -" }}筆資料符合
-      </h3>
-      <li class="container">
-        <h3 class="title">LOCATION 地點</h3>
-        <ul class="">
-          <li></li>
-        </ul>
-      </li>
-      <li class="container">
-        <h3 class="title">SHOPPING AREA 商圈標籤</h3>
-        <ul>
-          <li></li>
-        </ul>
-      </li>
-      <li class="container">
-        <h3 class="title">PURPLE 目的</h3>
-        <ul>
-          <li></li>
-        </ul>
-      </li>
-      <li class="container">
-        <h3 class="title">FEATURE 特色</h3>
-        <ul>
-          <li></li>
-        </ul>
-      </li>
-      <li class="container">
-        <h3 class="title">TYPES 種類</h3>
-        <ul>
-          <li></li>
-        </ul>
-      </li>
-      <li
-        class="w-screen px-[20px] py-[24px] text-white flex justify-between fixed bottom-[76px]"
-      >
-        <button class="bg-red">確認</button>
-        <button class="bg-white text-red" @click.self="closeModal()">
-          取消
+  <ul class="wrapper-filter">
+    <li class="px-[12px] py-[12px]" style="border-bottom: 1px solid white">
+      <img
+        :src="iconX"
+        alt="x"
+        class="w-[30px] h-[32px] cursor-pointer"
+        @click.self="closeModal"
+      />
+    </li>
+    <h3 class="container text-center">
+      總共有{{ storeListAfterFilterType.length || "- -" }}筆資料符合
+    </h3>
+    <li class="container">
+      <h3 class="title">TYPE 類型</h3>
+      <ul class="flex gap-[8px]">
+        <button
+          class="px-[12px] py-[8px] flex bg-slate-200 rounded-lg text-black"
+          v-for="types in allTypeOption"
+          :key="types"
+        >
+          <input
+            type="radio"
+            :value="types"
+            :id="types"
+            name="types"
+            class="text-[16px] mr-1"
+          />
+          <label :for="types">{{ types }}</label>
         </button>
-      </li>
-    </ul>
-  </Teleport>
+      </ul>
+    </li>
+    <li class="container">
+      <h3 class="title">SHOPPING AREA 商圈標籤</h3>
+      <ul class="wrapper-tag">
+        <li
+          class="tag bg-slate-200 flex-1"
+          v-for="items in allAddressTag"
+          :key="items"
+        >
+          <input
+            type="radio"
+            :value="items"
+            :id="items"
+            name="address-tag"
+            class="text-[16px] mr-1"
+          />
+          <label :for="items">{{ items }}</label>
+        </li>
+      </ul>
+    </li>
+    <li class="container">
+      <h3 class="title">PURPLE 目的</h3>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li class="container">
+      <h3 class="title">FEATURE 特色</h3>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li class="container">
+      <h3 class="title">TYPES 種類</h3>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li
+      class="w-screen px-[20px] py-[24px] text-white flex justify-between fixed bottom-[76px]"
+    >
+      <button class="bg-red flex-1">確認</button>
+      <button class="bg-white text-red flex-1" @click.self="closeModal()">
+        取消
+      </button>
+    </li>
+  </ul>
 </template>
 
 <script setup>
@@ -66,7 +90,8 @@ import iconX from "../assets/X.svg";
 const emits = defineEmits(["closeModal"]);
 
 const storeInfo = useStoreInfo();
-const { storeListAfterFilterType } = storeToRefs(storeInfo);
+const { storeListAfterFilterType, allTypeOption, allAddressTag } =
+  storeToRefs(storeInfo);
 
 function closeModal() {
   console.log("關閉彈窗");
@@ -81,13 +106,13 @@ function closeModal() {
   color: white;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0);
   position: absolute;
   z-index: 50;
   .container {
     padding: 24px 20px;
     border-bottom: 1px solid white;
-    background-color: rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 0.8);
     .title {
       font-family: "Francois One", "Arial Narrow", Arial, sans-serif;
     }
@@ -96,7 +121,20 @@ function closeModal() {
     }
   }
 }
-button {
-  width: 144px;
+.wrapper-tag {
+  max-height: 132px;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 8px;
+  margin-top: 8px;
+  color: black;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: auto;
+  .tag {
+    padding: 8px 12px;
+    // flex-grow: 1;
+  }
 }
 </style>

@@ -2,11 +2,20 @@
   <header
     class="header w-dvw gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a] text-base"
   >
+    <Teleport to="body">
+      <Transition
+        enter-active-class="animate__animated animate__slideInLeft animate__faster"
+        leave-active-class="animate__animated animate__slideOutLeft animate__faster"
+      >
+        <FilterBar v-if="showFilterBar" @closeModal="showFilterBar = false" />
+      </Transition>
+    </Teleport>
+
     <img
       :src="moreOptionWhite"
       alt="更多選項"
       class="w-[32px] absolute left-3 top-[15px] rotate-90 cursor-pointer"
-      @click="showMoreOption = !showMoreOption"
+      @click="showFilterBar = !showFilterBar"
     />
     <div v-for="route in routerList" :key="route">
       <router-link :to="route.path" class="select-none">
@@ -17,7 +26,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
+import FilterBar from "./FilterBar.vue";
 
 //picture
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
@@ -27,7 +37,7 @@ const env = computed(() => {
   return process.env.NODE_ENV;
 });
 
-const showMoreOption = ref(false);
+const showFilterBar = ref(false);
 const routerList = ref([
   { path: "/", name: "首頁" },
   // {path:"/", name:"測驗跳選", },
