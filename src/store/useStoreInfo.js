@@ -6,10 +6,10 @@ export const useStoreInfo = defineStore({
     storeList: [], //全部的店家資料
     storeListAfterFilterType: [], //篩選完的店家資料
     titleList: [], //所有標題
-    allTypeOption: [],
-    allPurpleOption: [],
+    allTypeOption: [], //所有type
+    allPurpleOption: [], //所有"目的"
     // allFeatureOption: [],
-    allAddressOption: [],
+    allAddressOption: [], //所有"地址"
     allCategoryOption: [],
     allAddressTag: [], //所有的商圈標籤
   }),

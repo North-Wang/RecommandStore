@@ -49,16 +49,14 @@ const loading = useLoading();
 const { allTypeOption } = storeToRefs(storeInfo);
 const isMobile = isMobileDevice();
 const router = useRouter();
-const currentType = ref(allTypeOption.value[0]);
+const currentType = ref(allTypeOption.value[0] || "餐廳");
 
 function doFilter() {
   storeInfo.filterStoreByType(currentType.value);
   router.push("/FilterResult");
 }
 
-onMounted(() => {
-  console.log("aaa currentType", currentType.value);
-});
+onMounted(() => {});
 </script>
 
 <style scoped>
@@ -75,7 +73,7 @@ h1 {
   line-height: 1;
   text-wrap: wrap;
   text-align: left;
-  /* letter-spacing: -0.025em; */
+  font-family: "Francois One", sans-serif;
 }
 /* h2 {
   margin-top: 16px;

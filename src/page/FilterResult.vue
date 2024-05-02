@@ -26,7 +26,7 @@
             </li>
           </ul>
           <ul class="wrapper-tag" v-if="result?.purple">
-            <li v-for="tags in result?.feature.split('、')">
+            <li v-for="tags in result?.purple.split('、')">
               <h4 class="tag bg-yellow">{{ tags }}</h4>
             </li>
           </ul>

@@ -14,9 +14,10 @@
     </h3>
     <li class="container">
       <h3 class="title">TYPE 類型</h3>
-      <ul class="flex gap-[8px]">
-        <button
-          class="px-[12px] py-[8px] flex bg-slate-200 rounded-lg text-black"
+      <ul class="wrapper-tag">
+        <label
+          :for="types"
+          class="tag bg-slate-200"
           v-for="types in allTypeOption"
           :key="types"
         >
@@ -27,33 +28,55 @@
             name="types"
             class="text-[16px] mr-1"
           />
-          <label :for="types">{{ types }}</label>
-        </button>
+          {{ types }}
+        </label>
       </ul>
     </li>
     <li class="container">
-      <h3 class="title">SHOPPING AREA 商圈標籤</h3>
-      <div class="wrapper-tag">
-        <label
-          :for="items"
-          class="tag bg-slate-200 flex-1"
-          v-for="items in allAddressTag"
-          :key="items"
-          >{{ items
-          }}<input
-            type="radio"
-            :value="items"
-            :id="items"
-            name="address-tag"
-            class="text-[16px] mr-1"
-        /></label>
-      </div>
+      <h3 class="title" @click="showAddressTag = !showAddressTag">
+        SHOPPING AREA 商圈標籤
+      </h3>
+      <Transition>
+        <div class="wrapper-tag" v-show="showAddressTag">
+          <label
+            :for="items"
+            class="tag bg-slate-200"
+            v-for="items in allAddressTag"
+            :key="items"
+          >
+            <input
+              type="radio"
+              :value="items"
+              :id="items"
+              name="address-tag"
+              class="text-[16px] mr-1"
+            />
+            {{ items }}
+          </label>
+        </div>
+      </Transition>
     </li>
     <li class="container">
-      <h3 class="title">PURPLE 目的</h3>
-      <ul>
-        <li></li>
-      </ul>
+      <h3 class="title" @click="showPurple = !showPurple">PURPLE 目的</h3>
+      <Transition>
+        <div class="wrapper-tag" v-show="showPurple">
+          <label
+            :for="items"
+            class="tag bg-slate-200"
+            v-for="items in allPurpleOption"
+            :key="items"
+          >
+            <input
+              type="radio"
+              :value="items"
+              :id="items"
+              name="address-tag"
+              class="text-[16px] mr-1"
+            />
+            {{ items }}
+          </label>
+        </div>
+      </Transition>
     </li>
     <li class="container">
       <h3 class="title">FEATURE 特色</h3>
@@ -62,13 +85,13 @@
       </ul>
     </li>
     <li class="container">
-      <h3 class="title">TYPES 種類</h3>
+      <h3 class="title">CATEGORY 種類</h3>
       <ul>
         <li></li>
       </ul>
     </li>
     <li
-      class="w-screen px-[20px] py-[24px] text-white flex justify-between fixed bottom-[76px]"
+      class="w-screen px-[20px] py-[24px] text-white flex justify-between gap-[8px]"
     >
       <button class="bg-red flex-1">確認</button>
       <button class="bg-white text-red flex-1" @click.self="closeModal()">
@@ -79,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, Teleport, defineEmits } from "vue";
+import { ref, Teleport, defineEmits, Transition } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 
@@ -87,10 +110,16 @@ import { useStoreInfo } from "../store/useStoreInfo";
 import iconX from "../assets/X.svg";
 
 const emits = defineEmits(["closeModal"]);
-
 const storeInfo = useStoreInfo();
-const { storeListAfterFilterType, allTypeOption, allAddressTag } =
-  storeToRefs(storeInfo);
+const {
+  storeListAfterFilterType,
+  allTypeOption,
+  allAddressTag,
+  allPurpleOption,
+} = storeToRefs(storeInfo);
+
+const showAddressTag = ref(false);
+const showPurple = ref(false);
 
 function closeModal() {
   console.log("關閉彈窗");
@@ -113,10 +142,7 @@ function closeModal() {
     border-bottom: 1px solid white;
     background-color: rgba(0, 0, 0, 0.8);
     .title {
-      font-family: "Francois One", "Arial Narrow", Arial, sans-serif;
-    }
-    > ul {
-      display: grid;
+      font-family: "Francois One", sans-serif;
     }
   }
 }
@@ -132,9 +158,18 @@ function closeModal() {
   -webkit-line-clamp: 3;
   overflow: auto;
   .tag {
-    padding: 8px 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
     white-space: nowrap;
     text-wrap: nowrap;
+    display: flex;
+    align-items: center;
   }
+  // .tag:hover{
+  //   background-color: #4baaf5;
+  //   color: white;
+  // }
 }
 </style>

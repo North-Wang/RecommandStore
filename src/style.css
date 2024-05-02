@@ -90,6 +90,22 @@ hr:not {
   padding: 10px 12px;
   border-radius: 5px;
 }
+input[type="radio"]{
+  width: 18px;
+  height: 18px;
+}
+label:has(input[type="radio"]:checked) {
+  background-color: #4baaf5;
+  color: white;  
+}
+input[type="checked"]{
+  width: 18px;
+  height: 18px;
+}
+label:has(input[type="checked"]:checked) {
+  background-color: #4baaf5;
+  color: white;  
+}
 
 #app {
   min-height: 100vh;
