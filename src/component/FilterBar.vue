@@ -25,71 +25,39 @@
             type="radio"
             :value="types"
             :id="types"
+            :checked="currentType === types"
             name="types"
             class="text-[16px] mr-1"
+            @change="changeType(types)"
           />
           {{ types }}
         </label>
       </ul>
     </li>
-    <li class="container">
-      <h3 class="title" @click="showAddressTag = !showAddressTag">
-        SHOPPING AREA 商圈標籤
-      </h3>
-      <Transition>
-        <div class="wrapper-tag" v-show="showAddressTag">
-          <label
-            :for="items"
-            class="tag bg-slate-200"
-            v-for="items in allAddressTag"
-            :key="items"
-          >
-            <input
-              type="radio"
-              :value="items"
-              :id="items"
-              name="address-tag"
-              class="text-[16px] mr-1"
-            />
-            {{ items }}
-          </label>
-        </div>
-      </Transition>
-    </li>
-    <li class="container">
-      <h3 class="title" @click="showPurple = !showPurple">PURPLE 目的</h3>
-      <Transition>
-        <div class="wrapper-tag" v-show="showPurple">
-          <label
-            :for="items"
-            class="tag bg-slate-200"
-            v-for="items in allPurpleOption"
-            :key="items"
-          >
-            <input
-              type="radio"
-              :value="items"
-              :id="items"
-              name="address-tag"
-              class="text-[16px] mr-1"
-            />
-            {{ items }}
-          </label>
-        </div>
-      </Transition>
-    </li>
+    <FilterList
+      :dataType="'addressTag'"
+      :data="allAddressTag"
+      :inputType="'radio'"
+      @change="changeFilter"
+    />
+    <FilterList
+      :dataType="'purple'"
+      :data="allPurpleOption"
+      :inputType="'radio'"
+      @change="changeFilter"
+    />
     <li class="container">
       <h3 class="title">FEATURE 特色</h3>
       <ul>
         <li></li>
       </ul>
     </li>
-    <li class="container">
-      <h3 class="title">CATEGORY 種類</h3>
-      <ul>
-        <li></li>
-      </ul>
-    </li>
+    <FilterList
+      :dataType="'category'"
+      :data="allCategoryOption"
+      :inputType="'checkbox'"
+      @change="changeFilter"
+    />
     <li
       class="w-screen px-[20px] py-[24px] text-white flex justify-between gap-[8px]"
     >
@@ -105,25 +73,35 @@
 import { ref, Teleport, defineEmits, Transition } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
+import { useFilter } from "../store/useFilter";
+import FilterList from "./Filterbar/FilterList.vue";
 
 //picture
 import iconX from "../assets/X.svg";
 
 const emits = defineEmits(["closeModal"]);
 const storeInfo = useStoreInfo();
+const filterInfo = useFilter();
 const {
   storeListAfterFilterType,
   allTypeOption,
   allAddressTag,
   allPurpleOption,
+  allCategoryOption,
 } = storeToRefs(storeInfo);
-
-const showAddressTag = ref(false);
-const showPurple = ref(false);
+const { type: currentType } = storeToRefs(filterInfo);
 
 function closeModal() {
   console.log("關閉彈窗");
   emits("closeModal");
+}
+
+function changeType(type) {
+  filterInfo.type = type;
+}
+
+function changeFilter(obj) {
+  console.log("篩選條件變更", obj.type, obj.option);
 }
 </script>
 

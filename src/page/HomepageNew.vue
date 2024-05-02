@@ -16,7 +16,7 @@
           <li v-for="types in allTypeOption" :key="types" class="">
             <button
               :class="currentType === types ? 'bg-blue ' : ''"
-              @click="currentType = types"
+              @click="changeType(types)"
             >
               {{ types }}
             </button>
@@ -39,21 +39,29 @@ import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useLoading } from "../store/useLoading";
+import { useFilter } from "../store/useFilter";
 import { useRouter } from "vue-router";
 import isMobileDevice from "../js/isMobileDevice";
 
 import FilterButton from "../component/FilterButton.vue";
 
 const storeInfo = useStoreInfo();
+const filterInfo = useFilter();
 const loading = useLoading();
 const { allTypeOption } = storeToRefs(storeInfo);
+const { type } = storeToRefs(filterInfo);
 const isMobile = isMobileDevice();
 const router = useRouter();
-const currentType = ref(allTypeOption.value[0] || "餐廳");
+const currentType = ref(type || allTypeOption.value[0] || "餐廳");
 
 function doFilter() {
-  storeInfo.filterStoreByType(currentType.value);
+  storeInfo.filterType(currentType.value);
   router.push("/FilterResult");
+}
+
+function changeType(type) {
+  currentType.value = type;
+  filterInfo.type = type;
 }
 
 onMounted(() => {});

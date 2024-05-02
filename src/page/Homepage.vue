@@ -275,7 +275,7 @@ watch(storeListAfterFilterType, (list) => {
 });
 watch(selectedType, async function (type) {
   //type 改變之後
-  await storeInfo.filterStoreByType(type);
+  await storeInfo.filterType(type);
   storeInfo.setAllOption();
   resetOption();
   pickup();
@@ -290,7 +290,7 @@ watch(
       filterGroup.feature.length === 0 &&
       filterGroup.category.length === 0
     ) {
-      await storeInfo.filterStoreByType(selectedType.value);
+      await storeInfo.filterType(selectedType.value);
     } else {
       suitableStoreList.value = storeListAfterFilterType.value; //reset
       await filterStore(filterGroup);
@@ -309,11 +309,11 @@ watch(address, async function (val) {
 watch(selectedAddressTag, async function (tag) {
   console.log("watch 商圈標籤", tag);
   if (tag === "") {
-    await storeInfo.filterStoreByType(selectedType.value);
+    await storeInfo.filterType(selectedType.value);
   } else {
     address.value = ""; //reset
-    await storeInfo.filterStoreByType(selectedType.value);
-    await storeInfo.filterStoreByAddressTag(tag);
+    await storeInfo.filterType(selectedType.value);
+    await storeInfo.filterAddressTag(tag);
   }
   await storeInfo.setAllOption();
   pickup();

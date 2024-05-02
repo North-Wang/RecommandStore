@@ -86,25 +86,25 @@ hr {
 hr:not {
   height: 16px;
 }
-.tag{
+.tag {
   padding: 10px 12px;
   border-radius: 5px;
 }
-input[type="radio"]{
+input[type="radio"] {
   width: 18px;
   height: 18px;
 }
 label:has(input[type="radio"]:checked) {
   background-color: #4baaf5;
-  color: white;  
+  color: white;
 }
-input[type="checked"]{
+input[type="checkbox"] {
   width: 18px;
   height: 18px;
 }
-label:has(input[type="checked"]:checked) {
+label:has(input[type="checkbox"]:checked) {
   background-color: #4baaf5;
-  color: white;  
+  color: white;
 }
 
 #app {

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-screen min-h-screen">   
+  <div class="flex flex-col w-screen min-h-screen">
     <Loading v-if="isLoading" />
     <Header></Header>
     <routerView class="flex-1"></routerView>
@@ -23,7 +23,7 @@ const allStoreInfo = ref([]); //全部的店家資訊
 
 const setOption = async function () {
   storeInfo.setTypeOption();
-  await storeInfo.filterStoreByType("餐廳");
+  await storeInfo.filterType("餐廳");
   await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 };

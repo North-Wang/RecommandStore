@@ -14,14 +14,14 @@ export const useStoreInfo = defineStore({
     allAddressTag: [], //所有的商圈標籤
   }),
   actions: {
-    filterStoreByType(type) {
+    filterType(type) {
       //根據type來決定其他option要出現出現什麼選項
       //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
       this.storeListAfterFilterType = this.storeList.filter((store) => {
         return store.type === type;
       });
     },
-    filterStoreByAddressTag(tag) {
+    filterAddressTag(tag) {
       //根據商圈標籤來決定其他option要出現出現什麼選項
       //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
       if (tag === "" || !tag) return;

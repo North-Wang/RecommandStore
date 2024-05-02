@@ -1,10 +1,10 @@
 // 儲存已經選擇的篩選條件
 import { defineStore } from "pinia";
 
-export const useLoading = defineStore({
+export const useFilter = defineStore({
   id: "filterInfo",
   state: () => ({
-    type: "",
+    type: "餐廳",
     addressTag: "",
     purple: "",
     feature: [],
