@@ -8,8 +8,8 @@ export const useStoreInfo = defineStore({
     titleList: [], //所有標題
     allTypeOption: [], //所有type
     allPurpleOption: [], //所有"目的"
-    // allFeatureOption: [],
-    allAddressOption: [], //所有"地址"
+    allFeatureOption: [],
+    // allAddressOption: [], //所有"地址"
     allCategoryOption: [],
     allAddressTag: [], //所有的商圈標籤
   }),
@@ -55,19 +55,15 @@ export const useStoreInfo = defineStore({
     },
     setAllOption() {
       const allPurple = new Set();
-      // const allFeature = new Set();
-      const allAddress = new Set();
+      // const allAddress = new Set();
+      const allFeature = new Set();
       const allCategory = new Set();
 
       this.storeListAfterFilterType.forEach((store) => {
-        //get all feature options
-        // if (!allFeature.has(store.feature)) {
-        //   allFeature.add(store.feature);
-        // }
         //get all address options
-        if (!allAddress.has(store.address)) {
-          allAddress.add(store.address);
-        }
+        // if (!allAddress.has(store.address)) {
+        //   allAddress.add(store.address);
+        // }
 
         //get all purple options
         const purpleArray = store.purple.split(/[,，、]/);
@@ -77,6 +73,16 @@ export const useStoreInfo = defineStore({
             allPurple.add(item);
           }
         });
+
+        //get all feature options
+        const featureArray = store.feature.split(/[,，、]/);
+        featureArray.forEach((item) => {
+          if (item === "") return;
+          if (!allFeature.has(item)) {
+            allFeature.add(item);
+          }
+        });
+
         //get all category options
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
@@ -88,8 +94,8 @@ export const useStoreInfo = defineStore({
       });
 
       this.allPurpleOption = Array.from(allPurple);
-      // this.allFeatureOption = Array.from(allFeature);
-      this.allAddressOption = Array.from(allAddress);
+      // this.allAddressOption = Array.from(allAddress);
+      this.allFeatureOption = Array.from(allFeature);
       this.allCategoryOption = Array.from(allCategory);
     },
   },

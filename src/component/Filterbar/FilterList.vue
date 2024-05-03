@@ -101,6 +101,7 @@ const titleInterface = ref({
   type: "TYPE 類型",
   addressTag: "SHOPPING AREA 商圈標籤",
   purple: "PURPLE 目的",
+  feature: "FEATURE 特色",
   category: "CATEGORY 種類",
 });
 const selectedOptions = ref([]); //被勾選的選項
