@@ -1,37 +1,45 @@
 <template>
   <div class="container" ref="filterList">
-    <h3 class="title" @click="closeOption()">
-      {{ titleInterface[dataType] || "- -" }}
-    </h3>
+    <div class="flex justify-between">
+      <h3 class="title" @click="closeOption()">
+        {{ titleInterface[dataType] || "- -" }}
+      </h3>
+      <input
+        type="button"
+        value="清空"
+        class="cursor-pointer"
+        @click="cleanUp()"
+        v-if="selectedOptions != ''"
+      />
+    </div>
+
     <div
-      class="wrapper-tag min-h-[48px] rounded-lg p-1"
-      style="border: 1px solid white"
+      class="wrapper-tag min-h-[48px]"
       v-show="selectedOptions.length"
       v-if="inputType === 'radio' && selectedOptions != ''"
     >
-      <label :for="selectedOptions" class="tag bg-slate-200">
+      <label :for="selectedOptions" class="tag bg-blue font-semibold h-10">
         {{ selectedOptions }}
-        <i
+        <!-- <i
           class="pi pi-times ml-2 cursor-pointer"
           style="font-size: 1rem"
           @click="selectedOptions = ''"
-        />
+        /> -->
       </label>
     </div>
     <div
-      class="wrapper-tag min-h-[48px] rounded-lg p-1"
-      style="border: 1px solid white"
+      class="wrapper-tag min-h-[48px]"
       v-show="selectedOptions.length"
       v-if="inputType === 'checkbox' && selectedOptions != ''"
     >
       <label
         :for="items"
-        class="tag bg-slate-200"
+        class="tag bg-blue font-semibold h-10"
         v-for="items in selectedOptions"
         :key="items"
       >
         {{ items }}
-        <i class="pi pi-times ml-2 cursor-pointer" style="font-size: 1rem" />
+        <!-- <i class="pi pi-times ml-2 cursor-pointer" style="font-size: 1rem" /> -->
       </label>
     </div>
     <Transition>
@@ -90,6 +98,7 @@ const emits = defineEmits(["change"]);
 const filterList = ref(null);
 const showOptions = ref(false);
 const titleInterface = ref({
+  type: "TYPE 類型",
   addressTag: "SHOPPING AREA 商圈標籤",
   purple: "PURPLE 目的",
   category: "CATEGORY 種類",
@@ -109,8 +118,20 @@ function deleteSelected(item) {
   selectedOptions.value.splice(index, 1);
 }
 
-function changeInput(type) {
-  console.log("選擇的項目", selectedOptions.value);
+function changeInput() {
+  emits("change", {
+    type: props.dataType,
+    option: selectedOptions.value,
+  });
+}
+
+function cleanUp() {
+  if (props.inputType === "radio") {
+    selectedOptions.value = "";
+  } else if (props.inputType === "checkbox") {
+    selectedOptions.value = [];
+  }
+
   emits("change", {
     type: props.dataType,
     option: selectedOptions.value,

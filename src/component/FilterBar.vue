@@ -10,8 +10,14 @@
       />
     </li>
     <h3 class="container text-center">
-      總共有{{ storeListAfterFilterType.length || "- -" }}筆資料符合
+      總共有{{ matchStore.length || "- -" }}筆資料符合
     </h3>
+    <!-- <FilterList
+      :dataType="'type'"
+      :data="allTypeOption"
+      :inputType="'radio'"
+      @change="changeFilter"
+    /> -->
     <li class="container">
       <h3 class="title">TYPE 類型</h3>
       <ul class="wrapper-tag">
@@ -70,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, Teleport, defineEmits, Transition } from "vue";
+import { ref, watch, Teleport, defineEmits, Transition } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useFilter } from "../store/useFilter";
@@ -83,6 +89,7 @@ const emits = defineEmits(["closeModal"]);
 const storeInfo = useStoreInfo();
 const filterInfo = useFilter();
 const {
+  storeList,
   storeListAfterFilterType,
   allTypeOption,
   allAddressTag,
@@ -91,6 +98,13 @@ const {
 } = storeToRefs(storeInfo);
 const { type: currentType } = storeToRefs(filterInfo);
 
+//watch pinia
+filterInfo.$subscribe((mutation, state) => {
+  //state：被改動的整個state實例
+  console.table(state);
+});
+const matchStore = ref([]); //符合條件的店家
+
 function closeModal() {
   console.log("關閉彈窗");
   emits("closeModal");
@@ -98,11 +112,62 @@ function closeModal() {
 
 function changeType(type) {
   filterInfo.type = type;
+  storeInfo.filterType(type);
 }
 
 function changeFilter(obj) {
-  console.log("篩選條件變更", obj.type, obj.option);
+  // console.log("篩選條件變更", obj.type, obj.option);
+  filterInfo[obj.type] = obj.option;
+  doFilter();
 }
+
+function doFilter() {
+  //如果沒有選擇任何條件，
+  if (
+    filterInfo.purple === "" &&
+    !filterInfo.addressTag.length &&
+    !filterInfo.feature.length &&
+    !filterInfo.category.length
+  ) {
+    matchStore.value = storeInfo.storeListAfterFilterType;
+    return;
+  }
+
+  const ans = storeList.value.filter((item) => {
+    console.log("aaa item", item);
+    const filterList = ["purple", "category"]; //要被篩選的key
+
+    for (const key in filterList) {
+      //如果key值是Array且不為空陣列，就進行篩選
+      if (Array.isArray(filterInfo[key]) && filterInfo[key].length) {
+        console.log("aaa item[key]", item[key]);
+        item[key].index;
+      } else if (typeof filterInfo[key] == "string" && filterInfo[key] !== "") {
+        //key值是String
+        return item[key].includes(filterInfo[key]) != -1;
+      }
+    }
+    //如果有選擇addressTag就篩選
+    // if (filterInfo.addressTag !== "") {
+    //   return item.addressTag.indexOf(filterInfo.addressTag) != -1;
+    // }
+
+    // //如果有選擇purple就篩選
+    // if (filterInfo.purple !== "") {
+    //   return item.purple === filterInfo.purple;
+    // }
+  });
+  console.log("aaa 篩選結果", ans.length);
+  matchStore.value = ans;
+}
+
+watch(
+  storeListAfterFilterType,
+  (storeList) => {
+    matchStore.value = storeList;
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped lang="scss">
@@ -114,6 +179,8 @@ function changeFilter(obj) {
   flex-direction: column;
   background-color: rgba(0, 0, 0);
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 50;
   .container {
     padding: 24px 20px;
