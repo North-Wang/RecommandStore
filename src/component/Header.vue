@@ -37,7 +37,7 @@ const env = computed(() => {
   return process.env.NODE_ENV;
 });
 
-const showFilterBar = ref(true);
+const showFilterBar = ref(false);
 const routerList = ref([
   { path: "/", name: "首頁" },
   // {path:"/", name:"測驗跳選", },

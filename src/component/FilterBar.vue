@@ -75,16 +75,16 @@
     >
       <button
         class="bg-blue flex-1 hover:bg-sky-500 hover:text-white"
-        @click.self="changeFilterAndClose()"
+        @click.self="closeModal()"
       >
         確認
       </button>
-      <button
+      <!-- <button
         class="bg-white text-black flex-1 hover:text-black"
         @click.self="closeModal()"
       >
         取消
-      </button>
+      </button> -->
     </li>
   </ul>
 </template>
@@ -126,9 +126,12 @@ filterInfo.$subscribe((mutation, state) => {
 });
 const matchStore = ref([]); //暫存符合條件的店家(和抽選的範圍不同)
 
-function changeType(type) {
+async function changeType(type) {
   filterInfo.type = type;
-  storeInfo.filterType(type);
+  await storeInfo.filterType(type);
+  //只顯示有該type(類型)才有的address、purple、feature、category...等
+  await storeInfo.setAddressTag();
+  storeInfo.setAllOption();
 }
 
 function changeFilter(obj) {
@@ -196,12 +199,6 @@ function doFilter() {
 
 function closeModal() {
   emits("closeModal");
-}
-
-//確定要更改篩選條件
-function changeFilterAndClose(params) {
-  storeInfo.storeListAfterFilterType = matchStore.value;
-  closeModal();
 }
 
 //如果type有變更就在pinia篩選一次type，減少資料量
