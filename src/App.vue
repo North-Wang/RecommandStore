@@ -47,6 +47,7 @@ const getStoreList = async function () {
           feature: store[5],
           category: store[6],
           weight: store[7],
+          note: store[8],
         });
       });
       // console.log("全部的店家資訊", allStoreInfo.value);

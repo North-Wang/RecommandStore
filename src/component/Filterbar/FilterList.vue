@@ -1,5 +1,5 @@
 <template>
-  <div class="container" ref="filterList">
+  <div class="container select-none" ref="filterList">
     <div class="flex justify-between">
       <h3 class="title" @click="closeOption()">
         {{ titleInterface[dataType] || "- -" }}
@@ -14,7 +14,7 @@
     </div>
 
     <div
-      class="wrapper-tag min-h-[48px]"
+      class="wrapper-tag"
       v-show="selectedOptions.length"
       v-if="inputType === 'radio' && selectedOptions != ''"
     >
@@ -28,7 +28,7 @@
       </label>
     </div>
     <div
-      class="wrapper-tag min-h-[48px]"
+      class="wrapper-tag"
       v-show="selectedOptions.length"
       v-if="inputType === 'checkbox' && selectedOptions != ''"
     >
@@ -77,19 +77,23 @@ import { onClickOutside } from "@vueuse/core";
 import iconX from "../../assets/xBlack.svg";
 
 const props = defineProps({
+  //定義是什麼類型的資料
   dataType: {
-    //是什麼資料
     type: String,
     default: "",
   },
+  //想要選項的選項
   data: {
     type: Array,
     default: () => [],
   },
+  //input類型
   inputType: {
-    //input類型
     type: String,
     default: "radio",
+  },
+  cleanAll: {
+    type: Function,
   },
 });
 
@@ -110,13 +114,7 @@ onClickOutside(filterList, () => {
 });
 
 function closeOption() {
-  filterSelected();
   showOptions.value = !showOptions.value;
-}
-function filterSelected() {}
-function deleteSelected(item) {
-  const index = selectedOptions.value.indexOf(item);
-  selectedOptions.value.splice(index, 1);
 }
 
 function changeInput() {
@@ -138,6 +136,10 @@ function cleanUp() {
     option: selectedOptions.value,
   });
 }
+
+defineExpose({
+  selectedOptions,
+});
 </script>
 
 <style scoped lang="scss">
@@ -168,6 +170,7 @@ function cleanUp() {
       text-wrap: nowrap;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
   }
 }

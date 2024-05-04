@@ -9,21 +9,22 @@
         @click.self="closeModal"
       />
     </li>
-    <h3 class="container text-center">
+    <h3 class="container text-center select-none">
       總共有{{ matchStore.length || "0" }}筆資料符合
     </h3>
     <!-- <FilterList
+      ref="filterList"
       :dataType="'type'"
       :data="allTypeOption"
       :inputType="'radio'"
       @change="changeFilter"
     /> -->
     <li class="container">
-      <h3 class="title">TYPE 類型</h3>
+      <h3 class="title select-none">TYPE 類型</h3>
       <ul class="wrapper-tag">
         <label
           :for="types"
-          class="tag bg-slate-200"
+          class="tag bg-slate-200 cursor-pointer"
           v-for="types in allTypeOption"
           :key="types"
         >
@@ -41,30 +42,28 @@
       </ul>
     </li>
     <FilterList
+      ref="filterTag"
       :dataType="'addressTag'"
       :data="allAddressTag"
       :inputType="'radio'"
       @change="changeFilter"
     />
     <FilterList
+      ref="filterPurple"
       :dataType="'purple'"
       :data="allPurpleOption"
       :inputType="'radio'"
       @change="changeFilter"
     />
-    <!-- <li class="container">
-      <h3 class="title">FEATURE 特色</h3>
-      <ul>
-        <li></li>
-      </ul>
-    </li> -->
     <FilterList
+      ref="filterFeature"
       :dataType="'feature'"
       :data="allFeatureOption"
       :inputType="'checkbox'"
       @change="changeFilter"
     />
     <FilterList
+      ref="filterCategory"
       :dataType="'category'"
       :data="allCategoryOption"
       :inputType="'checkbox'"
@@ -73,12 +72,7 @@
     <li
       class="w-screen px-[20px] py-[24px] text-white flex justify-between gap-[8px]"
     >
-      <button
-        class="bg-blue flex-1 hover:bg-sky-500 hover:text-white"
-        @click.self="closeModal()"
-      >
-        確認
-      </button>
+      <button class="flex-1 text-black" @click.self="closeModal()">確認</button>
       <!-- <button
         class="bg-white text-black flex-1 hover:text-black"
         @click.self="closeModal()"
@@ -118,6 +112,10 @@ const {
   feature,
   category,
 } = storeToRefs(filterInfo);
+const filterTag = ref(null);
+const filterPurple = ref(null);
+const filterFeature = ref(null);
+const filterCategory = ref(null);
 
 //watch pinia
 filterInfo.$subscribe((mutation, state) => {
@@ -127,6 +125,10 @@ filterInfo.$subscribe((mutation, state) => {
 const matchStore = ref([]); //暫存符合條件的店家(和抽選的範圍不同)
 
 async function changeType(type) {
+  //由於type以外的選項會變更，因此要清空所選條件
+  filterInfo.$reset();
+  await resetSelected();
+
   filterInfo.type = type;
   await storeInfo.filterType(type);
   //只顯示有該type(類型)才有的address、purple、feature、category...等
@@ -185,13 +187,6 @@ function doFilter() {
     }
 
     //回傳同時符合上述篩選條件的
-    console.log(
-      "match",
-      matchAddressTag,
-      matchPurple,
-      matchFeature,
-      matchCategory
-    );
     return matchAddressTag && matchPurple && matchFeature && matchCategory;
   });
   matchStore.value = ans;
@@ -201,13 +196,20 @@ function closeModal() {
   emits("closeModal");
 }
 
+function resetSelected() {
+  filterTag.value.selectedOptions = "";
+  filterPurple.value.selectedOptions = "";
+  filterFeature.value.selectedOptions = [];
+  filterCategory.value.selectedOptions = [];
+}
+
 //如果type有變更就在pinia篩選一次type，減少資料量
 watch(
   storeListAfterFilterType,
   (storeList) => {
     matchStore.value = storeList;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 

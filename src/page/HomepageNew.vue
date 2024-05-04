@@ -1,6 +1,6 @@
 <template>
   <main
-    class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] relative flex justify-center"
+    class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] relative flex justify-center select-none"
   >
     <div
       class="w-screen h-2/5 bg-[#1B1A1A]/90 text-white flex flex-column items-center justify-between"
@@ -15,6 +15,7 @@
         <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
           <li v-for="types in allTypeOption" :key="types" class="">
             <button
+              class="font-semibold"
               :class="currentType === types ? 'bg-blue ' : ''"
               @click="changeType(types)"
             >

@@ -65,6 +65,9 @@ button {
   align-items: center;
   height: 40px;
   line-height: 40px;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
 }
 button:hover {
   background-color: #4baaf5;
