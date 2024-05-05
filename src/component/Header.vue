@@ -1,13 +1,17 @@
 <template>
   <header
-    class="header w-dvw gap-x-5 relative bg-gradient-to-b from-[#09203f] to-[#15417a] text-base"
+    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#09203f] to-[#15417a] text-base"
   >
     <Teleport to="body">
       <Transition
         enter-active-class="animate__animated animate__slideInLeft animate__faster"
         leave-active-class="animate__animated animate__slideOutLeft animate__faster"
       >
-        <FilterBar v-if="showFilterBar" @closeModal="showFilterBar = false" />
+        <FilterBar
+          ref="filterBar"
+          v-show="showFilterBar"
+          @closeModal="showFilterBar = false"
+        />
       </Transition>
     </Teleport>
 
@@ -16,6 +20,7 @@
       alt="更多選項"
       class="w-[32px] absolute left-3 top-[15px] rotate-90 cursor-pointer"
       @click="showFilterBar = !showFilterBar"
+      v-if="showIcon"
     />
     <div v-for="route in routerList" :key="route">
       <router-link :to="route.path" class="select-none">
@@ -27,17 +32,33 @@
 
 <script setup>
 import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
+import { useRoute } from "vue-router";
 import FilterBar from "./FilterBar.vue";
+import { onClickOutside } from "@vueuse/core";
 
 //picture
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
 
+const route = useRoute();
 const env = computed(() => {
   return process.env.NODE_ENV;
 });
+const showIcon = computed(() => {
+  switch (route.path) {
+    case "/ContactMe":
+      return false;
 
+    default:
+      return true;
+  }
+});
+const filterBar = ref(null);
 const showFilterBar = ref(false);
+onClickOutside(filterBar, () => {
+  showFilterBar.value = false;
+});
+
 const routerList = ref([
   { path: "/", name: "首頁" },
   // {path:"/", name:"測驗跳選", },
@@ -48,9 +69,14 @@ const routerList = ref([
 
 <style scoped lang="scss">
 .header {
+  width: 100%;
   height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+  // position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
 }
 </style>

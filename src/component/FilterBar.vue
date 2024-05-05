@@ -10,7 +10,7 @@
       />
     </li>
     <h3 class="container text-center select-none">
-      總共有{{ matchStore.length || "0" }}筆資料符合
+      總共有{{ storeInfo.matchStore.length || "0" }}筆資料符合
     </h3>
     <!-- <FilterList
       ref="filterList"
@@ -99,6 +99,7 @@ const filterInfo = useFilter();
 const {
   storeList,
   storeListAfterFilterType,
+  matchStore,
   allTypeOption,
   allAddressTag,
   allPurpleOption,
@@ -120,9 +121,8 @@ const filterCategory = ref(null);
 //watch pinia
 filterInfo.$subscribe((mutation, state) => {
   //state：被改動的整個state實例
-  console.table(state);
+  // console.table(state);
 });
-const matchStore = ref([]); //暫存符合條件的店家(和抽選的範圍不同)
 
 async function changeType(type) {
   //由於type以外的選項會變更，因此要清空所選條件
@@ -150,7 +150,7 @@ function doFilter() {
     !filterInfo.feature.length &&
     !filterInfo.category.length
   ) {
-    matchStore.value = storeInfo.storeListAfterFilterType;
+    storeInfo.matchStore = storeInfo.storeListAfterFilterType;
     return;
   }
 
@@ -172,7 +172,7 @@ function doFilter() {
 
     //如果有選擇feature
     let matchFeature = true;
-    if (category.value.length !== 0) {
+    if (feature.value.length !== 0) {
       matchFeature = item.feature.split(/[,，、]/).some((str) => {
         return feature.value.includes(str);
       });
@@ -189,7 +189,7 @@ function doFilter() {
     //回傳同時符合上述篩選條件的
     return matchAddressTag && matchPurple && matchFeature && matchCategory;
   });
-  matchStore.value = ans;
+  storeInfo.matchStore = ans;
 }
 
 function closeModal() {
@@ -207,7 +207,7 @@ function resetSelected() {
 watch(
   storeListAfterFilterType,
   (storeList) => {
-    matchStore.value = storeList;
+    storeInfo.matchStore = storeList;
   },
   { immediate: true },
 );

@@ -1,5 +1,5 @@
 <template>
-  <main>聯絡我</main>
+  <main></main>
 </template>
 
 <script setup>

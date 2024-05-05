@@ -4,7 +4,9 @@ export const useStoreInfo = defineStore({
   id: "storeInfo",
   state: () => ({
     storeList: [], //全部的店家資料
-    storeListAfterFilterType: [], //篩選完的店家資料
+    storeListAfterFilterType: [], //篩選完type的店家資料
+    matchStore: [], //符合所有篩選條件的店家,
+
     titleList: [], //所有標題
     allTypeOption: [], //所有type
     allPurpleOption: [], //所有"目的"
@@ -21,16 +23,16 @@ export const useStoreInfo = defineStore({
         return store.type === type;
       });
     },
-    filterAddressTag(tag) {
-      //根據商圈標籤來決定其他option要出現出現什麼選項
-      //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
-      if (tag === "" || !tag) return;
-      this.storeListAfterFilterType = this.storeListAfterFilterType.filter(
-        (store) => {
-          return store.addressTag.includes(tag);
-        }
-      );
-    },
+    // filterAddressTag(tag) {
+    //   //根據商圈標籤來決定其他option要出現出現什麼選項
+    //   //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
+    //   if (tag === "" || !tag) return;
+    //   this.storeListAfterFilterType = this.storeListAfterFilterType.filter(
+    //     (store) => {
+    //       return store.addressTag.includes(tag);
+    //     },
+    //   );
+    // },
     setTypeOption() {
       const allType = new Set();
       this.storeList.forEach((store) => {

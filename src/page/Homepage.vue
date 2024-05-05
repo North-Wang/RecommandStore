@@ -247,7 +247,7 @@ const resetOption = () => {
 };
 const pickup = () => {
   const randomNumber = Math.floor(
-    Math.random() * suitableStoreList.value.length
+    Math.random() * suitableStoreList.value.length,
   );
   console.log("符合篩選條件的所有店家", suitableStoreList.value);
   const result = suitableStoreList.value[randomNumber];
@@ -297,7 +297,7 @@ watch(
     }
     pickup();
   },
-  { deep: true }
+  { deep: true },
 );
 watch(address, async function (val) {
   if (val != "") {
@@ -313,7 +313,7 @@ watch(selectedAddressTag, async function (tag) {
   } else {
     address.value = ""; //reset
     await storeInfo.filterType(selectedType.value);
-    await storeInfo.filterAddressTag(tag);
+    // await storeInfo.filterAddressTag(tag);
   }
   await storeInfo.setAllOption();
   pickup();
@@ -340,12 +340,15 @@ onMounted(() => {
   border-radius: 50%;
   border: none;
   background: #ed1c5b;
-  transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1),
+  transition:
+    box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1),
     transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
 }
 .btn:hover {
-  box-shadow: 0 0 1px 15px rgba(138, 59, 88, 0.4),
-    0 0 1px 30px rgba(138, 59, 88, 0.1), 0 0 1px 45px rgba(138, 59, 88, 0.1);
+  box-shadow:
+    0 0 1px 15px rgba(138, 59, 88, 0.4),
+    0 0 1px 30px rgba(138, 59, 88, 0.1),
+    0 0 1px 45px rgba(138, 59, 88, 0.1);
 }
 
 input[type="radio"]:checked {
