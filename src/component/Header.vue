@@ -1,6 +1,6 @@
 <template>
   <header
-    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#09203f] to-[#15417a] text-base"
+    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#09203f] to-[#15417a] text-base select-none"
   >
     <Teleport to="body">
       <Transition
@@ -22,6 +22,7 @@
       @click="showFilterBar = !showFilterBar"
       v-if="showIcon"
     />
+
     <div v-for="route in routerList" :key="route">
       <router-link :to="route.path" class="select-none">
         <span class="text-white select-none">{{ route.name }}</span>

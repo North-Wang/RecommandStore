@@ -10,7 +10,7 @@
       />
     </li>
     <h3 class="container text-center select-none">
-      總共有{{ storeInfo.matchStore.length || "0" }}筆資料符合
+      總共有{{ matchStore.length || "0" }}筆資料符合
     </h3>
     <!-- <FilterList
       ref="filterList"
@@ -34,7 +34,7 @@
             :id="types"
             :checked="currentType === types"
             name="types"
-            class="text-[16px] mr-1"
+            class="text-[16px] mr-1 dark:accent-blue"
             @change="changeType(types)"
           />
           {{ types }}
@@ -72,13 +72,18 @@
     <li
       class="w-screen px-[20px] py-[24px] text-white flex justify-between gap-[8px]"
     >
-      <button class="flex-1 text-black" @click.self="closeModal()">確認</button>
-      <!-- <button
+      <button
+        class="flex-1 text-black bg-blue"
+        @click.self="certainChangeFilter()"
+      >
+        確認
+      </button>
+      <button
         class="bg-white text-black flex-1 hover:text-black"
         @click.self="closeModal()"
       >
         取消
-      </button> -->
+      </button>
     </li>
   </ul>
 </template>
@@ -99,7 +104,6 @@ const filterInfo = useFilter();
 const {
   storeList,
   storeListAfterFilterType,
-  matchStore,
   allTypeOption,
   allAddressTag,
   allPurpleOption,
@@ -117,6 +121,7 @@ const filterTag = ref(null);
 const filterPurple = ref(null);
 const filterFeature = ref(null);
 const filterCategory = ref(null);
+const matchStore = ref([]);
 
 //watch pinia
 filterInfo.$subscribe((mutation, state) => {
@@ -150,7 +155,7 @@ function doFilter() {
     !filterInfo.feature.length &&
     !filterInfo.category.length
   ) {
-    storeInfo.matchStore = storeInfo.storeListAfterFilterType;
+    matchStore.value = storeInfo.storeListAfterFilterType;
     return;
   }
 
@@ -189,11 +194,16 @@ function doFilter() {
     //回傳同時符合上述篩選條件的
     return matchAddressTag && matchPurple && matchFeature && matchCategory;
   });
-  storeInfo.matchStore = ans;
+  matchStore.value = ans;
 }
 
 function closeModal() {
   emits("closeModal");
+}
+
+function certainChangeFilter() {
+  storeInfo.matchStore = matchStore.value;
+  closeModal();
 }
 
 function resetSelected() {
@@ -207,9 +217,9 @@ function resetSelected() {
 watch(
   storeListAfterFilterType,
   (storeList) => {
-    storeInfo.matchStore = storeList;
+    matchStore.value = storeList;
   },
-  { immediate: true },
+  { immediate: true }
 );
 </script>
 

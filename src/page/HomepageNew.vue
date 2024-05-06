@@ -15,8 +15,8 @@
         <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
           <li v-for="types in allTypeOption" :key="types" class="">
             <button
-              class="font-semibold"
-              :class="currentType === types ? 'bg-blue ' : ''"
+              class="font-semibold dark:bg-white"
+              :class="currentType === types ? 'bg-blue dark:bg-blue' : ''"
               @click="changeType(types)"
             >
               {{ types }}
@@ -27,7 +27,7 @@
     </div>
     <!-- <FilterButton /> -->
     <button
-      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none"
+      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none bg-white text-black"
       @click="doFilter()"
     >
       START
@@ -53,7 +53,7 @@ const { allTypeOption } = storeToRefs(storeInfo);
 const { type } = storeToRefs(filterInfo);
 const isMobile = isMobileDevice();
 const router = useRouter();
-const currentType = ref(type || allTypeOption.value[0] || "餐廳");
+const currentType = ref("");
 
 function doFilter() {
   storeInfo.filterType(currentType.value);
@@ -65,7 +65,16 @@ function changeType(type) {
   filterInfo.type = type;
 }
 
-onMounted(() => {});
+onMounted(() => {
+  if (type.value !== "") {
+    //如果有選擇過type
+    currentType.value = type.value;
+  } else {
+    currentType.value = allTypeOption.value[0];
+    filterInfo.type = allTypeOption.value[0];
+  }
+  console.log("aaa", currentType.value, type.value);
+});
 </script>
 
 <style scoped>

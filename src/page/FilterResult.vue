@@ -5,7 +5,7 @@
       <h4>共{{ matchStore.length.toLocaleString() }}筆資料符合</h4>
       <ul class="flex justify-center min-h-[320px] mt-5 mb-[20px] md:mb-[32px]">
         <li
-          class="rounded-lg wrapper-result max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
+          class="rounded-lg wrapper-result bg-white dark:bg-white max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
           v-if="Object.keys(result).length"
         >
           <h3 class="select-all" :v-tooltip.bottom="result?.name">
@@ -44,9 +44,14 @@
             v-if="result?.note"
           >
             <div class="text-left my-1">備註：</div>
-            <textarea name="" id="" cols="30" rows="10">{{
-              result?.note
-            }}</textarea>
+            <textarea
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              class="dark:bg-lightGray text-gray-500 dark:text-gray-500"
+              >{{ result?.note }}</textarea
+            >
           </ul>
         </li>
         <li v-else></li>
@@ -73,12 +78,21 @@ import Tooltip from "primevue/tooltip";
 import copyIcon from "../assets/copy.svg";
 
 const storeInfo = useStoreInfo();
-const { matchStore } = storeToRefs(storeInfo);
+const { matchStore, storeListAfterFilterType } = storeToRefs(storeInfo);
 const result = ref({});
 
 function doFilter() {
-  const index = Math.floor(Math.random() * matchStore.value.length);
-  result.value = matchStore.value[index] || {};
+  if (matchStore.value.length === 0) {
+    //沒有選擇除了type以外的篩選條件
+    const index = Math.floor(
+      Math.random() * storeListAfterFilterType.value.length
+    );
+    result.value = storeListAfterFilterType.value[index] || {};
+  } else {
+    const index = Math.floor(Math.random() * matchStore.value.length);
+    result.value = matchStore.value[index] || {};
+  }
+
   console.log("抽選的結果", result.value);
 }
 
@@ -109,7 +123,7 @@ section {
 }
 .wrapper-result {
   width: 80%;
-  background-color: #ededed;
+  // background-color: #ededed;
   color: black;
   text-align: left;
   -webkit-user-select: none !important;

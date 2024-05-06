@@ -5,7 +5,7 @@ import { useStoreInfo } from "./useStoreInfo";
 export const useFilter = defineStore({
   id: "filterInfo",
   state: () => ({
-    type: "餐廳",
+    type: "",
     addressTag: "",
     purple: "",
     feature: [],

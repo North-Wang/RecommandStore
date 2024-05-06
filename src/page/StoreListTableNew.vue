@@ -14,7 +14,7 @@
           @change="search()"
         />
         <span
-          class="pi pi-search absolute left-[16px] top-[10px] text-black"
+          class="pi pi-search absolute left-[16px] top-[10px] text-black dark:text-white"
         ></span>
       </div>
     </section>
@@ -33,7 +33,7 @@
         <li
           v-for="(store, index) in currentPageStore"
           :key="index"
-          class="store"
+          class="store bg-white"
         >
           <h3 class="title">{{ store?.name }}</h3>
           <h4
@@ -77,7 +77,7 @@
             style="border-top: 0.5px solid gray"
           >
             <div class="text-left my-1">備註：</div>
-            <textarea name="" id="" cols="30" rows="10">{{
+            <textarea name="" id="" cols="30" rows="10" class="dark:bg-lightGray text-gray-500 dark:text-gray-500">{{
               store?.note
             }}</textarea>
           </ul>
@@ -117,7 +117,7 @@
       </li> -->
       </ul>
       <h4
-        class="font-semibold h-full flex  justify-center"
+        class="font-semibold h-full flex items-center justify-center text-black dark:text-black"
         v-else-if="!currentPageStore.length"
       >
         沒有店家資料
@@ -228,7 +228,7 @@ input[type="text"] {
   padding: 12px 20px;
   border-bottom: 0.5px solid black;
   position: relative;
-  background: white;
+  color: black;
   h3 {
     border-bottom: 0.5px solid #929292;
   }
@@ -275,7 +275,6 @@ input[type="text"] {
     height: 80px;
     border-radius: 5px;
     border: 1px solid gray;
-    margin-top: 12px;
   }
 }
 :deep(.p-paginator) {
