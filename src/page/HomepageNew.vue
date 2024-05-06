@@ -16,7 +16,7 @@
           <li v-for="types in allTypeOption" :key="types" class="">
             <button
               class="font-semibold dark:bg-white"
-              :class="currentType === types ? 'bg-blue dark:bg-blue' : ''"
+              :style="currentType === types ? 'background-color:#87D4FF' : ''"
               @click="changeType(types)"
             >
               {{ types }}

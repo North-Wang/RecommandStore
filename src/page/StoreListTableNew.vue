@@ -7,7 +7,7 @@
       <h4 class="py-3">共{{ tableData.length?.toLocaleString() }}筆資料</h4>
       <div class="px-2 relative">
         <input
-          type="text"
+          type="search"
           placeholder="請輸入店家名稱"
           class="w-full text-center text-black dark:text-white lg:max-w-[300px] mb-[8px]"
           v-model="keyword"
@@ -18,16 +18,15 @@
         ></span>
       </div>
     </section>
-    <Paginator
+    <!-- <Paginator
       :totalRecords="total"
       :first="0"
       :rows="rows"
       :pageLinkSize="3"
       :alwaysShow="true"
       template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink  "
-      @page="onPage($event)"
-    >
-    </Paginator>
+      @page="onPage($event)"      
+    /> -->
     <div class="overflow-y-auto" style="height: calc(100vh - 269px)">
       <ul v-if="isMobile && currentPageStore.length">
         <li
@@ -101,14 +100,42 @@
         class="font-semibold h-full flex items-center justify-center select-none"
         v-else-if="!isMobile && currentPageStore.length"
       >
-      <DataView :value="currentPageStore">
+      <!-- <DataView :value="currentPageStore">
         <template #list="slotProps">
           <div class="grid grid-nogutter ">
-            <div v-for="(item, index) in slotProps.items" :key="index" class="w-full h-[40PX] flex items-center justify-start px-4 select-none">
+            <div v-for="(item, index) in slotProps.items" :key="index" class="grid-items">
               {{ item.name }}
             </div>
           </div></template>
-      </DataView>
+      </DataView> -->
+      <DataTable 
+        :value="tableData"         
+        :scrollable="true" 
+        scrollHeight="flex" 
+        paginator  
+        paginatorPosition="top" 
+        :pageLinkSize="3" 
+        :first="0"
+        paginatorTemplate="CurrentPageReport PrevPageLink PageLinks NextPageLink JumpToPageInput"
+        class="w-full h-full dark:text-black" 
+      >
+      <!-- <template #paginatorstart>
+        <div></div>	
+      </template> -->
+        <Column field="name" header="店名"></Column>
+        <Column field="type" header="類型" :sortable="true"  ></Column>
+        <Column field="purple" header="目的" :sortable="true"  ></Column>
+        <Column field="addressTag" header="商圈標籤" :sortable="true">
+          <template #body="{ data, index }">
+            <div>{{ data?.addressTag.toString()}}</div>
+          </template>
+        </Column>
+        <Column field="address" header="地點" class="text-left">
+         
+        </Column>
+        <Column field="feature" header="特色"  :sortable="true" ></Column>
+        <Column field="category" header="種類"  :sortable="true" ></Column>
+      </DataTable>
       <!-- <li
           v-for="(store, index) in currentPageStore"
           :key="index"
@@ -144,6 +171,8 @@ import isMobileDevice from "../js/isMobileDevice";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
 import DataView from 'primevue/dataview';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 //picure
 import editIcon from "../assets/editIcon.svg";
@@ -218,7 +247,7 @@ section {
   background-color: black;
   color: white;
 }
-input[type="text"] {
+input[type="search"] {
   border-radius: 5px;
   height: 40px;
   padding-left: 32px;
@@ -277,6 +306,21 @@ input[type="text"] {
     border: 1px solid gray;
   }
 }
+// .grid-items{
+//   width: 100%;
+//   flex-grow: 1;
+//   color: black;
+//   display: flex;
+//   align-items: center;
+//   -webkit-user-select: none !important;
+//     -moz-user-select: none !important;
+//     user-select: none !important;
+//     padding-left: 16px;
+//     padding-right: 16px;
+//   @media (prefers-color-shceme: dark) {
+//     color: black;
+//   }
+// }
 :deep(.p-paginator) {
   display: flex;
   justify-content: center;
@@ -298,4 +342,35 @@ input[type="text"] {
     color: white;
   }
 }
+:deep(.p-datatable-wrapper){
+  thead{
+    height: 60px;
+    border-bottom: 1px solid gray
+    th{
+      white-space: nowrap;
+    }
+    tr{
+      // height: 40px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      td{
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+    }
+  }
+}
+// :deep(.p-dataview){
+//   height: 100%;
+//   width: 100%;
+//   .p-dataview-content{
+//     height: 100%;
+//   width: 100%;
+//  .grid-items{
+//     height: 68px;
+//     display: flex;
+//     align-items: center;  
+//  }
+//   }
+// }
 </style>
