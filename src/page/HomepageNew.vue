@@ -65,15 +65,18 @@ function changeType(type) {
   filterInfo.type = type;
 }
 
+watch(allTypeOption, () => {
+  //第一次進來的時候，要設定currentType
+  currentType.value = allTypeOption.value[0];
+  filterInfo.type = allTypeOption.value[0];
+  console.log("aaa", currentType.value, type.value);
+});
+
 onMounted(() => {
   if (type.value !== "") {
     //如果有選擇過type
     currentType.value = type.value;
-  } else {
-    currentType.value = allTypeOption.value[0];
-    filterInfo.type = allTypeOption.value[0];
   }
-  console.log("aaa", currentType.value, type.value);
 });
 </script>
 

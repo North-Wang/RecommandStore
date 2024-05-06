@@ -18,7 +18,7 @@
         ></span>
       </div>
     </section>
-    <!-- <Paginator
+    <Paginator
       :totalRecords="total"
       :first="0"
       :rows="rows"
@@ -26,7 +26,7 @@
       :alwaysShow="true"
       template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink  "
       @page="onPage($event)"      
-    /> -->
+    />
     <div class="overflow-y-auto" style="height: calc(100vh - 269px)">
       <ul v-if="isMobile && currentPageStore.length">
         <li
@@ -178,7 +178,7 @@ import Column from 'primevue/column';
 import editIcon from "../assets/editIcon.svg";
 
 const storeInfo = useStoreInfo();
-const { matchStore } = storeToRefs(storeInfo);
+const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
 const tableData = ref(matchStore.value);
 const total = computed(() => {
   return tableData.value.length;
@@ -238,7 +238,12 @@ watch(matchStore, (store) => {
 });
 
 onMounted(() => {
-  setStoreData();
+  if(matchStore.value.length == 0){
+    //尚未選擇任篩選條件
+    tableData.value = storeListAfterFilterType.value
+    setStoreData();
+  }
+  
 });
 </script>
 
