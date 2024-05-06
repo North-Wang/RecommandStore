@@ -1,13 +1,14 @@
 <template>
   <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
-    <section class="">
+    <section class="select-none">
       <h3 class="py-[20px]">篩選結果</h3>
-      <h4>
-        共{{ storeListAfterFilterType.length.toLocaleString() }}筆資料符合
-      </h4>
-      <ul class="flex justify-center mt-5">
-        <li class="rounded-lg wrapper-result">
-          <h3 class="" :v-tooltip.bottom="result?.name">
+      <h4>共{{ matchStore.length.toLocaleString() }}筆資料符合</h4>
+      <ul class="flex justify-center min-h-[320px] mt-5 mb-[20px] md:mb-[32px]">
+        <li
+          class="rounded-lg wrapper-result max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
+          v-if="Object.keys(result).length"
+        >
+          <h3 class="select-all" :v-tooltip.bottom="result?.name">
             {{ result?.name }}
           </h3>
           <h3 class="text-darkYellow" v-if="result?.feature">
@@ -17,7 +18,9 @@
             class="flex gap-x-2 justify-between"
             style="border-bottom: 1.5px solid #929292"
           >
-            <h4 class="text-left leading-[1.2]">{{ result.address }}</h4>
+            <h4 class="text-left leading-[1.2] select-all">
+              {{ result.address }}
+            </h4>
             <img :src="copyIcon" alt="copyIcon" class="cursor-pointer" />
           </div>
           <ul class="wrapper-tag" v-if="result?.addressTag">
@@ -35,11 +38,22 @@
               <h4 class="tag bg-[#A9A9A9]">{{ tags }}</h4>
             </li>
           </ul>
+          <ul
+            class="mt-[8px]"
+            style="border-top: 0.5px solid gray"
+            v-if="result?.note"
+          >
+            <div class="text-left my-1">備註：</div>
+            <textarea name="" id="" cols="30" rows="10">{{
+              result?.note
+            }}</textarea>
+          </ul>
         </li>
+        <li v-else></li>
       </ul>
     </section>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" v-if="Object.keys(result).length">
       <button
         class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] bg-red text-white cursor-pointer select-none hover:bg-[#ad4747]"
         @click.prevent="doFilter()"
@@ -51,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import Tooltip from "primevue/tooltip";
@@ -59,16 +73,18 @@ import Tooltip from "primevue/tooltip";
 import copyIcon from "../assets/copy.svg";
 
 const storeInfo = useStoreInfo();
-const { storeListAfterFilterType } = storeToRefs(storeInfo);
+const { matchStore } = storeToRefs(storeInfo);
 const result = ref({});
 
 function doFilter() {
-  const index = Math.floor(
-    Math.random() * storeListAfterFilterType.value.length
-  );
-  result.value = storeListAfterFilterType.value[index];
+  const index = Math.floor(Math.random() * matchStore.value.length);
+  result.value = matchStore.value[index] || {};
   console.log("抽選的結果", result.value);
 }
+
+watch(matchStore, () => {
+  doFilter();
+});
 
 onMounted(() => {
   doFilter();
@@ -93,27 +109,37 @@ section {
 }
 .wrapper-result {
   width: 80%;
-  max-width: 500px;
-  padding: 24px 20px;
-  margin-bottom: 20px;
   background-color: #ededed;
   color: black;
   text-align: left;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
   h3:first-child {
     font-weight: 700;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     overflow: hidden;
   }
   h3 {
     padding-top: 8px;
     padding-bottom: 8px;
+    // margin-top: 8px;
+    // margin-bottom: 8px;
     border-bottom: 1.5px solid #929292;
   }
   h4 {
     padding-top: 8px;
     padding-bottom: 8px;
+  }
+  textarea {
+    width: 100%;
+    padding: 4px 8px;
+    overflow-y: auto;
+    height: 80px;
+    border-radius: 5px;
+    border: 1px solid gray;
   }
 }
 .wrapper-tag {

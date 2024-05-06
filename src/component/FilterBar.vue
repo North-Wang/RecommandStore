@@ -1,6 +1,6 @@
 <!-- 篩選器彈窗 -->
 <template>
-  <ul class="wrapper-filter">
+  <ul class="wrapper-filter w-full md:w-[500px]">
     <li class="px-[12px] py-[12px]" style="border-bottom: 1px solid white">
       <img
         :src="iconX"
@@ -215,7 +215,6 @@ watch(
 
 <style scoped lang="scss">
 .wrapper-filter {
-  width: 100%;
   height: 100%;
   color: white;
   display: flex;

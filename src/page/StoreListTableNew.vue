@@ -29,8 +29,8 @@
     >
     </Paginator>
     <div class="overflow-y-auto" style="height: calc(100vh - 269px)">
-      <div v-if="isMobile && currentPageStore.length">
-        <div
+      <ul v-if="isMobile && currentPageStore.length">
+        <li
           v-for="(store, index) in currentPageStore"
           :key="index"
           class="store"
@@ -95,9 +95,31 @@
               </button>
             </li>
           </ul>
-        </div>
-      </div>
-      <h4 class="font-semibold h-full flex items-center justify-center" v-else>
+        </li>
+      </ul>
+      <ul
+        class="font-semibold h-full flex items-center justify-center select-none"
+        v-else-if="!isMobile && currentPageStore.length"
+      >
+      <DataView :value="currentPageStore">
+        <template #list="slotProps">
+          <div class="grid grid-nogutter ">
+            <div v-for="(item, index) in slotProps.items" :key="index" class="w-full h-[40PX] flex items-center justify-start px-4 select-none">
+              {{ item.name }}
+            </div>
+          </div></template>
+      </DataView>
+      <!-- <li
+          v-for="(store, index) in currentPageStore"
+          :key="index"
+          class="store"
+        >{{ store.name }}
+      </li> -->
+      </ul>
+      <h4
+        class="font-semibold h-full flex  justify-center"
+        v-else-if="!currentPageStore.length"
+      >
         沒有店家資料
       </h4>
     </div>
@@ -121,6 +143,7 @@ import { useStoreInfo } from "../store/useStoreInfo";
 import isMobileDevice from "../js/isMobileDevice";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
+import DataView from 'primevue/dataview';
 
 //picure
 import editIcon from "../assets/editIcon.svg";
