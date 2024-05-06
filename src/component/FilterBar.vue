@@ -155,11 +155,11 @@ function doFilter() {
     !filterInfo.feature.length &&
     !filterInfo.category.length
   ) {
-    matchStore.value = storeInfo.storeListAfterFilterType;
+    matchStore.value = storeListAfterFilterType.storeListAfterFilterType;
     return;
   }
 
-  const ans = storeList.value.filter((item) => {
+  const ans = storeListAfterFilterType.value.filter((item) => {
     //如果有選擇addressTag
     let matchAddressTag = true;
     if (addressTag.value !== "") {
@@ -219,7 +219,7 @@ watch(
   (storeList) => {
     matchStore.value = storeList;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
