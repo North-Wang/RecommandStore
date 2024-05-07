@@ -26,9 +26,16 @@
       :alwaysShow="true"
       template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink  "
       @page="onPage($event)"      
+      v-if="isMobile"
     />
-    <div class="overflow-y-auto" style="height: calc(100vh - 269px)">
-      <ul v-if="isMobile && currentPageStore.length">
+    <ul class="overflow-y-auto" style="height: calc(100vh - 269px)" v-if="isMobile">
+      <h4
+        class="font-semibold h-full flex items-center justify-center text-black dark:text-black"
+        v-if="!currentPageStore.length"
+      >
+        沒有店家資料
+      </h4>
+      <ul v-else>
         <li
           v-for="(store, index) in currentPageStore"
           :key="index"
@@ -96,9 +103,12 @@
           </ul>
         </li>
       </ul>
-      <ul
+      
+      
+    </ul>
+    <ul
         class="font-semibold h-full flex items-center justify-center select-none"
-        v-else-if="!isMobile && currentPageStore.length"
+        v-if="!isMobile"
       >
       <!-- <DataView :value="currentPageStore">
         <template #list="slotProps">
@@ -111,30 +121,34 @@
       <DataTable 
         :value="tableData"         
         :scrollable="true" 
-        scrollHeight="flex" 
-        paginator  
+        scrollHeight="flex"
+        :paginator="true"  
         paginatorPosition="top" 
         :pageLinkSize="3" 
         :first="0"
-        paginatorTemplate="CurrentPageReport PrevPageLink PageLinks NextPageLink JumpToPageInput"
+        :rows="rows"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
         class="w-full h-full dark:text-black" 
       >
-      <!-- <template #paginatorstart>
-        <div></div>	
-      </template> -->
-        <Column field="name" header="店名"></Column>
-        <Column field="type" header="類型" :sortable="true"  ></Column>
+        <Column field="name" header="店名" class="text-left w-[400px]" frozen></Column>
+        <Column field="type" header="類型" :sortable="true" class="w-[80px]" ></Column>
         <Column field="purple" header="目的" :sortable="true"  ></Column>
-        <Column field="addressTag" header="商圈標籤" :sortable="true">
+        <Column field="addressTag" header="商圈標籤" :sortable="true" class="flex-1">
           <template #body="{ data, index }">
-            <div>{{ data?.addressTag.toString()}}</div>
+            <ul class="w-[120px]">
+              <li v-for="tags in data?.addressTag" :key="tags" class="white-nowrap">
+              {{ tags.toString() }}
+              </li>
+            </ul>
           </template>
         </Column>
-        <Column field="address" header="地點" class="text-left">
-         
+        <Column field="address" header="地點" class="text-left w-[400px]">         
         </Column>
-        <Column field="feature" header="特色"  :sortable="true" ></Column>
-        <Column field="category" header="種類"  :sortable="true" ></Column>
+        <Column field="feature" header="特色"  :sortable="true" class="text-left w-[400px]"></Column>
+        <Column field="category" header="種類"  :sortable="true" class="text-left w-[400px]" ></Column>
+        <template #empty>
+          <div class="text-black dark:text-black">沒有店家資料</div>
+        </template>
       </DataTable>
       <!-- <li
           v-for="(store, index) in currentPageStore"
@@ -143,13 +157,6 @@
         >{{ store.name }}
       </li> -->
       </ul>
-      <h4
-        class="font-semibold h-full flex items-center justify-center text-black dark:text-black"
-        v-else-if="!currentPageStore.length"
-      >
-        沒有店家資料
-      </h4>
-    </div>
 
     <!-- <Paginator
       class="fixed bottom-0 w-full"
@@ -167,6 +174,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
+import { useWindowSize } from '@vueuse/core'
 import isMobileDevice from "../js/isMobileDevice";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
@@ -179,6 +187,7 @@ import editIcon from "../assets/editIcon.svg";
 
 const storeInfo = useStoreInfo();
 const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
+const { width, height } = useWindowSize()
 const tableData = ref(matchStore.value);
 const total = computed(() => {
   return tableData.value.length;
@@ -186,7 +195,8 @@ const total = computed(() => {
 const rows = ref(10); //一頁顯示幾筆資料
 const currentPageStore = ref([]); //篩選完的店家資料
 const moreOptionMap = ref(new Map());
-const isMobile = isMobileDevice();
+// const isMobile = isMobileDevice();
+const isMobile = ref(true)
 const keyword = ref("");
 
 function onPage(e) {
@@ -230,7 +240,9 @@ function setStoreData() {
   currentPageStore.value = tableData.value.slice(0, rows.value - 1);
 }
 
-//watch pinia
+watch(width, (width)=>{
+ isMobile.value = width < 1024
+}, {immediate:true})
 
 watch(matchStore, (store) => {
   tableData.value = store;
@@ -239,8 +251,10 @@ watch(matchStore, (store) => {
 
 onMounted(() => {
   if(matchStore.value.length == 0){
-    //尚未選擇任篩選條件
-    tableData.value = storeListAfterFilterType.value
+    console.log("尚未變更篩選條件")
+    tableData.value = storeListAfterFilterType.value        
+  }
+  if(isMobile.value){
     setStoreData();
   }
   
@@ -350,18 +364,19 @@ input[type="search"] {
 :deep(.p-datatable-wrapper){
   thead{
     height: 60px;
-    border-bottom: 1px solid gray
+    border-bottom: 1px solid gray;
     th{
       white-space: nowrap;
-    }
-    tr{
-      // height: 40px;
-      padding-top: 8px;
-      padding-bottom: 8px;
-      td{
+      padding-left: 12px;
+       padding-right: 12px;
+    }    
+  }
+  tbody{
+    td{
         padding-left: 12px;
         padding-right: 12px;
-      }
+        padding-top: 16px;
+      padding-bottom: 16px;      
     }
   }
 }
