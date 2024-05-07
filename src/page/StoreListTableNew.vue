@@ -132,12 +132,20 @@
       >
         <Column field="name" header="店名" class="text-left w-[400px]" frozen></Column>
         <Column field="type" header="類型" :sortable="true" class="w-[80px]" ></Column>
-        <Column field="purple" header="目的" :sortable="true"  ></Column>
-        <Column field="addressTag" header="商圈標籤" :sortable="true" class="flex-1">
-          <template #body="{ data, index }">
-            <ul class="w-[120px]">
-              <li v-for="tags in data?.addressTag" :key="tags" class="white-nowrap">
-              {{ tags.toString() }}
+        <Column field="purple" header="目的" :sortable="true"  >
+          <template #body="{ data }">
+            <ul class="w-[120px] wrapper-tag">
+              <li v-for="tags in data?.purple.split(/[,，、]/)" :key="tags" class=" ">
+                <span class="tag bg-yellow"> {{ tags }}</span>               
+              </li>
+            </ul>
+          </template>
+        </Column>
+        <Column field="addressTag" header="商圈標籤" :sortable="true" class="text-left flex-1">
+          <template #body="{ data }">
+            <ul class="w-[120px] wrapper-tag">
+              <li v-for="tags in data?.addressTag" :key="tags" class=" ">
+                <span class="tag bg-blue"> {{ tags.toString() }}</span>               
               </li>
             </ul>
           </template>
@@ -302,20 +310,6 @@ input[type="search"] {
     overflow: hidden;
     padding-bottom: 8px;
   }
-  .wrapper-tag {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 8px;
-    row-gap: 8px;
-  }
-  .tag {
-    padding: 4px 12px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-  }
   textarea {
     width: 100%;
     padding: 4px 8px;
@@ -376,7 +370,8 @@ input[type="search"] {
         padding-left: 12px;
         padding-right: 12px;
         padding-top: 16px;
-      padding-bottom: 16px;      
+      padding-bottom: 16px;   
+      border-bottom: 0.5px solid gray;   
     }
   }
 }
@@ -393,4 +388,18 @@ input[type="search"] {
 //  }
 //   }
 // }
+.wrapper-tag {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 8px;
+  }
+  .tag {
+    padding: 4px 12px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+  }
 </style>
