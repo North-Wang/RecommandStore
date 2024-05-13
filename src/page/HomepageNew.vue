@@ -72,7 +72,7 @@ watch(
     currentType.value = allTypeOption.value[0];
     filterInfo.type = allTypeOption.value[0];
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {

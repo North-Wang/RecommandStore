@@ -3,7 +3,12 @@
     class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] h-full flex flex-col"
   >
     <section class="">
-      <h3 class="py-[20px]">店家列表</h3>
+      <div class="flex justify-between items-center px-[20px] py-[20px]">
+        <h3></h3>
+        <h3>店家列表</h3>
+        <button class="text-black" disabled><h4>新增</h4></button>
+      </div>
+
       <h4 class="py-3">共{{ tableData.length?.toLocaleString() }}筆資料</h4>
       <div class="px-2 relative">
         <input
@@ -18,142 +23,88 @@
         ></span>
       </div>
     </section>
-    <Paginator
-      :totalRecords="total"
-      :first="0"
-      :rows="rows"
-      :pageLinkSize="3"
-      :alwaysShow="true"
-      template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink  "
-      @page="onPage($event)"      
-      v-if="isMobile"
-    />
-    <ul class="overflow-y-auto" style="height: calc(100vh - 269px)" v-if="isMobile">
-      <h4
-        class="font-semibold h-full flex items-center justify-center text-black dark:text-black"
-        v-if="!currentPageStore.length"
-      >
-        沒有店家資料
-      </h4>
-      <ul v-else>
-        <li
-          v-for="(store, index) in currentPageStore"
-          :key="index"
-          class="store bg-white"
-        >
-          <h3 class="title">{{ store?.name }}</h3>
-          <h4
-            class="address"
-            v-if="moreOptionMap.has(store?.name) && store?.address"
-          >
-            {{ store?.address }}
-          </h4>
-          <h4
-            class="text-[#E09A30] text-left font-bold py-2"
-            v-if="store?.feature"
-          >
-            {{ store?.feature }}
-          </h4>
-
-          <ul class="wrapper-tag mt-[12px]">
-            <li
-              v-for="purples in store?.purple.split('、')"
-              v-if="store?.purple"
-            >
-              <div class="tag bg-yellow">{{ purples }}</div>
-            </li>
-            <li
-              v-for="addressTags in store?.addressTag"
-              v-if="store?.addressTag"
-            >
-              <div class="tag bg-blue">{{ addressTags }}</div>
-            </li>
-          </ul>
-          <li class="wrapper-tag mt-2">
-            <ul
-              v-for="cates in store?.category.split('、')"
-              v-if="store?.category"
-            >
-              <li class="tag bg-[#d6d6d6]">{{ cates }}</li>
-            </ul>
-          </li>
-          <ul
-            v-if="moreOptionMap.has(store?.name) && store?.note"
-            class="mt-3"
-            style="border-top: 0.5px solid gray"
-          >
-            <div class="text-left my-1">備註：</div>
-            <textarea name="" id="" cols="30" rows="10" class="dark:bg-lightGray text-gray-500 dark:text-gray-500">{{
-              store?.note
-            }}</textarea>
-          </ul>
-
-          <ul class="flex justify-end items-center h-8 mt-2">
-            <li class="flex gap-x-2 items-center">
-              <!-- <img :src="editIcon" alt="editIcon" class="h-6 ursor-not-allowed" /> -->
-
-              <button
-                class="w-[72px] text-left bg-inherit text-blue hover:bg-[#4baaf5] hover:text-white"
-                @click="toggleShowMoreOption(store?.name)"
-              >
-                <div v-if="moreOptionMap.has(store?.name)">close</div>
-                <div v-else>more...</div>
-              </button>
-            </li>
-          </ul>
-        </li>
-      </ul>
-      
-      
-    </ul>
+    <DataView :dataList="tableData" v-if="isMobile" />
     <ul
-        class="font-semibold h-full flex items-center justify-center select-none"
-        v-if="!isMobile"
-      >
-      <!-- <DataView :value="currentPageStore">
-        <template #list="slotProps">
-          <div class="grid grid-nogutter ">
-            <div v-for="(item, index) in slotProps.items" :key="index" class="grid-items">
-              {{ item.name }}
-            </div>
-          </div></template>
-      </DataView> -->
-      <DataTable 
-        :value="tableData"         
-        :scrollable="true" 
+      class="font-semibold h-full flex items-center justify-center select-none"
+      v-if="!isMobile"
+    >
+      <DataTable
+        :value="tableData"
+        :scrollable="true"
         scrollHeight="flex"
-        :paginator="true"  
-        paginatorPosition="top" 
-        :pageLinkSize="3" 
+        :paginator="true"
+        paginatorPosition="top"
+        :pageLinkSize="3"
         :first="0"
         :rows="rows"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-        class="w-full h-full dark:text-black" 
+        class="w-full h-full dark:text-black"
       >
-        <Column field="name" header="店名" class="text-left w-[400px]" frozen></Column>
-        <Column field="type" header="類型" :sortable="true" class="w-[80px]" ></Column>
-        <Column field="purple" header="目的" :sortable="true"  >
+        <Column
+          field="name"
+          header="店名"
+          class="text-left w-[400px]"
+          frozen
+        ></Column>
+        <Column
+          field="type"
+          header="類型"
+          :sortable="true"
+          class="w-[80px]"
+        ></Column>
+        <Column field="purple" header="目的" :sortable="true">
           <template #body="{ data }">
             <ul class="w-[120px] wrapper-tag">
-              <li v-for="tags in data?.purple.split(/[,，、]/)" :key="tags" class=" ">
-                <span class="tag bg-yellow"> {{ tags }}</span>               
+              <li
+                v-for="tags in data?.purple.split(/[,，、]/)"
+                :key="tags"
+                class=" "
+              >
+                <span class="tag bg-yellow"> {{ tags }}</span>
               </li>
             </ul>
           </template>
         </Column>
-        <Column field="addressTag" header="商圈標籤" :sortable="true" class="text-left flex-1">
+        <Column
+          field="addressTag"
+          header="商圈標籤"
+          :sortable="true"
+          class="text-left flex-1"
+        >
           <template #body="{ data }">
             <ul class="w-[120px] wrapper-tag">
               <li v-for="tags in data?.addressTag" :key="tags" class=" ">
-                <span class="tag bg-blue"> {{ tags.toString() }}</span>               
+                <span class="tag bg-blue"> {{ tags }}</span>
               </li>
             </ul>
           </template>
         </Column>
-        <Column field="address" header="地點" class="text-left w-[400px]">         
+        <Column field="address" header="地點" class="text-left w-[400px]">
         </Column>
-        <Column field="feature" header="特色"  :sortable="true" class="text-left w-[400px]"></Column>
-        <Column field="category" header="種類"  :sortable="true" class="text-left w-[400px]" ></Column>
+        <Column
+          field="feature"
+          header="特色"
+          :sortable="true"
+          class="text-left w-[400px]"
+        ></Column>
+        <Column
+          field="category"
+          header="種類"
+          :sortable="true"
+          class="text-left w-[400px]"
+        >
+          <template #body="{ data }">
+            <ul class="wrapper-tag">
+              <li
+                v-for="tags in data?.category.split(/[,，、]/)"
+                :key="tags"
+                class=" "
+              >
+                <span class="tag bg-[#d6d6d6]"> {{ tags }}</span>
+              </li>
+            </ul>
+          </template>
+        </Column>
         <template #empty>
           <div class="text-black dark:text-black">沒有店家資料</div>
         </template>
@@ -164,7 +115,7 @@
           class="store"
         >{{ store.name }}
       </li> -->
-      </ul>
+    </ul>
 
     <!-- <Paginator
       class="fixed bottom-0 w-full"
@@ -182,21 +133,21 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
-import { useWindowSize } from '@vueuse/core'
+import { useWindowSize } from "@vueuse/core";
 import isMobileDevice from "../js/isMobileDevice";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
-import DataView from 'primevue/dataview';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import DataView from "../component/storeList/DataView.vue";
 
 //picure
 import editIcon from "../assets/editIcon.svg";
 
 const storeInfo = useStoreInfo();
 const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
-const { width, height } = useWindowSize()
-const tableData = ref(matchStore.value);
+const { width, height } = useWindowSize();
+const tableData = ref(matchStore.value); //符合篩選條件的店家
 const total = computed(() => {
   return tableData.value.length;
 });
@@ -204,7 +155,7 @@ const rows = ref(10); //一頁顯示幾筆資料
 const currentPageStore = ref([]); //篩選完的店家資料
 const moreOptionMap = ref(new Map());
 // const isMobile = isMobileDevice();
-const isMobile = ref(true)
+const isMobile = ref(true);
 const keyword = ref("");
 
 function onPage(e) {
@@ -248,9 +199,13 @@ function setStoreData() {
   currentPageStore.value = tableData.value.slice(0, rows.value - 1);
 }
 
-watch(width, (width)=>{
- isMobile.value = width < 1024
-}, {immediate:true})
+watch(
+  width,
+  (width) => {
+    isMobile.value = width < 1024;
+  },
+  { immediate: true },
+);
 
 watch(matchStore, (store) => {
   tableData.value = store;
@@ -258,14 +213,13 @@ watch(matchStore, (store) => {
 });
 
 onMounted(() => {
-  if(matchStore.value.length == 0){
-    console.log("尚未變更篩選條件")
-    tableData.value = storeListAfterFilterType.value        
+  if (matchStore.value.length == 0) {
+    console.log("尚未變更篩選條件");
+    tableData.value = storeListAfterFilterType.value;
   }
-  if(isMobile.value){
+  if (isMobile.value) {
     setStoreData();
   }
-  
 });
 </script>
 
@@ -279,45 +233,6 @@ input[type="search"] {
   height: 40px;
   padding-left: 32px;
   padding-right: 8px;
-}
-.store {
-  padding: 12px 20px;
-  border-bottom: 0.5px solid black;
-  position: relative;
-  color: black;
-  h3 {
-    border-bottom: 0.5px solid #929292;
-  }
-  h4 {
-    border-bottom: 0.5px solid #929292;
-  }
-  .title {
-    text-align: left;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-weight: 900;
-    padding-bottom: 8px;
-  }
-  .address {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-bottom: 0.5px solid #929292;
-    text-align: left;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    padding-bottom: 8px;
-  }
-  textarea {
-    width: 100%;
-    padding: 4px 8px;
-    overflow-y: auto;
-    height: 80px;
-    border-radius: 5px;
-    border: 1px solid gray;
-  }
 }
 // .grid-items{
 //   width: 100%;
@@ -355,51 +270,38 @@ input[type="search"] {
     color: white;
   }
 }
-:deep(.p-datatable-wrapper){
-  thead{
+:deep(.p-datatable-wrapper) {
+  thead {
     height: 60px;
     border-bottom: 1px solid gray;
-    th{
+    th {
       white-space: nowrap;
       padding-left: 12px;
-       padding-right: 12px;
-    }    
+      padding-right: 12px;
+    }
   }
-  tbody{
-    td{
-        padding-left: 12px;
-        padding-right: 12px;
-        padding-top: 16px;
-      padding-bottom: 16px;   
-      border-bottom: 0.5px solid gray;   
+  tbody {
+    td {
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      border-bottom: 0.5px solid gray;
     }
   }
 }
-// :deep(.p-dataview){
-//   height: 100%;
-//   width: 100%;
-//   .p-dataview-content{
-//     height: 100%;
-//   width: 100%;
-//  .grid-items{
-//     height: 68px;
-//     display: flex;
-//     align-items: center;  
-//  }
-//   }
-// }
 .wrapper-tag {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 8px;
-    row-gap: 8px;
-  }
-  .tag {
-    padding: 4px 12px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 8px;
+}
+.tag {
+  padding: 4px 12px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
 </style>

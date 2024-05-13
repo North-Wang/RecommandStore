@@ -1,6 +1,6 @@
 <template>
   <header
-    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#09203f] to-[#15417a] text-base select-none"
+    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
   >
     <Teleport to="body">
       <Transition

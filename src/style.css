@@ -73,6 +73,11 @@ button:hover {
   background-color: #4baaf5;
   color: white;
 }
+button:disabled {
+  background-color: #dff1ff;
+  color: #33b8fd;
+  opacity: 0.6;
+}
 
 .card {
   padding: 2em;

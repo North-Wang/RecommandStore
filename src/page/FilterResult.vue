@@ -2,7 +2,7 @@
   <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
     <section class="select-none">
       <h3 class="py-[20px]">篩選結果</h3>
-      <h4>共{{ matchStore.length.toLocaleString() }}筆資料符合</h4>
+      <h4>共{{ count.toLocaleString() }}筆資料符合</h4>
       <ul class="flex justify-center min-h-[320px] mt-5 mb-[20px] md:mb-[32px]">
         <li
           class="rounded-lg wrapper-result bg-white dark:bg-white max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
@@ -21,7 +21,12 @@
             <h4 class="text-left leading-[1.2] select-all">
               {{ result.address }}
             </h4>
-            <img :src="copyIcon" alt="copyIcon" class="cursor-pointer" />
+            <img
+              :src="copyIcon"
+              alt="copyIcon"
+              class="cursor-pointer"
+              @click.prevent="copyText(result?.address)"
+            />
           </div>
           <ul class="wrapper-tag" v-if="result?.addressTag">
             <li v-for="tags in result?.addressTag">
@@ -70,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import Tooltip from "primevue/tooltip";
@@ -79,13 +84,26 @@ import copyIcon from "../assets/copy.svg";
 
 const storeInfo = useStoreInfo();
 const { matchStore, storeListAfterFilterType } = storeToRefs(storeInfo);
+const count = computed(() => {
+  if (matchStore.value.length === 0) {
+    //沒有選擇除了type以外的篩選條件
+    return storeListAfterFilterType.value.length;
+  } else {
+    return matchStore.value.length;
+  }
+});
 const result = ref({});
+
+async function copyText(text) {
+  console.log("aaa text", text);
+  navigator.clipboard.writeText(text);
+}
 
 function doFilter() {
   if (matchStore.value.length === 0) {
     //沒有選擇除了type以外的篩選條件
     const index = Math.floor(
-      Math.random() * storeListAfterFilterType.value.length
+      Math.random() * storeListAfterFilterType.value.length,
     );
     result.value = storeListAfterFilterType.value[index] || {};
   } else {
