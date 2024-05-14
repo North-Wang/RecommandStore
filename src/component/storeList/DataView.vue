@@ -86,10 +86,17 @@ import { useStoreInfo } from "../../store/useStoreInfo";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
 
+//picture
+import editIcon from "../../assets/editIcon.svg";
+
 const props = defineProps({
   dataList: {
     type: Array,
     default: () => [],
+  },
+  rows: {
+    type: Number,
+    default: 10,
   },
 });
 
@@ -97,14 +104,13 @@ const storeInfo = useStoreInfo()
 const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
 const currentPageStore = ref([]) //篩選完的店家資料
 const moreOptionMap = ref(new Map());
-const rows = ref(10)
 
 function setStoreData() {
     if(matchStore.value.length){
-        currentPageStore.value = matchStore.value.slice(0, rows.value - 1);
+        currentPageStore.value = matchStore.value.slice(0, props.rows - 1);
     }else{
         //尚未更改篩選條件
-        currentPageStore.value = storeListAfterFilterType.value.slice(0, rows.value - 1);
+        currentPageStore.value = storeListAfterFilterType.value.slice(0, props.rows - 1);
     }  
 }
 
@@ -175,19 +181,5 @@ input[type="search"] {
     border-radius: 5px;
     border: 1px solid gray;
   }
-}
-.wrapper-tag {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 8px;
-  row-gap: 8px;
-}
-.tag {
-  padding: 4px 12px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
 }
 </style>

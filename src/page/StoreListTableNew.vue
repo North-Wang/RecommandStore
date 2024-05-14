@@ -9,11 +9,11 @@
         <button class="text-black" disabled><h4>新增</h4></button>
       </div>
 
-      <h4 class="py-3">共{{ tableData.length?.toLocaleString() }}筆資料</h4>
+      <h4 class="py-3">共{{ total }}筆資料</h4>
       <div class="px-2 relative">
         <input
           type="search"
-          placeholder="請輸入店家名稱"
+          placeholder="請輸入店家名稱、目的、商圈標籤、特色、種類"
           class="w-full text-center text-black dark:text-white lg:max-w-[300px] mb-[8px]"
           v-model="keyword"
           @change="search()"
@@ -23,109 +23,8 @@
         ></span>
       </div>
     </section>
-    <DataView :dataList="tableData" v-if="isMobile" />
-    <ul
-      class="font-semibold h-full flex items-center justify-center select-none"
-      v-if="!isMobile"
-    >
-      <DataTable
-        :value="tableData"
-        :scrollable="true"
-        scrollHeight="flex"
-        :paginator="true"
-        paginatorPosition="top"
-        :pageLinkSize="3"
-        :first="0"
-        :rows="rows"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-        class="w-full h-full dark:text-black"
-      >
-        <Column
-          field="name"
-          header="店名"
-          class="text-left w-[400px]"
-          frozen
-        ></Column>
-        <Column
-          field="type"
-          header="類型"
-          :sortable="true"
-          class="w-[80px]"
-        ></Column>
-        <Column field="purple" header="目的" :sortable="true">
-          <template #body="{ data }">
-            <ul class="w-[120px] wrapper-tag">
-              <li
-                v-for="tags in data?.purple.split(/[,，、]/)"
-                :key="tags"
-                class=" "
-              >
-                <span class="tag bg-yellow"> {{ tags }}</span>
-              </li>
-            </ul>
-          </template>
-        </Column>
-        <Column
-          field="addressTag"
-          header="商圈標籤"
-          :sortable="true"
-          class="text-left flex-1"
-        >
-          <template #body="{ data }">
-            <ul class="w-[120px] wrapper-tag">
-              <li v-for="tags in data?.addressTag" :key="tags" class=" ">
-                <span class="tag bg-blue"> {{ tags }}</span>
-              </li>
-            </ul>
-          </template>
-        </Column>
-        <Column field="address" header="地點" class="text-left w-[400px]">
-        </Column>
-        <Column
-          field="feature"
-          header="特色"
-          :sortable="true"
-          class="text-left w-[400px]"
-        ></Column>
-        <Column
-          field="category"
-          header="種類"
-          :sortable="true"
-          class="text-left w-[400px]"
-        >
-          <template #body="{ data }">
-            <ul class="wrapper-tag">
-              <li
-                v-for="tags in data?.category.split(/[,，、]/)"
-                :key="tags"
-                class=" "
-              >
-                <span class="tag bg-[#d6d6d6]"> {{ tags }}</span>
-              </li>
-            </ul>
-          </template>
-        </Column>
-        <template #empty>
-          <div class="text-black dark:text-black">沒有店家資料</div>
-        </template>
-      </DataTable>
-      <!-- <li
-          v-for="(store, index) in currentPageStore"
-          :key="index"
-          class="store"
-        >{{ store.name }}
-      </li> -->
-    </ul>
-
-    <!-- <Paginator
-      class="fixed bottom-0 w-full"
-      :totalRecords="total"
-      :first="0"
-      :rows="rows"
-      :pageLinkSize="3"
-      template="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink "
-      @page="onPage($event)"
-    /> -->
+    <DataView :dataList="tableData" :rows="rows" v-if="isMobile" />
+    <DataTableView :dataList="tableData" :rows="rows" v-if="!isMobile" />
   </main>
 </template>
 
@@ -135,21 +34,18 @@ import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useWindowSize } from "@vueuse/core";
 import isMobileDevice from "../js/isMobileDevice";
-import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import DataView from "../component/storeList/DataView.vue";
-
-//picure
-import editIcon from "../assets/editIcon.svg";
+import DataTableView from "../component/storeList/DataTableView.vue";
 
 const storeInfo = useStoreInfo();
 const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
 const { width, height } = useWindowSize();
-const tableData = ref(matchStore.value); //符合篩選條件的店家
+const tableData = ref(matchStore.value); //經過搜尋完的結果，符合篩選條件的店家
 const total = computed(() => {
-  return tableData.value.length;
+  return tableData.value.length.toLocaleString();
 });
 const rows = ref(10); //一頁顯示幾筆資料
 const currentPageStore = ref([]); //篩選完的店家資料
@@ -158,24 +54,12 @@ const moreOptionMap = ref(new Map());
 const isMobile = ref(true);
 const keyword = ref("");
 
-function onPage(e) {
-  currentPageStore.value = tableData.value.slice(e.first, e.first + e.rows);
-}
-
-//切換那些店家要顯示更多資訊
-function toggleShowMoreOption(name) {
-  if (moreOptionMap.value.has(name)) {
-    moreOptionMap.value.delete(name);
-  } else {
-    moreOptionMap.value.set(name);
-  }
-}
-
 function search() {
   console.log("搜尋", keyword.value);
-  if (keyword.value === "") {
+  if (keyword.value.trim() === "") {
     tableData.value = matchStore.value;
   } else {
+    console.log("aaa 這裡有可能maatchStore為0");
     tableData.value = matchStore.value.filter((item) => {
       let matchStore = item.name.includes(keyword.value);
       let matchAddressTag = item.addressTag.includes(keyword.value);
@@ -192,10 +76,10 @@ function search() {
     });
   }
   console.log("搜尋結果", tableData.value);
-  setStoreData();
+  setDefaultStoreData();
 }
 
-function setStoreData() {
+function setDefaultStoreData() {
   currentPageStore.value = tableData.value.slice(0, rows.value - 1);
 }
 
@@ -204,12 +88,12 @@ watch(
   (width) => {
     isMobile.value = width < 1024;
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 watch(matchStore, (store) => {
   tableData.value = store;
-  setStoreData();
+  setDefaultStoreData();
 });
 
 onMounted(() => {
@@ -218,7 +102,7 @@ onMounted(() => {
     tableData.value = storeListAfterFilterType.value;
   }
   if (isMobile.value) {
-    setStoreData();
+    setDefaultStoreData();
   }
 });
 </script>
@@ -269,39 +153,9 @@ input[type="search"] {
     background-color: #4baaf5;
     color: white;
   }
-}
-:deep(.p-datatable-wrapper) {
-  thead {
-    height: 60px;
-    border-bottom: 1px solid gray;
-    th {
-      white-space: nowrap;
-      padding-left: 12px;
-      padding-right: 12px;
-    }
+  .p-disabled {
+    background-color: unset;
+    color: white;
   }
-  tbody {
-    td {
-      padding-left: 12px;
-      padding-right: 12px;
-      padding-top: 16px;
-      padding-bottom: 16px;
-      border-bottom: 0.5px solid gray;
-    }
-  }
-}
-.wrapper-tag {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 8px;
-  row-gap: 8px;
-}
-.tag {
-  padding: 4px 12px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
 }
 </style>

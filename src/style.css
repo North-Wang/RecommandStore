@@ -115,6 +115,21 @@ label:has(input[type="checkbox"]:checked) {
   color: white;
 }
 
+.wrapper-tag {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 8px;
+}
+.tag {
+  padding: 4px 12px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+
 #app {
   min-height: 100vh;
   display: flex;
