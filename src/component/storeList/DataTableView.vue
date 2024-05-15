@@ -124,4 +124,29 @@ const props = defineProps({
     }
   }
 }
+:deep(.p-paginator) {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  padding-bottom: 8px;
+  .p-paginator-element {
+    padding: 8px 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .p-paginator-pages {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .p-highlight {
+    background-color: #4baaf5;
+    color: white;
+  }
+  .p-disabled {
+    background-color: unset;
+    color: white;
+  }
+}
 </style>

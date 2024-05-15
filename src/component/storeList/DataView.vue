@@ -132,6 +132,7 @@ watch(()=>props.dataList, (data)=>{
 })
 
 onMounted(()=>{
+  setCurrentPage()
 })
 </script>
 
@@ -185,7 +186,7 @@ input[type="search"] {
     border: 1px solid gray;
   }
 }
- :deep(.p-paginator) {
+:deep(.p-paginator) {
   display: flex;
   justify-content: center;
   background-color: black;
@@ -209,5 +210,5 @@ input[type="search"] {
     background-color: unset;
     color: white;
   }
-} 
+}
 </style>
