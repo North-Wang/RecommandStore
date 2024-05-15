@@ -1,14 +1,22 @@
 <template>
+  <div>
+    <Paginator 
+    :rows="rows" 
+    :totalRecords="dataList.length" 
+	  :pageLinkSize="3"
+	  template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+    @page="onPage($event)"
+  />
   <ul class="overflow-y-auto" style="height: calc(100vh - 269px)" >
       <h4
         class="font-semibold h-full flex items-center justify-center text-black dark:text-black"
-        v-if="!currentPageStore.length"
+        v-if="!dataList.length"
       >
         沒有店家資料
       </h4>
       <ul v-else>
         <li
-          v-for="(store, index) in currentPageStore"
+          v-for="(store, index) in currentPage"
           :key="index"
           class="store bg-white"
         >
@@ -28,7 +36,7 @@
 
           <ul class="wrapper-tag mt-[12px]">
             <li
-              v-for="purples in store?.purple.split('、')"
+              v-for="purples in store?.purple?.split('、')"
               v-if="store?.purple"
             >
               <div class="tag bg-yellow">{{ purples }}</div>
@@ -42,7 +50,7 @@
           </ul>
           <li class="wrapper-tag mt-2">
             <ul
-              v-for="cates in store?.category.split('、')"
+              v-for="cates in store?.category?.split('、')"
               v-if="store?.category"
             >
               <li class="tag bg-[#d6d6d6]">{{ cates }}</li>
@@ -73,15 +81,14 @@
             </li>
           </ul>
         </li>
-      </ul>
-      
-      
+      </ul> 
     </ul>
+  </div>
+  
 </template>
 
 <script setup>
 import { ref, defineProps, onMounted, watch } from "vue";
-import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../../store/useStoreInfo";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
@@ -100,18 +107,11 @@ const props = defineProps({
   },
 });
 
-const storeInfo = useStoreInfo()
-const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
-const currentPageStore = ref([]) //篩選完的店家資料
 const moreOptionMap = ref(new Map());
+const currentPage = ref([])
 
-function setStoreData() {
-    if(matchStore.value.length){
-        currentPageStore.value = matchStore.value.slice(0, props.rows - 1);
-    }else{
-        //尚未更改篩選條件
-        currentPageStore.value = storeListAfterFilterType.value.slice(0, props.rows - 1);
-    }  
+function setCurrentPage() {
+  currentPage.value = props.dataList.slice(0, props.rows)
 }
 
 //切換那些店家要顯示更多資訊
@@ -123,12 +123,15 @@ function toggleShowMoreOption(name) {
   }
 }
 
-watch(()=>props.dataList, ()=>{
-    setStoreData()
+function onPage(e) {
+  currentPage.value = props.dataList.slice(e.first, e.first + e.rows)
+}
+
+watch(()=>props.dataList, (data)=>{
+  setCurrentPage()
 })
 
 onMounted(()=>{
-    setStoreData()
 })
 </script>
 
@@ -182,4 +185,29 @@ input[type="search"] {
     border: 1px solid gray;
   }
 }
+ :deep(.p-paginator) {
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  padding-bottom: 8px;
+  .p-paginator-element {
+    padding: 8px 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .p-paginator-pages {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  .p-highlight {
+    background-color: #4baaf5;
+    color: white;
+  }
+  .p-disabled {
+    background-color: unset;
+    color: white;
+  }
+} 
 </style>

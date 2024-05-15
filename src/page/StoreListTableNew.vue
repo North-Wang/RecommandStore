@@ -16,15 +16,15 @@
           placeholder="請輸入店家名稱、目的、商圈標籤、特色、種類"
           class="w-full text-center text-black dark:text-white lg:max-w-[300px] mb-[8px]"
           v-model="keyword"
-          @change="search()"
+          @input="search()"
         />
         <span
           class="pi pi-search absolute left-[16px] top-[10px] text-black dark:text-white"
         ></span>
       </div>
     </section>
-    <DataView :dataList="tableData" :rows="rows" v-if="isMobile" />
-    <DataTableView :dataList="tableData" :rows="rows" v-if="!isMobile" />
+    <DataView :dataList="storeAfterSearch" :rows="rows" v-if="isMobile" />
+    <DataTableView :dataList="storeAfterSearch" :rows="rows" v-if="!isMobile" />
   </main>
 </template>
 
@@ -43,29 +43,48 @@ import DataTableView from "../component/storeList/DataTableView.vue";
 const storeInfo = useStoreInfo();
 const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
 const { width, height } = useWindowSize();
-const tableData = ref(matchStore.value); //經過搜尋完的結果，符合篩選條件的店家
+const storeAfterSearch = ref(matchStore.value); //經過搜尋完的結果，符合篩選條件的店家
 const total = computed(() => {
-  return tableData.value.length.toLocaleString();
+  return storeAfterSearch.value.length.toLocaleString();
 });
 const rows = ref(10); //一頁顯示幾筆資料
-const currentPageStore = ref([]); //篩選完的店家資料
 const moreOptionMap = ref(new Map());
 // const isMobile = isMobileDevice();
 const isMobile = ref(true);
 const keyword = ref("");
 
 function search() {
-  console.log("搜尋", keyword.value);
+  // console.log("搜尋", keyword.value);
   if (keyword.value.trim() === "") {
-    tableData.value = matchStore.value;
+    setDefaultStore();
+    return;
+  }
+
+  /* 開始搜尋 */
+  if (matchStore.value.length == 0) {
+    //尚未變更篩選條件
+    storeAfterSearch.value = storeAfterSearch.value.filter((item) => {
+      let matchStore = item?.name.includes(keyword.value);
+      let matchAddressTag = item?.addressTag.includes(keyword.value);
+      let matchPurple = item.purple?.includes(keyword.value);
+      let matchCategory = item.category?.includes(keyword.value);
+      let matchFeature = item.feature?.includes(keyword.value);
+      return (
+        matchStore ||
+        matchAddressTag ||
+        matchPurple ||
+        matchCategory ||
+        matchFeature
+      );
+    });
   } else {
-    console.log("aaa 這裡有可能maatchStore為0");
-    tableData.value = matchStore.value.filter((item) => {
-      let matchStore = item.name.includes(keyword.value);
-      let matchAddressTag = item.addressTag.includes(keyword.value);
-      let matchPurple = item.purple.includes(keyword.value);
-      let matchCategory = item.category.includes(keyword.value);
-      let matchFeature = item.feature.includes(keyword.value);
+    //有變更篩選條件
+    storeAfterSearch.value = matchStore.value.filter((item) => {
+      let matchStore = item.name?.includes(keyword.value);
+      let matchAddressTag = item?.addressTag.includes(keyword.value);
+      let matchPurple = item.purple?.includes(keyword.value);
+      let matchCategory = item.category?.includes(keyword.value);
+      let matchFeature = item.feature?.includes(keyword.value);
       return (
         matchStore ||
         matchAddressTag ||
@@ -75,12 +94,17 @@ function search() {
       );
     });
   }
-  console.log("搜尋結果", tableData.value);
-  setDefaultStoreData();
+  console.log("搜尋結果", storeAfterSearch.value);
 }
 
-function setDefaultStoreData() {
-  currentPageStore.value = tableData.value.slice(0, rows.value - 1);
+//設定回預設店家資料
+function setDefaultStore() {
+  if (matchStore.value.length == 0) {
+    //尚未變更篩選條件
+    storeAfterSearch.value = storeListAfterFilterType.value;
+  } else {
+    storeAfterSearch.value = matchStore.value;
+  }
 }
 
 watch(
@@ -92,18 +116,12 @@ watch(
 );
 
 watch(matchStore, (store) => {
-  tableData.value = store;
-  setDefaultStoreData();
+  storeAfterSearch.value = store;
+  search();
 });
 
 onMounted(() => {
-  if (matchStore.value.length == 0) {
-    console.log("尚未變更篩選條件");
-    tableData.value = storeListAfterFilterType.value;
-  }
-  if (isMobile.value) {
-    setDefaultStoreData();
-  }
+  setDefaultStore();
 });
 </script>
 
@@ -117,45 +135,5 @@ input[type="search"] {
   height: 40px;
   padding-left: 32px;
   padding-right: 8px;
-}
-// .grid-items{
-//   width: 100%;
-//   flex-grow: 1;
-//   color: black;
-//   display: flex;
-//   align-items: center;
-//   -webkit-user-select: none !important;
-//     -moz-user-select: none !important;
-//     user-select: none !important;
-//     padding-left: 16px;
-//     padding-right: 16px;
-//   @media (prefers-color-shceme: dark) {
-//     color: black;
-//   }
-// }
-:deep(.p-paginator) {
-  display: flex;
-  justify-content: center;
-  background-color: black;
-  color: white;
-  padding-bottom: 8px;
-  .p-paginator-element {
-    padding: 8px 12px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  .p-paginator-pages {
-    display: flex;
-    flex-wrap: nowrap;
-  }
-  .p-highlight {
-    background-color: #4baaf5;
-    color: white;
-  }
-  .p-disabled {
-    background-color: unset;
-    color: white;
-  }
 }
 </style>

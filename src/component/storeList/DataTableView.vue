@@ -88,8 +88,6 @@
 
 <script setup>
 import { ref, defineProps, onMounted, watch } from "vue";
-import { storeToRefs } from "pinia";
-import { useStoreInfo } from "../../store/useStoreInfo";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 
