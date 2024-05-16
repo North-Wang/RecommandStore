@@ -1,7 +1,7 @@
 <!-- 篩選器彈窗 -->
 <template>
   <ul class="wrapper-filter w-full h-dvh md:w-[500px]">
-    <li class="px-[12px] py-[12px]" style="border-bottom: 1px solid white">
+    <li class="px-[12px] py-[12px] border-bottom">
       <img
         :src="iconX"
         alt="x"
@@ -122,10 +122,14 @@ filterInfo.$subscribe((mutation, state) => {
   // console.table(state);
 });
 
-async function changeType(type) {
-  //由於type以外的選項會變更，因此要清空所選條件
+async function resetFilters() {
   filterInfo.$reset();
   await resetSelected();
+}
+
+async function changeType(type) {
+  //由於type以外的選項會變更，因此要清空所選條件
+  resetFilters();
 
   filterInfo.type = type;
   await storeInfo.filterType(type);

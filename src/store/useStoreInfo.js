@@ -11,7 +11,6 @@ export const useStoreInfo = defineStore({
     allTypeOption: [], //所有type
     allPurpleOption: [], //所有"目的"
     allFeatureOption: [],
-    // allAddressOption: [], //所有"地址"
     allCategoryOption: [],
     allAddressTag: [], //所有的商圈標籤
   }),
@@ -23,16 +22,6 @@ export const useStoreInfo = defineStore({
         return store.type === type;
       });
     },
-    // filterAddressTag(tag) {
-    //   //根據商圈標籤來決定其他option要出現出現什麼選項
-    //   //因為變更的次數較少，所以更新時會重新篩選storeList，以減少其他選項要篩選的資料筆數
-    //   if (tag === "" || !tag) return;
-    //   this.storeListAfterFilterType = this.storeListAfterFilterType.filter(
-    //     (store) => {
-    //       return store.addressTag.includes(tag);
-    //     },
-    //   );
-    // },
     setTypeOption() {
       const allType = new Set();
       this.storeList.forEach((store) => {
@@ -62,11 +51,6 @@ export const useStoreInfo = defineStore({
       const allCategory = new Set();
 
       this.storeListAfterFilterType.forEach((store) => {
-        //get all address options
-        // if (!allAddress.has(store.address)) {
-        //   allAddress.add(store.address);
-        // }
-
         //get all purple options
         const purpleArray = store.purple.split(/[,，、]/);
         purpleArray.forEach((item) => {

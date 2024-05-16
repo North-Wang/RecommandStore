@@ -32,10 +32,12 @@ const setOption = async function () {
   await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 };
-function setFilterType() {
+function selectFilterType() {
   if (type.value === "") {
     //如果尚未選擇篩選條件的type
+    console.log("重新設定type");
     filterInfo.type = allTypeOption.value[0];
+    storeInfo.filterType(filterInfo.type);
   }
 }
 const getStoreList = async function () {
@@ -74,7 +76,7 @@ const getStoreList = async function () {
 
 onMounted(async function () {
   await getStoreList();
-  Promise.all([setOption(), setFilterType()]);
+  Promise.all([setOption(), selectFilterType()]);
 });
 </script>
 

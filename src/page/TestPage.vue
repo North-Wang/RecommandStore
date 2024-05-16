@@ -1,8 +1,9 @@
 <template>
   <ul>
     <li>test</li>
+    <button>click</button>
     <!-- 建議有小孩出遊的選項 -->
-    <!-- <button @click="addStore">送出</button> -->
+    <button @click="addStore">送出</button>
   </ul>
 </template>
 
@@ -21,8 +22,11 @@ const testStore = ref({
   權重: 1,
 });
 const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
+// const url = ref(
+//   `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/住宿`
+// );
 const url = ref(
-  `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/住宿`,
+  "https://script.google.com/macros/s/AKfycbxHruY3wc2gLADRdR8HwNtuD8VKH88CIDoRwZMRQRBrYM1LKI28FdZJ_U0qFMzweX8xBw/exec"
 );
 
 function addStore() {

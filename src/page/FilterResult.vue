@@ -4,7 +4,7 @@
       <h3 class="py-[20px]">篩選結果</h3>
       <h4>共{{ count.toLocaleString() }}筆資料符合</h4>
       <ul
-        class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px]"
+        class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px] animate-pulse"
       >
         <li
           class="rounded-lg wrapper-result bg-white dark:bg-white max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"

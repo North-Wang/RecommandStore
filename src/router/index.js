@@ -3,6 +3,7 @@ import {
   createWebHashHistory,
   createWebHistory,
 } from "vue-router";
+
 // import Homepage from "../page/Homepage.vue";
 import Homepage from "../page/HomepageNew.vue";
 import FilterResult from "../page/FilterResult.vue";
@@ -13,8 +14,10 @@ import TestPage from "../page/TestPage.vue";
 import ContactMe from "../page/ContactMe.vue";
 
 import isMobileDevice from "../js/isMobileDevice";
+import { useLoading } from "../store/useLoading";
 
 const isMobile = isMobileDevice();
+// const loadingInfo = useLoading();
 
 const router = createRouter({
   history: createWebHashHistory(), //如果填入"/object"，這樣進去每個分頁的前面都會有/object

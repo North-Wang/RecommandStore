@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, Teleport } from "vue";
+import { ref, Teleport } from "vue";
 </script>
 
 <style scoped>

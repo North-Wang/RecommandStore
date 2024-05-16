@@ -63,7 +63,7 @@ function search() {
   /* 開始搜尋 */
   if (matchStore.value.length == 0) {
     //尚未變更篩選條件
-    storeAfterSearch.value = storeAfterSearch.value.filter((item) => {
+    storeAfterSearch.value = storeListAfterFilterType.value.filter((item) => {
       let matchStore = item?.name.includes(keyword.value);
       let matchAddressTag = item?.addressTag.includes(keyword.value);
       let matchPurple = item.purple?.includes(keyword.value);
