@@ -1,6 +1,5 @@
 // 儲存已經選擇的篩選條件
 import { defineStore } from "pinia";
-import { useStoreInfo } from "./useStoreInfo";
 
 export const useFilter = defineStore({
   id: "filterInfo",

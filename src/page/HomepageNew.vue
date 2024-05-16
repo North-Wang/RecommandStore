@@ -65,20 +65,26 @@ function changeType(type) {
   filterInfo.type = type;
 }
 
+function setDefaultType() {
+  currentType.value = allTypeOption.value[0];
+  filterInfo.type = allTypeOption.value[0];
+}
+
 watch(
   allTypeOption,
   () => {
     //第一次進來的時候，要設定currentType
-    currentType.value = allTypeOption.value[0];
-    filterInfo.type = allTypeOption.value[0];
+    setDefaultType();
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 onMounted(() => {
   if (type.value !== "") {
     //如果有選擇過type
     currentType.value = type.value;
+  } else {
+    setDefaultType();
   }
 });
 </script>

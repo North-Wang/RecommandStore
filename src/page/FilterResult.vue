@@ -3,7 +3,9 @@
     <section class="select-none">
       <h3 class="py-[20px]">篩選結果</h3>
       <h4>共{{ count.toLocaleString() }}筆資料符合</h4>
-      <ul class="flex justify-center min-h-[320px] mt-5 mb-[20px] md:mb-[32px]">
+      <ul
+        class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px]"
+      >
         <li
           class="rounded-lg wrapper-result bg-white dark:bg-white max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
           v-if="Object.keys(result).length"
@@ -103,7 +105,7 @@ function doFilter() {
   if (matchStore.value.length === 0) {
     //沒有選擇除了type以外的篩選條件
     const index = Math.floor(
-      Math.random() * storeListAfterFilterType.value.length,
+      Math.random() * storeListAfterFilterType.value.length
     );
     result.value = storeListAfterFilterType.value[index] || {};
   } else {

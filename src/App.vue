@@ -7,26 +7,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "./store/useStoreInfo.js";
 import { useLoading } from "./store/useLoading";
+import { useFilter } from "./store/useFilter";
 import axios from "axios";
 import Header from "./component/Header.vue";
 import Footer from "./component/Footer.vue";
 import Loading from "./component/Loading.vue";
 
 const storeInfo = useStoreInfo();
+const filterInfo = useFilter();
 const loading = useLoading();
 const { isLoading } = storeToRefs(loading);
+const { allTypeOption } = storeToRefs(storeInfo);
+const { type } = storeToRefs(filterInfo);
 const allStoreInfo = ref([]); //全部的店家資訊
 
+//get all options
 const setOption = async function () {
   storeInfo.setTypeOption();
   await storeInfo.filterType("餐廳");
   await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 };
+function setFilterType() {
+  if (type.value === "") {
+    //如果尚未選擇篩選條件的type
+    filterInfo.type = allTypeOption.value[0];
+  }
+}
 const getStoreList = async function () {
   const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
   const name = "餐廳";
@@ -55,9 +66,6 @@ const getStoreList = async function () {
       //update data to Pinia
       storeInfo.storeList = allStoreInfo.value;
       storeInfo.titleList = titleList;
-
-      //get all options
-      setOption();
     });
   } catch (error) {
     console.log("連線有誤", error);
@@ -65,7 +73,8 @@ const getStoreList = async function () {
 };
 
 onMounted(async function () {
-  Promise.all([getStoreList()]);
+  await getStoreList();
+  Promise.all([setOption(), setFilterType()]);
 });
 </script>
 

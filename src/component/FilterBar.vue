@@ -12,13 +12,6 @@
     <h3 class="container text-center select-none">
       總共有{{ matchStore.length || "0" }}筆資料符合
     </h3>
-    <!-- <FilterList
-      ref="filterList"
-      :dataType="'type'"
-      :data="allTypeOption"
-      :inputType="'radio'"
-      @change="changeFilter"
-    /> -->
     <li class="container">
       <h3 class="title select-none">TYPE 類型</h3>
       <ul class="wrapper-tag">
@@ -219,7 +212,7 @@ watch(
   (storeList) => {
     matchStore.value = storeList;
   },
-  { immediate: true },
+  { immediate: true }
 );
 </script>
 

@@ -130,6 +130,10 @@ label:has(input[type="checkbox"]:checked) {
   font-weight: 600;
 }
 
+textarea {
+  resize: none;
+}
+
 #app {
   min-height: 100vh;
   display: flex;
