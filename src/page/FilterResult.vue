@@ -1,8 +1,8 @@
 <template>
   <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
     <section class="select-none">
-      <h3 class="py-[20px]">篩選結果</h3>
-      <h4>共{{ count.toLocaleString() }}筆資料符合</h4>
+      <h3 class="py-[20px] bg-black">篩選結果</h3>
+      <h4 class="bg-black pb-4">共{{ count.toLocaleString() }}筆資料符合</h4>
       <ul
         class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px] animate-pulse"
       >
@@ -67,7 +67,7 @@
 
     <div class="flex justify-center" v-if="Object.keys(result).length">
       <button
-        class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] bg-red text-white cursor-pointer select-none hover:bg-[#ad4747]"
+        class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none"
         @click.prevent="doFilter()"
       >
         抽選
@@ -138,7 +138,7 @@ main {
   flex-direction: column;
 }
 section {
-  background-color: black;
+  // background-color: black;
   color: white;
 }
 .wrapper-result {

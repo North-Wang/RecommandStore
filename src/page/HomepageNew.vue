@@ -27,7 +27,7 @@
     </div>
     <!-- <FilterButton /> -->
     <button
-      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none bg-white text-black animate-bounce"
+      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none animate-bounce"
       @click="doFilter()"
     >
       START
