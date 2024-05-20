@@ -15,12 +15,12 @@ import axios from "axios";
 
 const testStore = {
   name: "測試用店家",
-  type: "日式",
+  type: "餐廳",
+  purple: "普通吃飯",
   address: "115台北市南港區南港路一段201號",
+  addressTag: "台北車站",
   feature: "划算",
   category: "滷味,水餃",
-  purple: "普通吃飯",
-  tag: "划算、吃飽",
   權重: 1,
 };
 const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
@@ -39,6 +39,14 @@ async function addStore() {
     .then((data) => console.log(data))
     .catch((error) => console.error("Error:", error));
 }
+
+onMounted(() => {
+  if (formElement.value) {
+    formElement.value.addEventListener("submit", (e) => {
+      // e.preventDefault();
+    });
+  }
+});
 </script>
 
 <style scoped></style>

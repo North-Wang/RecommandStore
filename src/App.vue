@@ -39,6 +39,7 @@ function selectFilterType() {
     filterInfo.type = allTypeOption.value[0];
     storeInfo.filterType(filterInfo.type);
   }
+  setOption();
 }
 const getStoreList = async function () {
   const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
@@ -68,6 +69,7 @@ const getStoreList = async function () {
       //update data to Pinia
       storeInfo.storeList = allStoreInfo.value;
       storeInfo.titleList = titleList;
+      selectFilterType();
     });
   } catch (error) {
     console.log("連線有誤", error);
@@ -76,7 +78,6 @@ const getStoreList = async function () {
 
 onMounted(async function () {
   await getStoreList();
-  Promise.all([setOption(), selectFilterType()]);
 });
 </script>
 

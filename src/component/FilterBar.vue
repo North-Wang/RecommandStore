@@ -139,9 +139,10 @@ async function changeType(type) {
 }
 
 function changeFilter(obj) {
-  // console.log("篩選條件變更", obj.type, obj.option);
+  console.log("篩選條件變更", obj);
   filterInfo[obj.type] = obj.option; //將各項篩選條件統一存到pinia
-  doFilter();
+  console.log("新的篩選條件", filterInfo);
+  // doFilter();
 }
 
 function doFilter() {
@@ -216,13 +217,12 @@ watch(
   (storeList) => {
     matchStore.value = storeList;
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
 <style scoped lang="scss">
 .wrapper-filter {
-  height: 100%;
   color: white;
   display: flex;
   flex-direction: column;
