@@ -2,26 +2,21 @@
   <header
     class="header w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
   >
-    <Teleport to="body">
+    <div ref="filterBar">
+      <img
+        :src="moreOptionWhite"
+        alt="更多選項"
+        class="w-[32px] absolute left-3 top-[15px] rotate-90 cursor-pointer"
+        @click="showFilterBar = !showFilterBar"
+        v-if="showIcon"
+      />
       <Transition
         enter-active-class="animate__animated animate__slideInLeft animate__faster"
         leave-active-class="animate__animated animate__slideOutLeft animate__faster"
       >
-        <FilterBar
-          ref="filterBar"
-          v-show="showFilterBar"
-          @closeModal="showFilterBar = false"
-        />
+        <FilterBar v-show="showFilterBar" @closeModal="showFilterBar = false" />
       </Transition>
-    </Teleport>
-
-    <img
-      :src="moreOptionWhite"
-      alt="更多選項"
-      class="w-[32px] absolute left-3 top-[15px] rotate-90 cursor-pointer"
-      @click="showFilterBar = !showFilterBar"
-      v-if="showIcon"
-    />
+    </div>
 
     <div v-for="route in routerList" :key="route">
       <router-link :to="route.path" class="select-none">

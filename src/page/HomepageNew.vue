@@ -9,7 +9,9 @@
         <h1
           class="text-left break-keep text-[48px] md:text-[64px] font-black md:text-center py-[48px]"
         >
-          RECOMMEND STORE
+          <!-- <span> RECOMMEND STORE </span> -->
+          <!-- <span>Throw out a minnow to catch a whale</span> -->
+          <span>拋磚引玉</span>
         </h1>
         <h2 class="font-bold">Choose a purple</h2>
         <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
@@ -76,7 +78,7 @@ watch(
     //第一次進來的時候，要設定currentType
     setDefaultType();
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 onMounted(() => {

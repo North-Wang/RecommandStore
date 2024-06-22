@@ -1,7 +1,7 @@
 <!-- 篩選器彈窗 -->
 <template>
-  <ul class="wrapper-filter w-full h-dvh md:w-[500px]">
-    <li class="px-[12px] py-[12px] border-bottom">
+  <ul class="wrapper-filter h-screen md:w-[500px]">
+    <li class="px-[12px] py-[12px] border-bottom flex justify-normal">
       <img
         :src="iconX"
         alt="x"
@@ -63,16 +63,16 @@
       @change="changeFilter"
     />
     <li
-      class="w-screen px-[20px] py-[24px] text-white flex justify-between gap-[8px]"
+      class="w-full px-[20px] py-[24px] text-white flex justify-center gap-[8px]"
     >
       <button
-        class="flex-1 text-black bg-blue"
+        class="flex-1 text-black bg-blue max-w-[100px]"
         @click.self="certainChangeFilter()"
       >
         確認
       </button>
       <button
-        class="bg-white text-black flex-1 hover:text-black"
+        class="bg-white text-black flex-1 hover:text-black max-w-[100px]"
         @click.self="closeModal()"
       >
         取消
@@ -226,6 +226,8 @@ watch(
   color: white;
   display: flex;
   flex-direction: column;
+  // justify-content: center;
+  align-items: start;
   background-color: rgba(0, 0, 0);
   position: absolute;
   top: 0;
