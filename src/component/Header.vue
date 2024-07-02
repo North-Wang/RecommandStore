@@ -23,12 +23,34 @@
         <span class="text-white select-none">{{ route.name }}</span>
       </router-link>
     </div>
+
+    <div class="locale-changer">
+      <select v-model="$i18n.locale">
+        <option
+          v-for="locale in $i18n.availableLocales"
+          :key="`locale-${locale}`"
+          :value="locale"
+        >
+          {{ langObj[locale] }}
+        </option>
+      </select>
+    </div>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  computed,
+  Transition,
+  Teleport,
+} from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+
 import FilterBar from "./FilterBar.vue";
 import { onClickOutside } from "@vueuse/core";
 
@@ -39,6 +61,10 @@ import moreOptionWhite from "../assets/moreOptionWhite.svg";
 const route = useRoute();
 const env = computed(() => {
   return process.env.NODE_ENV;
+});
+const { t, locale } = useI18n({
+  inheritLocale: true,
+  useScope: "global",
 });
 const showIcon = computed(() => {
   switch (route.path) {
@@ -55,12 +81,22 @@ onClickOutside(filterBar, () => {
   showFilterBar.value = false;
 });
 
+const langObj = reactive({
+  en: "English",
+  zh_tw: "繁體中文",
+});
+
 const routerList = ref([
   { path: "/", name: "首頁" },
   // {path:"/", name:"測驗跳選", },
   { path: "/StoreListTable", name: "店家列表" },
   { path: "/ContactMe", name: "聯絡我" },
 ]);
+
+//儲存選擇的語言種類
+watch(locale, (val) => {
+  sessionStorage.setItem("lang", val);
+});
 </script>
 
 <style scoped lang="scss">

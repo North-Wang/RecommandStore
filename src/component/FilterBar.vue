@@ -10,7 +10,7 @@
       />
     </li>
     <h3 class="container text-center select-none">
-      總共有{{ matchStore.length || "0" }}筆資料符合
+      {{ $t("navbar.title", { count: matchStore.length || "0" }) }}
     </h3>
     <li class="container">
       <h3 class="title select-none">TYPE 類型</h3>
@@ -69,13 +69,13 @@
         class="flex-1 text-black bg-blue max-w-[100px]"
         @click.self="certainChangeFilter()"
       >
-        確認
+        {{ $t("button.certain") }}
       </button>
       <button
         class="bg-white text-black flex-1 hover:text-black max-w-[100px]"
         @click.self="closeModal()"
       >
-        取消
+        {{ $t("button.cancel") }}
       </button>
     </li>
   </ul>
@@ -86,12 +86,17 @@ import { ref, watch, Teleport, defineEmits, Transition } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useFilter } from "../store/useFilter";
+import { useI18n } from "vue-i18n";
 import FilterList from "./Filterbar/FilterList.vue";
 
 //picture
 import iconX from "../assets/X.svg";
 
 const emits = defineEmits(["closeModal"]);
+const { t, locale } = useI18n({
+  inheritLocale: true,
+  useScope: "global",
+});
 const storeInfo = useStoreInfo();
 const filterInfo = useFilter();
 const {
@@ -217,7 +222,7 @@ watch(
   (storeList) => {
     matchStore.value = storeList;
   },
-  { immediate: true },
+  { immediate: true }
 );
 </script>
 
