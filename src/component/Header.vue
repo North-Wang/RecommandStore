@@ -24,16 +24,25 @@
       </router-link>
     </div>
 
-    <div class="locale-changer">
-      <select v-model="$i18n.locale">
-        <option
-          v-for="locale in $i18n.availableLocales"
-          :key="`locale-${locale}`"
-          :value="locale"
-        >
-          {{ langObj[locale] }}
-        </option>
-      </select>
+    <div class="relative" ref="languageElement">
+      <img
+        :src="langWhite"
+        alt="earth"
+        class="w-[32px] aspect-square cursor-pointer"
+        @click="showLanguage = !showLanguage"
+      />
+      <div class="wrapper-lang absolute right-0 top-8" v-if="showLanguage">
+        <select v-model="$i18n.locale">
+          <option
+            v-for="locale in $i18n.availableLocales"
+            :key="`locale-${locale}`"
+            :value="locale"
+            class="option-lang"
+          >
+            {{ locale }}
+          </option>
+        </select>
+      </div>
     </div>
   </header>
 </template>
@@ -57,11 +66,10 @@ import { onClickOutside } from "@vueuse/core";
 //picture
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
+import langBlack from "../assets/header/languageBlack.svg";
+import langWhite from "../assets/header/languageWhite.svg";
 
 const route = useRoute();
-const env = computed(() => {
-  return process.env.NODE_ENV;
-});
 const { t, locale } = useI18n({
   inheritLocale: true,
   useScope: "global",
@@ -76,21 +84,21 @@ const showIcon = computed(() => {
   }
 });
 const filterBar = ref(null);
+const languageElement = ref(null);
 const showFilterBar = ref(false);
+const showLanguage = ref(false);
 onClickOutside(filterBar, () => {
   showFilterBar.value = false;
 });
-
-const langObj = reactive({
-  en: "English",
-  zh_tw: "繁體中文",
+onClickOutside(languageElement, () => {
+  showLanguage.value = false;
 });
 
 const routerList = ref([
-  { path: "/", name: "首頁" },
-  // {path:"/", name:"測驗跳選", },
-  { path: "/StoreListTable", name: "店家列表" },
-  { path: "/ContactMe", name: "聯絡我" },
+  { path: "/", name: "首頁", key: "home" },
+  // { path: "/", name: "測驗跳選", key: "testPage" },
+  { path: "/StoreListTable", name: "店家列表", key: "storeList" },
+  { path: "/ContactMe", name: "聯絡我", key: "contactUs" },
 ]);
 
 //儲存選擇的語言種類
@@ -110,5 +118,8 @@ watch(locale, (val) => {
   top: 0;
   left: 0;
   z-index: 60;
+}
+.option-lang {
+  padding: 2px 6px;
 }
 </style>
