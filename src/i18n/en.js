@@ -21,7 +21,7 @@ export const locale = {
   header: {
     home: "Home",
     storeList: "StoreList",
-    contactUs: "ContactUs",
+    contactUs: "Contact Us",
     testPage: "testPage",
   },
 };

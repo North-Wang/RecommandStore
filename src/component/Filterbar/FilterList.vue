@@ -149,6 +149,7 @@ defineExpose({
   background-color: rgba(0, 0, 0, 0.8);
   .title {
     font-family: "Francois One", sans-serif;
+    cursor: pointer;
   }
   .wrapper-tag {
     max-height: 136px;

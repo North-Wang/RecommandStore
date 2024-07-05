@@ -112,8 +112,13 @@ import isMobileDevice from "../js/isMobileDevice.js";
 import "primevue/resources/themes/vela-blue/theme.css";
 
 const storeInfo = useStoreInfo();
-const { storeList, titleList, allTypeOption, allPurpleOption, allAddressTag } =
-  storeToRefs(storeInfo);
+const {
+  storeRawData,
+  titleList,
+  allTypeOption,
+  allPurpleOption,
+  allAddressTag,
+} = storeToRefs(storeInfo);
 const storeTable = ref([]);
 const loading = useLoading();
 const keywordStore = ref("");
@@ -148,7 +153,7 @@ watch([keywordStore, keywordFeature], (keywordList) => {
     return keyword === "";
   });
   if (checkNoAnyKeyword) {
-    storeTable.value = storeList.value;
+    storeTable.value = storeRawData.value;
     return;
   }
 
@@ -157,7 +162,7 @@ watch([keywordStore, keywordFeature], (keywordList) => {
 });
 
 onMounted(() => {
-  storeTable.value = storeList.value || [];
+  storeTable.value = storeRawData.value || [];
 });
 </script>
 <style scoped lang="scss">

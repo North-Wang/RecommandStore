@@ -11,5 +11,5 @@ export const useFilter = defineStore({
     category: [],
   }),
   action: {},
-  // persist: true,
+  persist: true,
 });

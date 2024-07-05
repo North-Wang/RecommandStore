@@ -85,13 +85,13 @@ import Tooltip from "primevue/tooltip";
 import copyIcon from "../assets/copy.svg";
 
 const storeInfo = useStoreInfo();
-const { matchStore, storeListAfterFilterType } = storeToRefs(storeInfo);
+const { storeResult, storeTemporary } = storeToRefs(storeInfo);
 const count = computed(() => {
-  if (matchStore.value.length === 0) {
+  if (storeResult.value.length === 0) {
     //沒有選擇除了type以外的篩選條件
-    return storeListAfterFilterType.value.length;
+    return storeTemporary.value.length;
   } else {
-    return matchStore.value.length;
+    return storeResult.value.length;
   }
 });
 const result = ref({});
@@ -101,22 +101,21 @@ async function copyText(text) {
   navigator.clipboard.writeText(text);
 }
 
+//隨機抽選一個店家
 function doFilter() {
-  if (matchStore.value.length === 0) {
+  if (storeResult.value.length === 0) {
     //沒有選擇除了type以外的篩選條件
-    const index = Math.floor(
-      Math.random() * storeListAfterFilterType.value.length
-    );
-    result.value = storeListAfterFilterType.value[index] || {};
+    const index = Math.floor(Math.random() * storeTemporary.value.length);
+    result.value = storeTemporary.value[index] || {};
   } else {
-    const index = Math.floor(Math.random() * matchStore.value.length);
-    result.value = matchStore.value[index] || {};
+    const index = Math.floor(Math.random() * storeResult.value.length);
+    result.value = storeResult.value[index] || {};
   }
 
   console.log("抽選的結果", result.value);
 }
 
-watch(matchStore, () => {
+watch(storeResult, () => {
   doFilter();
 });
 

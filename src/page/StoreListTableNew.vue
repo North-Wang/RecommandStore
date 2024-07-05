@@ -41,9 +41,9 @@ import DataView from "../component/storeList/DataView.vue";
 import DataTableView from "../component/storeList/DataTableView.vue";
 
 const storeInfo = useStoreInfo();
-const { storeListAfterFilterType, matchStore } = storeToRefs(storeInfo);
+const { storeTemporary, storeResult } = storeToRefs(storeInfo);
 const { width, height } = useWindowSize();
-const storeAfterSearch = ref(matchStore.value); //經過搜尋完的結果，符合篩選條件的店家
+const storeAfterSearch = ref(storeResult.value); //經過搜尋完的結果，符合篩選條件的店家
 const total = computed(() => {
   return storeAfterSearch.value.length.toLocaleString();
 });
@@ -61,16 +61,16 @@ function search() {
   }
 
   /* 開始搜尋 */
-  if (matchStore.value.length == 0) {
+  if (storeResult.value.length == 0) {
     //尚未變更篩選條件
-    storeAfterSearch.value = storeListAfterFilterType.value.filter((item) => {
-      let matchStore = item?.name.includes(keyword.value);
+    storeAfterSearch.value = storeTemporary.value.filter((item) => {
+      let storeResult = item?.name.includes(keyword.value);
       let matchAddressTag = item?.addressTag.includes(keyword.value);
       let matchPurple = item.purple?.includes(keyword.value);
       let matchCategory = item.category?.includes(keyword.value);
       let matchFeature = item.feature?.includes(keyword.value);
       return (
-        matchStore ||
+        storeResult ||
         matchAddressTag ||
         matchPurple ||
         matchCategory ||
@@ -79,14 +79,14 @@ function search() {
     });
   } else {
     //有變更篩選條件
-    storeAfterSearch.value = matchStore.value.filter((item) => {
-      let matchStore = item.name?.includes(keyword.value);
+    storeAfterSearch.value = storeResult.value.filter((item) => {
+      let storeResult = item.name?.includes(keyword.value);
       let matchAddressTag = item?.addressTag.includes(keyword.value);
       let matchPurple = item.purple?.includes(keyword.value);
       let matchCategory = item.category?.includes(keyword.value);
       let matchFeature = item.feature?.includes(keyword.value);
       return (
-        matchStore ||
+        storeResult ||
         matchAddressTag ||
         matchPurple ||
         matchCategory ||
@@ -99,11 +99,11 @@ function search() {
 
 //設定回預設店家資料
 function setDefaultStore() {
-  if (matchStore.value.length == 0) {
+  if (storeResult.value.length == 0) {
     //尚未變更篩選條件
-    storeAfterSearch.value = storeListAfterFilterType.value;
+    storeAfterSearch.value = storeTemporary.value;
   } else {
-    storeAfterSearch.value = matchStore.value;
+    storeAfterSearch.value = storeResult.value;
   }
 }
 
@@ -115,7 +115,7 @@ watch(
   { immediate: true }
 );
 
-watch(matchStore, (store) => {
+watch(storeResult, (store) => {
   storeAfterSearch.value = store;
   search();
 });
