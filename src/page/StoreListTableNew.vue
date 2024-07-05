@@ -5,7 +5,7 @@
     <section class="">
       <div class="flex justify-between items-center px-[20px] py-[20px]">
         <h3></h3>
-        <h3>店家列表</h3>
+        <h3>{{ $t("storeInfo.title") }}</h3>
         <button class="text-black" disabled><h4>新增</h4></button>
       </div>
 

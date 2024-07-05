@@ -28,55 +28,15 @@ import "primeflex/primeflex.css";
 
 //i18n
 import { createI18n } from "vue-i18n";
+import { locale as en } from "./i18n/en.js";
+import { locale as zh_tw } from "./i18n/zh_tw.js";
 const i18n = createI18n({
   legacy: false, // you must set `false`, to use Composition API
-  locale: localStorage.getItem("lang") || "zh_tw", //設定本地語言種類
+  locale: sessionStorage.getItem("lang") || "zh_tw", //設定本地語言種類
   fallbackLocale: "en",
   messages: {
-    en: {
-      message: {
-        hello: "hello world",
-      },
-      homepage: {
-        title: "Spark a Recommend Store",
-        intro: "quickly, suitably, sparklingly",
-        button: "pick up",
-      },
-      storeInfo: {
-        title: "Store List",
-      },
-      navbar: {
-        title: "{'Total of'} {count} {'match records'}",
-      },
-      button: {
-        save: "save",
-        certain: "certain",
-        cancel: "cancel",
-      },
-    },
-    zh_tw: {
-      //各種分頁
-      message: {
-        hello: "你好、世界",
-      },
-      homepage: {
-        title: "引欲",
-        intro: "更快,更合適，更具啟發",
-        button: "挑選",
-      },
-      storeInfo: {
-        title: "店家列表",
-      },
-      navbar: {
-        title: "{'總共有'} {count} {'筆資料符合'}",
-      },
-      //常用按鈕
-      button: {
-        save: "儲存",
-        certain: "確定",
-        cancel: "取消",
-      },
-    },
+    en,
+    zh_tw,
   },
 });
 

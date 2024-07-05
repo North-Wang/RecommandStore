@@ -1,8 +1,8 @@
 <template>
   <header
-    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
+    class="w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
   >
-    <div ref="filterBar">
+    <ul ref="filterBar">
       <img
         :src="moreOptionWhite"
         alt="更多選項"
@@ -16,15 +16,17 @@
       >
         <FilterBar v-show="showFilterBar" @closeModal="showFilterBar = false" />
       </Transition>
-    </div>
+    </ul>
 
-    <div v-for="route in routerList" :key="route">
-      <router-link :to="route.path" class="select-none">
-        <span class="text-white select-none">{{ route.name }}</span>
-      </router-link>
-    </div>
+    <ul class="flex gap-4">
+      <div v-for="route in routerList" :key="route">
+        <router-link :to="route.path" class="select-none">
+          <span class="text-white select-none">{{ route.name }}</span>
+        </router-link>
+      </div>
+    </ul>
 
-    <div class="relative" ref="languageElement">
+    <ul class="relative" ref="languageElement">
       <img
         :src="langWhite"
         alt="earth"
@@ -39,11 +41,11 @@
             :value="locale"
             class="option-lang"
           >
-            {{ locale }}
+            {{ langObj[locale] || "" }}
           </option>
         </select>
       </div>
-    </div>
+    </ul>
   </header>
 </template>
 
@@ -85,6 +87,7 @@ const showIcon = computed(() => {
 });
 const filterBar = ref(null);
 const languageElement = ref(null);
+const lang = ref(locale.value);
 const showFilterBar = ref(false);
 const showLanguage = ref(false);
 onClickOutside(filterBar, () => {
@@ -95,30 +98,56 @@ onClickOutside(languageElement, () => {
 });
 
 const routerList = ref([
-  { path: "/", name: "首頁", key: "home" },
+  {
+    path: "/",
+    name: computed(() => {
+      return t("header.home");
+    }),
+    key: "home",
+  },
   // { path: "/", name: "測驗跳選", key: "testPage" },
-  { path: "/StoreListTable", name: "店家列表", key: "storeList" },
-  { path: "/ContactMe", name: "聯絡我", key: "contactUs" },
+  {
+    path: "/StoreListTable",
+    name: computed(() => {
+      return t("header.storeList");
+    }),
+    key: "storeList",
+  },
+  {
+    path: "/ContactMe",
+    name: computed(() => {
+      return t("header.contactUs");
+    }),
+    key: "contactUs",
+  },
 ]);
 
+const langObj = ref({
+  en: "English",
+  zh_tw: "繁體中文",
+});
+
 //儲存選擇的語言種類
-watch(locale, (val) => {
-  sessionStorage.setItem("lang", val);
+watch(lang, (val) => {
+  locale.value = val;
+  sessionStorage.setItem("lang", lang.value);
 });
 </script>
 
 <style scoped lang="scss">
-.header {
+header {
   width: 100%;
   height: 60px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   // position: fixed;
+  padding: 0 20px;
   top: 0;
   left: 0;
   z-index: 60;
 }
+
 .option-lang {
   padding: 2px 6px;
 }
