@@ -185,8 +185,7 @@ const isMobile = isMobileDevice();
 const answerAddress = ref(null);
 const storeInfo = useStoreInfo();
 const loading = useLoading();
-const { storeList, titleList, storeListAfterFilterType } =
-  storeToRefs(storeInfo);
+const { storeRawData, titleList, storeTemporary } = storeToRefs(storeInfo);
 
 const featureList = computed(() => {
   const list = ["划算", "老店", "人氣", "久坐", "插座", "特色", "道地", "好吃"];
@@ -210,7 +209,7 @@ const allFilterFactor = ref({
 });
 const allOptions = ref(["商圈標籤", "地點類型", "目的", "特色", "地點標籤"]);
 const filterAddress = (address) => {
-  suitableStoreList.value = storeListAfterFilterType.value.filter((store) => {
+  suitableStoreList.value = storeTemporary.value.filter((store) => {
     return store.address.includes(address);
   });
 };
@@ -247,7 +246,7 @@ const resetOption = () => {
 };
 const pickup = () => {
   const randomNumber = Math.floor(
-    Math.random() * suitableStoreList.value.length,
+    Math.random() * suitableStoreList.value.length
   );
   console.log("符合篩選條件的所有店家", suitableStoreList.value);
   const result = suitableStoreList.value[randomNumber];
@@ -262,14 +261,14 @@ const pickup = () => {
 };
 const firstTimePickup = () => {
   /* when go into the website, do pick up first */
-  suitableStoreList.value = storeListAfterFilterType.value;
+  suitableStoreList.value = storeTemporary.value;
   pickup();
 };
 
 watch(titleList, () => {
   firstTimePickup();
 });
-watch(storeListAfterFilterType, (list) => {
+watch(storeTemporary, (list) => {
   //監聽到pinia 根據type篩選完成之後的店家資料
   suitableStoreList.value = list;
 });
@@ -292,12 +291,12 @@ watch(
     ) {
       await storeInfo.filterType(selectedType.value);
     } else {
-      suitableStoreList.value = storeListAfterFilterType.value; //reset
+      suitableStoreList.value = storeTemporary.value; //reset
       await filterStore(filterGroup);
     }
     pickup();
   },
-  { deep: true },
+  { deep: true }
 );
 watch(address, async function (val) {
   if (val != "") {
@@ -313,13 +312,12 @@ watch(selectedAddressTag, async function (tag) {
   } else {
     address.value = ""; //reset
     await storeInfo.filterType(selectedType.value);
-    // await storeInfo.filterAddressTag(tag);
   }
   await storeInfo.setAllOption();
   pickup();
 });
 onMounted(() => {
-  if (storeListAfterFilterType.value.length !== 0) firstTimePickup();
+  if (storeTemporary.value.length !== 0) firstTimePickup();
 });
 </script>
 <style scoped lang="scss">

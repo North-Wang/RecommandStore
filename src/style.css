@@ -140,6 +140,26 @@ textarea {
   justify-content: center;
   text-align: center;
 }
+/* 客製化滾動軸 start */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  overflow: overlay; /*滾動軸會浮在內容上，不會擠壓 */
+}
+
+::-webkit-scrollbar-track {
+  background: #eeeeee;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(126, 125, 125);
+}
 
 @media (prefers-color-scheme: light) {
   :root {

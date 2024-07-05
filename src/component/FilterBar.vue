@@ -10,7 +10,7 @@
       />
     </li>
     <h3 class="container text-center select-none">
-      總共有{{ matchStore.length || "0" }}筆資料符合
+      {{ $t("navbar.title", { count: storeResult.length || "0" }) }}
     </h3>
     <li class="container">
       <h3 class="title select-none">TYPE 類型</h3>
@@ -62,21 +62,19 @@
       :inputType="'checkbox'"
       @change="changeFilter"
     />
-    <li
-      class="w-full px-[20px] py-[24px] text-white flex justify-center gap-[8px]"
-    >
+    <li class="wrap-button">
       <button
         class="flex-1 text-black bg-blue max-w-[100px]"
         @click.self="certainChangeFilter()"
       >
-        確認
+        {{ $t("button.certain") }}
       </button>
-      <button
+      <!-- <button
         class="bg-white text-black flex-1 hover:text-black max-w-[100px]"
         @click.self="closeModal()"
       >
-        取消
-      </button>
+        {{ $t("button.cancel") }}
+      </button> -->
     </li>
   </ul>
 </template>
@@ -86,17 +84,23 @@ import { ref, watch, Teleport, defineEmits, Transition } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import { useFilter } from "../store/useFilter";
+import { useI18n } from "vue-i18n";
 import FilterList from "./Filterbar/FilterList.vue";
 
 //picture
 import iconX from "../assets/X.svg";
 
 const emits = defineEmits(["closeModal"]);
+const { t, locale } = useI18n({
+  inheritLocale: true,
+  useScope: "global",
+});
 const storeInfo = useStoreInfo();
 const filterInfo = useFilter();
 const {
-  storeList,
-  storeListAfterFilterType,
+  storeRawData,
+  storeTemporary,
+  storeResult,
   allTypeOption,
   allAddressTag,
   allPurpleOption,
@@ -114,12 +118,10 @@ const filterTag = ref(null);
 const filterPurple = ref(null);
 const filterFeature = ref(null);
 const filterCategory = ref(null);
-const matchStore = ref([]);
 
 //watch pinia
 filterInfo.$subscribe((mutation, state) => {
   //state：被改動的整個state實例
-  // console.table(state);
 });
 
 async function resetFilters() {
@@ -127,72 +129,30 @@ async function resetFilters() {
   await resetSelected();
 }
 
+/**
+ * type改變
+ * @description 由於type以外的選項會變更，因此要清空所選條件
+ * @description 重新設定所有選項
+ */
 async function changeType(type) {
-  //由於type以外的選項會變更，因此要清空所選條件
   resetFilters();
 
   filterInfo.type = type;
   await storeInfo.filterType(type);
-  //只顯示有該type(類型)才有的address、purple、feature、category...等
   await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 }
 
 function changeFilter(obj) {
-  console.log("篩選條件變更", obj);
   filterInfo[obj.type] = obj.option; //將各項篩選條件統一存到pinia
-  console.log("新的篩選條件", filterInfo);
-  // doFilter();
-}
-
-function doFilter() {
-  //如果沒有選擇任何條件，
-  if (
-    filterInfo.purple === "" &&
-    !filterInfo.addressTag.length &&
-    !filterInfo.feature.length &&
-    !filterInfo.category.length
-  ) {
-    matchStore.value = storeListAfterFilterType.storeListAfterFilterType;
-    return;
-  }
-
-  const ans = storeListAfterFilterType.value.filter((item) => {
-    //如果有選擇addressTag
-    let matchAddressTag = true;
-    if (addressTag.value !== "") {
-      matchAddressTag = item.addressTag.indexOf(addressTag.value) != -1;
-      // console.log("比較商圈", matchAddressTag);
-    }
-
-    //如果有選擇purple
-    let matchPurple = true;
-    if (purple.value !== "") {
-      matchPurple = item.purple.split(/[,，、]/).some((str) => {
-        return str == purple.value;
-      });
-    }
-
-    //如果有選擇feature
-    let matchFeature = true;
-    if (feature.value.length !== 0) {
-      matchFeature = item.feature.split(/[,，、]/).some((str) => {
-        return feature.value.includes(str);
-      });
-    }
-
-    //如果有選擇category
-    let matchCategory = true;
-    if (category.value.length !== 0) {
-      matchCategory = item.category.split(/[,，、]/).some((str) => {
-        return category.value.includes(str);
-      });
-    }
-
-    //回傳同時符合上述篩選條件的
-    return matchAddressTag && matchPurple && matchFeature && matchCategory;
-  });
-  matchStore.value = ans;
+  const newFilter = {
+    type: currentType.value,
+    addressTag: addressTag.value,
+    purple: purple.value,
+    feature: feature.value,
+    category: category.value,
+  };
+  console.log("新的篩選條件", newFilter);
 }
 
 function closeModal() {
@@ -200,7 +160,6 @@ function closeModal() {
 }
 
 function certainChangeFilter() {
-  storeInfo.matchStore = matchStore.value;
   closeModal();
 }
 
@@ -210,15 +169,6 @@ function resetSelected() {
   filterFeature.value.selectedOptions = [];
   filterCategory.value.selectedOptions = [];
 }
-
-//如果type有變更就在pinia篩選一次type，減少資料量
-watch(
-  storeListAfterFilterType,
-  (storeList) => {
-    matchStore.value = storeList;
-  },
-  { immediate: true },
-);
 </script>
 
 <style scoped lang="scss">
@@ -263,5 +213,14 @@ watch(
     display: flex;
     align-items: center;
   }
+}
+.wrap-button {
+  width: 100%;
+  padding: 24px 20px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  row-gap: 8px;
+  background-color: black;
 }
 </style>

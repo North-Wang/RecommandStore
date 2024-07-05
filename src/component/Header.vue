@@ -1,8 +1,8 @@
 <template>
   <header
-    class="header w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
+    class="w-dvw gap-x-5 bg-gradient-to-b from-[#062d4b] to-[#045588] text-base select-none"
   >
-    <div ref="filterBar">
+    <ul ref="filterBar">
       <img
         :src="moreOptionWhite"
         alt="更多選項"
@@ -16,29 +16,65 @@
       >
         <FilterBar v-show="showFilterBar" @closeModal="showFilterBar = false" />
       </Transition>
-    </div>
+    </ul>
 
-    <div v-for="route in routerList" :key="route">
-      <router-link :to="route.path" class="select-none">
-        <span class="text-white select-none">{{ route.name }}</span>
-      </router-link>
-    </div>
+    <ul class="flex gap-4">
+      <div v-for="route in routerList" :key="route">
+        <router-link :to="route.path" class="select-none">
+          <span class="text-white select-none">{{ route.name }}</span>
+        </router-link>
+      </div>
+    </ul>
+
+    <ul class="relative" ref="languageElement">
+      <img
+        :src="langWhite"
+        alt="earth"
+        class="w-[32px] aspect-square cursor-pointer"
+        @click="showLanguage = !showLanguage"
+      />
+      <div class="wrapper-lang absolute right-0 top-8" v-if="showLanguage">
+        <select v-model="$i18n.locale">
+          <option
+            v-for="locale in $i18n.availableLocales"
+            :key="`locale-${locale}`"
+            :value="locale"
+            class="option-lang"
+          >
+            {{ langObj[locale] || "" }}
+          </option>
+        </select>
+      </div>
+    </ul>
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed, Transition, Teleport } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  computed,
+  Transition,
+  Teleport,
+} from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+
 import FilterBar from "./FilterBar.vue";
 import { onClickOutside } from "@vueuse/core";
 
 //picture
 import moreOptionBlack from "../assets/moreOptionBlack.svg";
 import moreOptionWhite from "../assets/moreOptionWhite.svg";
+import langBlack from "../assets/header/languageBlack.svg";
+import langWhite from "../assets/header/languageWhite.svg";
 
 const route = useRoute();
-const env = computed(() => {
-  return process.env.NODE_ENV;
+const { t, locale } = useI18n({
+  inheritLocale: true,
+  useScope: "global",
 });
 const showIcon = computed(() => {
   switch (route.path) {
@@ -50,29 +86,69 @@ const showIcon = computed(() => {
   }
 });
 const filterBar = ref(null);
+const languageElement = ref(null);
+const lang = ref(locale.value);
 const showFilterBar = ref(false);
+const showLanguage = ref(false);
 onClickOutside(filterBar, () => {
   showFilterBar.value = false;
 });
+onClickOutside(languageElement, () => {
+  showLanguage.value = false;
+});
 
 const routerList = ref([
-  { path: "/", name: "首頁" },
-  // {path:"/", name:"測驗跳選", },
-  { path: "/StoreListTable", name: "店家列表" },
-  { path: "/ContactMe", name: "聯絡我" },
+  {
+    path: "/",
+    name: computed(() => {
+      return t("header.home");
+    }),
+    key: "home",
+  },
+  // { path: "/", name: "測驗跳選", key: "testPage" },
+  {
+    path: "/StoreListTable",
+    name: computed(() => {
+      return t("header.storeList");
+    }),
+    key: "storeList",
+  },
+  {
+    path: "/ContactMe",
+    name: computed(() => {
+      return t("header.contactUs");
+    }),
+    key: "contactUs",
+  },
 ]);
+
+const langObj = ref({
+  en: "English",
+  zh_tw: "繁體中文",
+});
+
+//儲存選擇的語言種類
+watch(lang, (val) => {
+  locale.value = val;
+  sessionStorage.setItem("lang", lang.value);
+});
 </script>
 
 <style scoped lang="scss">
-.header {
+header {
   width: 100%;
   height: 60px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   // position: fixed;
+  padding: 0 20px;
   top: 0;
   left: 0;
   z-index: 60;
+}
+
+.option-lang {
+  padding: 2px 6px;
 }
 </style>

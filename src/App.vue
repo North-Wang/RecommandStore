@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "./store/useStoreInfo.js";
 import { useLoading } from "./store/useLoading";
@@ -21,27 +21,19 @@ const storeInfo = useStoreInfo();
 const filterInfo = useFilter();
 const loading = useLoading();
 const { isLoading } = storeToRefs(loading);
-const { allTypeOption } = storeToRefs(storeInfo);
-const { type } = storeToRefs(filterInfo);
-const allStoreInfo = ref([]); //全部的店家資訊
+const { storeTemporary, allTypeOption } = storeToRefs(storeInfo);
+const { type, addressTag, purple, feature, category } = storeToRefs(filterInfo); //selected filter
 
-//get all options
-const setOption = async function () {
-  storeInfo.setTypeOption();
-  await storeInfo.filterType("餐廳");
+//set all filter's options
+const setOptions = async function () {
+  await storeInfo.setTypeOption();
+  type.value = allTypeOption.value[0];
+  await storeInfo.filterType(type.value);
   await storeInfo.setAddressTag();
   storeInfo.setAllOption();
 };
-function selectFilterType() {
-  if (type.value === "") {
-    //如果尚未選擇篩選條件的type
-    console.log("重新設定type");
-    filterInfo.type = allTypeOption.value[0];
-    storeInfo.filterType(filterInfo.type);
-  }
-  setOption();
-}
-const getStoreList = async function () {
+
+async function getStoreList() {
   const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
   const name = "餐廳";
   const url = `https://sheets.googleapis.com/v4/spreadsheets/1_3W1EeAV2n4InaUCczUp7BVPzXxB1mVsneRrD7Ygb_0/values/${name}?key=${sheetId}`;
@@ -51,8 +43,9 @@ const getStoreList = async function () {
       const titleList = result.data.values[0];
       const storeList = result.data.values.slice(1);
 
+      let allStore = [];
       storeList.forEach((store) => {
-        allStoreInfo.value.push({
+        allStore.push({
           name: store[0],
           type: store[1],
           purple: store[2],
@@ -64,17 +57,67 @@ const getStoreList = async function () {
           note: store[8],
         });
       });
-      // console.log("全部的店家資訊", allStoreInfo.value);
+      // console.log("全部的店家資訊", allStore);
 
-      //update data to Pinia
-      storeInfo.storeList = allStoreInfo.value;
+      //save storeInfo to Pinia
+      storeInfo.storeRawData = allStore;
       storeInfo.titleList = titleList;
-      selectFilterType();
+
+      setOptions();
     });
   } catch (error) {
     console.log("連線有誤", error);
   }
-};
+}
+
+/**
+ * 種類改變的時候，要重新篩選所有選項
+ */
+watch(type, async function () {
+  if (type.value.trim() === "") {
+    // 沒有選擇任何篩選條件的type
+    type.value = allTypeOption.value[0] || "餐廳";
+  }
+  await storeInfo.filterType(type.value);
+});
+
+//當商圈標籤改變時，要從新篩選出暫時的店家資料
+watch(addressTag, (tag) => {
+  storeInfo.filterAddressTag(tag);
+});
+
+/**
+ * 當暫存的店家資料改變時，要重新篩選出符合條件的店家
+ * @description storeTemporary已經篩選完type、addressTag了
+ * @description 需要重新篩選【目的】、【特色】、【種類】
+ */
+watch([storeTemporary, purple, feature, category], async function () {
+  const result = storeTemporary.value.filter((item) => {
+    //filter purple
+    let matchPurple = true;
+    if (purple.value !== "") {
+      matchPurple = item?.purple?.includes(purple.value);
+    }
+
+    //filter feature
+    let matchFeature = true;
+    if (feature.value.length !== 0) {
+      matchFeature = item?.feature.some((f) => {
+        return feature.value.includes(f);
+      });
+    }
+
+    //filter category
+    let matchCategory = true;
+    if (category.value.length !== 0) {
+      matchFeature = item?.category.includes(category.value);
+    }
+
+    return matchPurple && matchFeature && matchCategory;
+  });
+  console.log("符合所有篩選條件的店家", result);
+  storeInfo.storeResult = result;
+});
 
 onMounted(async function () {
   await getStoreList();
