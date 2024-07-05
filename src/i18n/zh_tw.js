@@ -3,7 +3,7 @@ export const locale = {
     hello: "你好、世界",
   },
   homepage: {
-    title: "引欲",
+    title: "拋磚引欲", //引欲
     intro: "更快,更合適，更具啟發",
     button: "挑選",
   },
