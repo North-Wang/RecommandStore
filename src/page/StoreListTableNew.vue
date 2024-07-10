@@ -3,18 +3,17 @@
     class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] h-full flex flex-col"
   >
     <section class="">
-      <div class="flex justify-between items-center px-[20px] py-[20px]">
-        <h3></h3>
-        <h3>{{ $t("storeInfo.title") }}</h3>
-        <button class="text-black" disabled><h4>新增</h4></button>
+      <div class="flex justify-center items-center px-[20px] py-[20px]">
+        <h3>{{ $t("view.storeInfo.title") }}</h3>
+        <!-- <button class="text-black" disabled><h4>新增</h4></button> -->
       </div>
 
-      <h4 class="py-3">共{{ total }}筆資料</h4>
+      <h4 class="py-3">{{ $t("navbar.title", { count: total || "0" }) }}</h4>
       <div class="px-2 relative">
         <input
           type="search"
           placeholder="請輸入店家名稱、目的、商圈標籤、特色、種類"
-          class="w-full text-center text-black dark:text-white lg:max-w-[300px] mb-[8px]"
+          class="lg:max-w-[300px] mb-[8px]"
           v-model="keyword"
           @input="search()"
         />
@@ -129,11 +128,5 @@ onMounted(() => {
 section {
   background-color: black;
   color: white;
-}
-input[type="search"] {
-  border-radius: 5px;
-  height: 40px;
-  padding-left: 32px;
-  padding-right: 8px;
 }
 </style>

@@ -1,54 +1,63 @@
 <template>
   <main class="bg-gradient-to-b from-[#fdfbfb] to-[#ebedee]">
     <section class="select-none">
-      <h3 class="py-[20px] bg-black">篩選結果</h3>
-      <h4 class="bg-black pb-4">共{{ count.toLocaleString() }}筆資料符合</h4>
+      <h3 class="py-[20px] bg-black">{{ $t("view.filterResult.title") }}</h3>
+      <h4 class="bg-black pb-4">
+        {{
+          $t("navbar.title", { count: countMatchStore.toLocaleString() || "0" })
+        }}
+      </h4>
+      <ul class="w-full bg-black py-4" v-if="countMatchStore === 0">
+        {{
+          $t("view.filterResult.noData")
+        }}
+      </ul>
       <ul
-        class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px] animate-pulse"
+        class="flex justify-center min-h-[320px] max-h-[480px] mt-5 mb-[20px] md:mb-[32px]"
       >
         <li
           class="rounded-lg wrapper-result bg-white dark:bg-white max-w-[500px] md:max-w-[400px] px-[20px] pt-[16px] pb-[20px] md:pt-[12px]"
-          v-if="Object.keys(result).length"
+          v-if="countMatchStore !== 0"
         >
-          <h3 class="select-all" :v-tooltip.bottom="result?.name">
-            {{ result?.name }}
+          <h3 class="select-all" :v-tooltip.bottom="resultPickup?.name">
+            {{ resultPickup?.name }}
           </h3>
-          <h3 class="text-darkYellow" v-if="result?.feature">
-            {{ result?.feature }}
+          <h3 class="text-darkYellow" v-if="resultPickup?.feature">
+            {{ resultPickup?.feature }}
           </h3>
           <div
             class="flex gap-x-2 justify-between"
             style="border-bottom: 1.5px solid #929292"
           >
             <h4 class="text-left leading-[1.2] select-all">
-              {{ result.address }}
+              {{ resultPickup.address }}
             </h4>
             <img
               :src="copyIcon"
               alt="copyIcon"
-              class="cursor-pointer"
-              @click.prevent="copyText(result?.address)"
+              class="cursor-pointer select-none"
+              @click.prevent="copyText(resultPickup?.address)"
             />
           </div>
-          <ul class="wrapper-tag" v-if="result?.addressTag">
-            <li v-for="tags in result?.addressTag">
+          <ul class="wrapper-tag" v-if="resultPickup?.addressTag">
+            <li v-for="tags in resultPickup?.addressTag">
               <h4 class="tag bg-blue">{{ tags }}</h4>
             </li>
           </ul>
-          <ul class="wrapper-tag" v-if="result?.purple">
-            <li v-for="tags in result?.purple.split('、')">
+          <ul class="wrapper-tag" v-if="resultPickup?.purple">
+            <li v-for="tags in resultPickup?.purple.split('、')">
               <h4 class="tag bg-yellow">{{ tags }}</h4>
             </li>
           </ul>
-          <ul class="wrapper-tag" v-if="result?.feature">
-            <li v-for="tags in result?.feature.split('、')">
+          <ul class="wrapper-tag" v-if="resultPickup?.feature">
+            <li v-for="tags in resultPickup?.feature.split('、')">
               <h4 class="tag bg-[#A9A9A9]">{{ tags }}</h4>
             </li>
           </ul>
           <ul
             class="mt-[8px]"
             style="border-top: 0.5px solid gray"
-            v-if="result?.note"
+            v-if="resultPickup?.note"
           >
             <div class="text-left my-1">備註：</div>
             <textarea
@@ -57,27 +66,28 @@
               cols="30"
               rows="10"
               class="dark:bg-lightGray text-gray-500 dark:text-gray-500"
-              >{{ result?.note }}</textarea
+              >{{ resultPickup?.note }}</textarea
             >
           </ul>
         </li>
-        <li v-else></li>
       </ul>
     </section>
 
-    <div class="flex justify-center" v-if="Object.keys(result).length">
-      <button
-        class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none"
-        @click.prevent="doFilter()"
+    <Teleport to="#app">
+      <div
+        class="w-full flex justify-center animate-pulse bottom-[0px] absolute"
+        v-if="countMatchStore !== 0"
       >
-        抽選
-      </button>
-    </div>
+        <button class="btn-filter select-none" @click.prevent="doFilter()">
+          抽選
+        </button>
+      </div>
+    </Teleport>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, watch, computed, Teleport } from "vue";
 import { storeToRefs } from "pinia";
 import { useStoreInfo } from "../store/useStoreInfo";
 import Tooltip from "primevue/tooltip";
@@ -86,18 +96,12 @@ import copyIcon from "../assets/copy.svg";
 
 const storeInfo = useStoreInfo();
 const { storeResult, storeTemporary } = storeToRefs(storeInfo);
-const count = computed(() => {
-  if (storeResult.value.length === 0) {
-    //沒有選擇除了type以外的篩選條件
-    return storeTemporary.value.length;
-  } else {
-    return storeResult.value.length;
-  }
+const countMatchStore = computed(() => {
+  return storeResult.value.length;
 });
-const result = ref({});
+const resultPickup = ref({}); //抽選的結果
 
 async function copyText(text) {
-  console.log("aaa text", text);
   navigator.clipboard.writeText(text);
 }
 
@@ -106,13 +110,13 @@ function doFilter() {
   if (storeResult.value.length === 0) {
     //沒有選擇除了type以外的篩選條件
     const index = Math.floor(Math.random() * storeTemporary.value.length);
-    result.value = storeTemporary.value[index] || {};
+    resultPickup.value = storeTemporary.value[index] || {};
   } else {
     const index = Math.floor(Math.random() * storeResult.value.length);
-    result.value = storeResult.value[index] || {};
+    resultPickup.value = storeResult.value[index] || {};
   }
 
-  console.log("抽選的結果", result.value);
+  console.log("抽選的結果", resultPickup.value);
 }
 
 watch(storeResult, () => {
@@ -135,6 +139,7 @@ main {
   background-size: cover;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 section {
   // background-color: black;
@@ -183,6 +188,13 @@ section {
   color: black;
   font-weight: 600;
 }
+.btn-filter {
+  z-index: 40;
+  width: 60%;
+  max-width: 240px;
+  cursor: pointer;
+}
+
 :deep {
   .p-tooltip {
     background-color: steelblue;

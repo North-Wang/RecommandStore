@@ -115,7 +115,7 @@ watch([storeTemporary, purple, feature, category], async function () {
 
     return matchPurple && matchFeature && matchCategory;
   });
-  console.log("符合所有篩選條件的店家", result);
+  // console.log("符合所有篩選條件的店家", result);
   storeInfo.storeResult = result;
 });
 

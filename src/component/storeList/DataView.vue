@@ -21,12 +21,18 @@
           class="store bg-white"
         >
           <h3 class="title">{{ store?.name }}</h3>
-          <h4
-            class="address"
-            v-if="moreOptionMap.has(store?.name) && store?.address"
-          >
-            {{ store?.address }}
-          </h4>
+          <div class="flex justify-between" style=" border-bottom: 0.5px solid #929292;" v-if="moreOptionMap.has(store?.name) && store?.address">
+            <h4 class="address">
+              {{ store?.address }}
+            </h4>
+            <img
+              :src="copyIcon"
+              alt="copyIcon"
+              class="cursor-pointer select-none"              
+              @click.prevent="copyText(store?.address)"
+            />
+          </div>
+          
           <h4
             class="text-[#E09A30] text-left font-bold py-2"
             v-if="store?.feature"
@@ -93,6 +99,9 @@ import { useStoreInfo } from "../../store/useStoreInfo";
 import Paginator from "primevue/paginator";
 import "primeicons/primeicons.css";
 
+
+import copyIcon from "../../assets/copy.svg";
+
 //picture
 import editIcon from "../../assets/editIcon.svg";
 
@@ -125,6 +134,10 @@ function toggleShowMoreOption(name) {
 
 function onPage(e) {
   currentPage.value = props.dataList.slice(e.first, e.first + e.rows)
+}
+
+async function copyText(text) {
+  navigator.clipboard.writeText(text);
 }
 
 watch(()=>props.dataList, (data)=>{
@@ -170,7 +183,7 @@ input[type="search"] {
   .address {
     padding-top: 8px;
     padding-bottom: 8px;
-    border-bottom: 0.5px solid #929292;
+    // border-bottom: 0.5px solid #929292;
     text-align: left;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;

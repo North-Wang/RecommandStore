@@ -2,21 +2,29 @@ export const locale = {
   message: {
     hello: "hello world",
   },
-  homepage: {
-    title: "Spark a Recommend Store",
-    intro: "quickly, suitably, sparklingly",
-    button: "pick up",
+  view: {
+    homepage: {
+      title: "Spark a Recommend Store",
+      intro: "quickly, suitably, sparklingly",
+      button: "pick up",
+    },
+    storeInfo: {
+      title: "Store List",
+    },
+    filterResult: {
+      title: "Filter Result",
+      noData: "no match store data",
+    },
   },
-  storeInfo: {
-    title: "Store List",
-  },
+
   navbar: {
-    title: "{'Total of'} {count} {'match records'}",
+    title: "{'Totally'} {count} {'match records'}",
   },
   button: {
     save: "save",
     certain: "certain",
     cancel: "cancel",
+    filter: "filter",
   },
   header: {
     home: "Home",

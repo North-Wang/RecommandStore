@@ -110,6 +110,15 @@ input[type="checkbox"] {
   width: 18px;
   height: 18px;
 }
+input[type="search"] {
+  width: 100%;
+  text-align: center;
+  color: white;
+  border-radius: 5px;
+  height: 40px;
+  padding-left: 32px;
+  padding-right: 8px;
+}
 label:has(input[type="checkbox"]:checked) {
   background-color: #4baaf5;
   color: white;
@@ -171,6 +180,9 @@ textarea {
   }
   button {
     background-color: #f9f9f9;
+  }
+  input[type="search"] {
+    color: #1a1a1a;
   }
 }
 @media (min-width: 1000px) {

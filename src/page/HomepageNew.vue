@@ -7,12 +7,12 @@
     >
       <div class="w-[80%]">
         <h1
-          class="text-left break-keep text-[48px] md:text-[64px] font-black md:text-center py-[48px]"
+          class="text-center break-keep text-[48px] md:text-[64px] font-black md:text-center py-[48px]"
         >
-          <span>{{ $t("homepage.title") }}</span>
+          <span>{{ $t("view.homepage.title") }}</span>
         </h1>
         <h2 class="font-bold">
-          <span>{{ $t("homepage.intro") }}</span>
+          <span>{{ $t("view.homepage.intro") }}</span>
         </h2>
         <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
           <li v-for="types in allTypeOption" :key="types" class="">
@@ -32,7 +32,7 @@
       class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none animate-bounce"
       @click="doFilter()"
     >
-      {{ $t("homepage.button") }}
+      {{ $t("view.homepage.button") }}
     </button>
   </main>
 </template>
