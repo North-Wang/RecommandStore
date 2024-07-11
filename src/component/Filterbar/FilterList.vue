@@ -49,6 +49,7 @@
           :placeholder="placeHolder"
           v-model="keyword"
           @change="filterOptions(keyword)"
+          v-if="needSearch"
         />
         <label
           :for="items"
@@ -132,6 +133,15 @@ const selectedOptions = ref([]); //被勾選的選項
 onClickOutside(filterList, () => {
   showOptions.value = false;
 });
+const needSearch = computed(() => {
+  switch (props.dataType) {
+    case "purple":
+      return false;
+
+    default:
+      return true;
+  }
+});
 
 function closeOption() {
   showOptions.value = !showOptions.value;
@@ -192,7 +202,7 @@ watch(
     cursor: pointer;
   }
   .wrapper-tag {
-    max-height: 136px;
+    max-height: 160px;
     display: flex;
     flex-wrap: wrap;
     column-gap: 8px;
