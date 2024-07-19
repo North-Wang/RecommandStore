@@ -91,33 +91,43 @@ watch(addressTag, (tag) => {
  * @description storeTemporary已經篩選完type、addressTag了
  * @description 需要重新篩選【目的】、【特色】、【種類】
  */
-watch([storeTemporary, purple, feature, category], async function () {
-  const result = storeTemporary.value.filter((item) => {
-    //filter purple
-    let matchPurple = true;
-    if (purple.value !== "") {
-      matchPurple = item?.purple?.includes(purple.value);
-    }
+watch(
+  [storeTemporary, purple, feature, category],
+  async function (filterObj) {
+    console.log("新的篩選條件", filterObj);
+    const result = storeTemporary.value.filter((item) => {
+      //filter purple
+      let matchPurple = true;
+      if (purple.value !== "") {
+        matchPurple = item?.purple?.includes(purple.value);
+      }
 
-    //filter feature
-    let matchFeature = true;
-    if (feature.value.length !== 0) {
-      matchFeature = item?.feature.some((f) => {
-        return feature.value.includes(f);
-      });
-    }
+      //filter feature
+      let matchFeature = true;
+      if (feature.value.length !== 0) {
+        if (typeof item.feature === "string") {
+          console.log("aaa feature", feature.value, item.feature);
+          matchFeature = feature.value.includes(item.feature);
+        } else {
+          matchFeature = item?.feature.some((f) => {
+            return feature.value.includes(f);
+          });
+        }
+      }
 
-    //filter category
-    let matchCategory = true;
-    if (category.value.length !== 0) {
-      matchFeature = item?.category.includes(category.value);
-    }
+      //filter category
+      let matchCategory = true;
+      if (category.value.length !== 0) {
+        matchFeature = item?.category.includes(category.value);
+      }
 
-    return matchPurple && matchFeature && matchCategory;
-  });
-  // console.log("符合所有篩選條件的店家", result);
-  storeInfo.storeResult = result;
-});
+      return matchPurple && matchFeature && matchCategory;
+    });
+    // console.log("符合所有篩選條件的店家", result);
+    storeInfo.storeResult = result;
+  },
+  { deep: true }
+);
 
 onMounted(async function () {
   await getStoreList();

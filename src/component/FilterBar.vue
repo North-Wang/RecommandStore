@@ -143,16 +143,13 @@ async function changeType(type) {
   storeInfo.setAllOption();
 }
 
+/**
+ * 變更篩選條件
+ * @param {Object} obj 篩選的種類、選擇的選項
+ */
 function changeFilter(obj) {
   filterInfo[obj.type] = obj.option; //將各項篩選條件統一存到pinia
-  const newFilter = {
-    type: currentType.value,
-    addressTag: addressTag.value,
-    purple: purple.value,
-    feature: feature.value,
-    category: category.value,
-  };
-  console.log("新的篩選條件", newFilter);
+  console.log("新的" + obj.type, filterInfo[obj.type]);
 }
 
 function closeModal() {
