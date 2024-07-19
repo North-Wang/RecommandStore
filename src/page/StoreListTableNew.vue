@@ -22,8 +22,8 @@
         ></span>
       </div>
     </section>
-    <DataView :dataList="storeAfterSearch" :rows="rows" v-if="isMobile" />
-    <DataTableView :dataList="storeAfterSearch" :rows="rows" v-if="!isMobile" />
+    <DataView :dataList="storeResult" :rows="rows" v-if="isMobile" />
+    <DataTableView :dataList="storeResult" :rows="rows" v-if="!isMobile" />
   </main>
 </template>
 
@@ -44,7 +44,7 @@ const { storeTemporary, storeResult } = storeToRefs(storeInfo);
 const { width, height } = useWindowSize();
 const storeAfterSearch = ref(storeResult.value); //經過搜尋完的結果，符合篩選條件的店家
 const total = computed(() => {
-  return storeAfterSearch.value.length.toLocaleString();
+  return storeResult.value.length.toLocaleString();
 });
 const rows = ref(10); //一頁顯示幾筆資料
 const moreOptionMap = ref(new Map());
@@ -62,7 +62,7 @@ function search() {
   /* 開始搜尋 */
   if (storeResult.value.length == 0) {
     //尚未變更篩選條件
-    storeAfterSearch.value = storeTemporary.value.filter((item) => {
+    storeResult.value = storeTemporary.value.filter((item) => {
       let storeResult = item?.name.includes(keyword.value);
       let matchAddressTag = item?.addressTag.includes(keyword.value);
       let matchPurple = item.purple?.includes(keyword.value);
@@ -78,7 +78,7 @@ function search() {
     });
   } else {
     //有變更篩選條件
-    storeAfterSearch.value = storeResult.value.filter((item) => {
+    storeResult.value = storeResult.value.filter((item) => {
       let storeResult = item.name?.includes(keyword.value);
       let matchAddressTag = item?.addressTag.includes(keyword.value);
       let matchPurple = item.purple?.includes(keyword.value);
@@ -93,16 +93,16 @@ function search() {
       );
     });
   }
-  console.log("搜尋結果", storeAfterSearch.value);
+  console.log("搜尋結果", storeResult.value);
 }
 
 //設定回預設店家資料
 function setDefaultStore() {
   if (storeResult.value.length == 0) {
     //尚未變更篩選條件
-    storeAfterSearch.value = storeTemporary.value;
+    storeResult.value = storeTemporary.value;
   } else {
-    storeAfterSearch.value = storeResult.value;
+    storeResult.value = storeResult.value;
   }
 }
 
@@ -115,7 +115,7 @@ watch(
 );
 
 watch(storeResult, (store) => {
-  storeAfterSearch.value = store;
+  // storeResult.value = store;
   search();
 });
 

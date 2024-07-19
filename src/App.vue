@@ -106,7 +106,6 @@ watch(
       let matchFeature = true;
       if (feature.value.length !== 0) {
         if (typeof item.feature === "string") {
-          console.log("aaa feature", feature.value, item.feature);
           matchFeature = feature.value.includes(item.feature);
         } else {
           matchFeature = item?.feature.some((f) => {
