@@ -81,9 +81,16 @@ watch(type, async function () {
   await storeInfo.filterType(type.value);
 });
 
-//當商圈標籤改變時，要從新篩選出暫時的店家資料
+/**
+ * 監聽「商圈標籤」改變
+ * @description 如果沒有商圈標籤，则重新篩選type
+ */
 watch(addressTag, (tag) => {
-  storeInfo.filterAddressTag(tag);
+  if (tag === "") {
+    storeInfo.filterType(type.value);
+  } else {
+    storeInfo.filterAddressTag(tag);
+  }
 });
 
 /**

@@ -106,9 +106,6 @@ const props = defineProps({
     type: String,
     default: "radio",
   },
-  cleanAll: {
-    type: Function,
-  },
   placeHolder: {
     type: String,
     default: "搜尋",

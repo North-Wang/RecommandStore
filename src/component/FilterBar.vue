@@ -98,8 +98,6 @@ const { t, locale } = useI18n({
 const storeInfo = useStoreInfo();
 const filterInfo = useFilter();
 const {
-  storeRawData,
-  storeTemporary,
   storeResult,
   allTypeOption,
   allAddressTag,
