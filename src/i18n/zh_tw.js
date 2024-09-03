@@ -4,8 +4,8 @@ export const locale = {
   },
   view: {
     homepage: {
-      title: "拋磚引欲", //引欲
-      intro: "更快,更合適，更具啟發",
+      title: "猶豫者救星", //引欲
+      intro: "想來想去，不如幫你挑一個",
       button: "挑選",
     },
     storeInfo: {
