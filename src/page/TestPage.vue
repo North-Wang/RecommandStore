@@ -5,6 +5,7 @@
 
     <div class="flex flex-col gap-2">
       <h4>輸入店名，輸出地址</h4>
+      <input type="file" accept=".xlsx, .xls" />
       <input
         type="text"
         class="text-center border-2"
@@ -34,6 +35,7 @@ import axios from "axios";
 
 const keyword = ref("");
 const address = ref("");
+const fileData = ref(""); //儲存file檔案資料
 const testStore = {
   name: "測試用店家",
   type: "餐廳",
@@ -69,6 +71,11 @@ async function searchAddress(placeName) {
     console.warn("查詢地址 失敗");
   }
 }
+
+/**
+ * 上傳excel檔案
+ */
+function uploadFile() {}
 
 async function addStore() {
   fetch(url, {
