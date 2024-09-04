@@ -5,7 +5,12 @@
 
     <div class="flex flex-col gap-2">
       <h4>輸入店名，輸出地址</h4>
-      <input type="file" accept=".xlsx, .xls" />
+      <input
+        type="file"
+        accept=".xlsx, .xls, .csv"
+        ref="fileEle"
+        @input="handleFileUpload"
+      />
       <input
         type="text"
         class="text-center border-2"
@@ -47,6 +52,8 @@ const testStore = {
   權重: 1,
 };
 const apiKey = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
+const fileEle = ref(null);
+const fileName = ref("");
 
 /**
  * 輸入店名，輸出地址
@@ -75,7 +82,45 @@ async function searchAddress(placeName) {
 /**
  * 上傳excel檔案
  */
-function uploadFile() {}
+function handleFileUpload() {
+  if (!fileEle.value) {
+    console.warn("沒有檔案");
+    return;
+  }
+
+  const target = fileEle.value?.files[0];
+  console.log("檔案", target);
+
+  if (!target) {
+    console.warn("沒有檔案");
+    return;
+  }
+
+  fileName.value = target.name;
+  console.log("檔案名稱", fileName.value);
+  const fileType = target.name.split(".")[1];
+  const fileSize = Math.round((target.size / 1024) * 10) / 10;
+  const updateDate = target.lastModifiedDate; //更新日期
+
+  //驗證成功，儲存檔案資料
+  fileData.value = target;
+
+  readFile(fileData.value);
+}
+
+/**
+ * 解析檔案
+ * @param {*} fileData
+ */
+function readFile(fileData) {
+  if (!fileData) return;
+
+  const reader = new FileReader();
+  reader.readAsText(fileData);
+  reader.onload = function (e) {
+    console.log("解析結果", e);
+  };
+}
 
 async function addStore() {
   fetch(url, {
