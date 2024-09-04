@@ -1,10 +1,23 @@
 <template>
-  <div class="flex justify-center items-center black">
+  <div class="flex flex-col justify-center items-center black gap-2">
     <!-- <button @click="addStore">新增店家</button> -->
-    測試用頁面
-    <div class="flex flex-col">
-      <button @click="searchAddress">輸入店名，輸出地址</button>
-      <input type="text" v-model="address" readonly />
+    <h2>測試用頁面</h2>
+
+    <div class="flex flex-col gap-2">
+      <h4>輸入店名，輸出地址</h4>
+      <input
+        type="text"
+        class="text-center border-2"
+        v-model="keyword"
+        placeholder="請輸入地點名稱"
+      />
+      <button @click="searchAddress(keyword)">送出</button>
+      <input
+        type="text"
+        class="text-center w-[500px]"
+        v-model="address"
+        readonly
+      />
     </div>
 
     <!-- <form id="myForm">
@@ -19,6 +32,7 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
+const keyword = ref("");
 const address = ref("");
 const testStore = {
   name: "測試用店家",
@@ -30,24 +44,27 @@ const testStore = {
   category: "滷味,水餃",
   權重: 1,
 };
-const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
-// const url = ref(
-//   `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/住宿`
-// );
-const url = ref(
-  "https://script.google.com/macros/s/AKfycbz26MkFvz_NpSHsbUqCQVF5EXuIDCJEoQPxvELZ8xuFlGP1D7aGjsUCkHB42ixmXcFjwg/exec"
-);
+const apiKey = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
 
-async function searchAddress() {
-  const sheetId = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
-  const placeName = "忠孝｜燒肉政宗 YAKINIKU MASAMUNE";
+/**
+ * 輸入店名，輸出地址
+ */
+async function searchAddress(placeName) {
+  if (placeName.trim() === "") return;
   const headers = {
-    accept: "application/json",
+    "Content-Type": "application/json",
+    "X-Goog-Api-Key": apiKey,
+    "X-Goog-FieldMask":
+      "places.displayName,places.formattedAddress,places.priceLevel",
   };
-  const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${placeName}&inputtype=textquery&key=${sheetId}`;
+  const body = {
+    textQuery: placeName,
+  };
+  const url = `https://places.googleapis.com/v1/places:searchText`;
   try {
-    const res = await axios.get(url);
+    const res = await axios.post(url, body, { headers });
     console.log("查詢地址 成功", res);
+    address.value = res.data.places[0].formattedAddress;
   } catch (error) {
     console.warn("查詢地址 失敗");
   }
@@ -62,13 +79,7 @@ async function addStore() {
     .catch((error) => console.error("Error:", error));
 }
 
-onMounted(() => {
-  // if (formElement.value) {
-  //   formElement.value.addEventListener("submit", (e) => {
-  //     // e.preventDefault();
-  //   });
-  // }
-});
+onMounted(() => {});
 </script>
 
 <style scoped></style>
