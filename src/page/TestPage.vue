@@ -37,14 +37,9 @@
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
       class="w-full h-full dark:text-black"
     >
-      <Column
-        field="name"
-        header="店名"
-        class="text-left w-[400px]"
-        frozen
-      ></Column>
-      <Column field="address" header="地址" class="w-[80px]"></Column>
-      <Column field="note" header="備註" class="w-[80px]"></Column>
+      <Column field="name" header="店名" class="text-left" frozen></Column>
+      <Column field="address" header="地址" class=""></Column>
+      <Column field="note" header="備註" class=""></Column>
     </DataTable>
 
     <!-- <form id="myForm">
