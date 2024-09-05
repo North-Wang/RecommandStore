@@ -34,8 +34,6 @@ import { useStoreInfo } from "../store/useStoreInfo";
 import { useWindowSize } from "@vueuse/core";
 import isMobileDevice from "../js/isMobileDevice";
 import "primeicons/primeicons.css";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
 import DataView from "../component/storeList/DataView.vue";
 import DataTableView from "../component/storeList/DataTableView.vue";
 

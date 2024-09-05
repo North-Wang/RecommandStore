@@ -25,6 +25,27 @@
         readonly
       />
     </div>
+    <DataTable
+      :value="tableData"
+      :scrollable="true"
+      scrollHeight="flex"
+      :paginator="true"
+      paginatorPosition="top"
+      :pageLinkSize="3"
+      :first="0"
+      :rows="10"
+      paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+      class="w-full h-full dark:text-black"
+    >
+      <Column
+        field="name"
+        header="店名"
+        class="text-left w-[400px]"
+        frozen
+      ></Column>
+      <Column field="address" header="地址" class="w-[80px]"></Column>
+      <Column field="note" header="備註" class="w-[80px]"></Column>
+    </DataTable>
 
     <!-- <form id="myForm">
       <input type="text" id="name" placeholder="Enter your name" />
@@ -38,9 +59,12 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+
 const keyword = ref("");
 const address = ref("");
-const fileData = ref(""); //儲存file檔案資料
+const csvData = ref(""); //儲存file檔案資料
 const testStore = {
   name: "測試用店家",
   type: "餐廳",
@@ -53,7 +77,7 @@ const testStore = {
 };
 const apiKey = "AIzaSyD4tjE_hNQpGPegRSGPD-Ut_Avo9G59zgU";
 const fileEle = ref(null);
-const fileName = ref("");
+const tableData = ref([]);
 
 /**
  * 輸入店名，輸出地址
@@ -74,8 +98,10 @@ async function searchAddress(placeName) {
     const res = await axios.post(url, body, { headers });
     console.log("查詢地址 成功", res);
     address.value = res.data.places[0].formattedAddress;
+    return address.value;
   } catch (error) {
     console.warn("查詢地址 失敗");
+    return "";
   }
 }
 
@@ -96,30 +122,51 @@ function handleFileUpload() {
     return;
   }
 
-  fileName.value = target.name;
-  console.log("檔案名稱", fileName.value);
+  console.log("檔案名稱", target.name);
   const fileType = target.name.split(".")[1];
   const fileSize = Math.round((target.size / 1024) * 10) / 10;
   const updateDate = target.lastModifiedDate; //更新日期
 
   //驗證成功，儲存檔案資料
-  fileData.value = target;
-
-  readFile(fileData.value);
+  readFile(target);
 }
 
 /**
- * 解析檔案
+ * 取得csv表單資料
  * @param {*} fileData
  */
 function readFile(fileData) {
   if (!fileData) return;
 
+  const file = fileData;
   const reader = new FileReader();
-  reader.readAsText(fileData);
   reader.onload = function (e) {
-    console.log("解析結果", e);
+    const text = e.target.result;
+    const rows = text.split("\n").map((row) => row.split(","));
+    // console.log(rows); // 這裡你可以處理每一行的數據
+
+    csvData.value = rows.slice(1);
+    console.log("表單的資料", csvData.value);
+    getAllAddress();
   };
+  reader.readAsText(file);
+}
+
+/**
+ * 取得所有地點的地址
+ */
+async function getAllAddress() {
+  const promises = csvData.value.map(async (place) => {
+    const address = await searchAddress(place[0]);
+    return {
+      name: place[0],
+      address: address,
+      note: place[1],
+    };
+  });
+
+  tableData.value = await Promise.all(promises);
+  console.log("整理結果", tableData.value);
 }
 
 async function addStore() {
