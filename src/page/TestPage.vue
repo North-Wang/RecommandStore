@@ -37,9 +37,21 @@
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
       class="w-full h-full dark:text-black"
     >
-      <Column field="name" header="店名" class="text-left" frozen></Column>
-      <Column field="address" header="地址" class=""></Column>
-      <Column field="note" header="備註" class=""></Column>
+      <Column
+        field="name"
+        header="店名"
+        class="text-left"
+        style="width: 30%"
+      ></Column>
+      <Column
+        field="address"
+        header="地址"
+        class="text-left py-2 w-[500px]"
+      ></Column>
+      <Column field="note" header="備註" class="text-left"></Column>
+      <template #empty>
+        <div class="text-black dark:text-black">沒有店家資料</div>
+      </template>
     </DataTable>
 
     <!-- <form id="myForm">
@@ -176,4 +188,11 @@ async function addStore() {
 onMounted(() => {});
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+:deep(.p-paginator) {
+  .p-paginator-pages {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+</style>
