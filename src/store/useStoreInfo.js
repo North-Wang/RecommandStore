@@ -30,6 +30,7 @@ export const useStoreInfo = defineStore({
      * @param {String} addressTag 商圈標籤
      */
     filterAddressTag(addressTag) {
+      console.log("篩選商圈標籤");
       this.storeTemporary = this.storeRawData.filter((store) => {
         return store?.addressTag.includes(addressTag);
       });
@@ -38,19 +39,22 @@ export const useStoreInfo = defineStore({
     setTypeOption() {
       const allType = new Set();
       this.storeRawData.forEach((store) => {
+        if (store.type.trim() === "") {
+          //排除空值
+          return;
+        }
         if (!allType.has(store.type)) {
           allType.add(store.type);
         }
       });
       this.allTypeOption = Array.from(allType);
-      // console.log("all type", this.allTypeOption);
     },
     /* 設定所有商圈標籤 */
     setAddressTag() {
       const allAddressTag = new Set();
       this.storeTemporary.forEach((store) => {
         store.addressTag.forEach((item) => {
-          if (item === "") return;
+          if (item.trim() === "") return;
           if (!allAddressTag.has(item)) {
             allAddressTag.add(item);
           }
@@ -58,7 +62,10 @@ export const useStoreInfo = defineStore({
       });
       this.allAddressTag = Array.from(allAddressTag);
     },
-    /* 設定所有【目的】【特色】【種類】 */
+    /**
+     * 設定所有【目的】【特色】【種類】
+     * @description 當商圈標籤變更時，要顯示該商圈標籤的【目的】、【特色】、【種類】
+     */
     setAllOption() {
       const allPurple = new Set();
       const allFeature = new Set();
@@ -68,7 +75,7 @@ export const useStoreInfo = defineStore({
         //get all purple options
         const purpleArray = store.purple.split(/[,，、]/);
         purpleArray.forEach((item) => {
-          if (item === "") return;
+          if (item.trim() === "") return;
           if (!allPurple.has(item)) {
             allPurple.add(item);
           }
@@ -77,7 +84,7 @@ export const useStoreInfo = defineStore({
         //get all feature options
         const featureArray = store.feature.split(/[,，、]/);
         featureArray.forEach((item) => {
-          if (item === "") return;
+          if (item.trim() === "") return;
           if (!allFeature.has(item)) {
             allFeature.add(item);
           }
@@ -86,7 +93,7 @@ export const useStoreInfo = defineStore({
         //get all category options
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
-          if (item === "") return;
+          if (item.trim() === "") return;
           if (!allCategory.has(item)) {
             allCategory.add(item);
           }

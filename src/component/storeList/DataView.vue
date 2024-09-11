@@ -1,3 +1,4 @@
+<!-- storeList ver.mobile --> 
 <template>
   <div>
     <Paginator 
@@ -174,9 +175,9 @@ input[type="search"] {
   .title {
     text-align: left;
     display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
+    //-webkit-box-orient: vertical;
+    //-webkit-line-clamp: 2;
+    //overflow: hidden;
     font-weight: 900;
     padding-bottom: 8px;
   }
@@ -197,31 +198,6 @@ input[type="search"] {
     height: 80px;
     border-radius: 5px;
     border: 1px solid gray;
-  }
-}
-:deep(.p-paginator) {
-  display: flex;
-  justify-content: center;
-  background-color: black;
-  color: white;
-  padding-bottom: 8px;
-  .p-paginator-element {
-    padding: 8px 12px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  .p-paginator-pages {
-    display: flex;
-    flex-wrap: nowrap;
-  }
-  .p-highlight {
-    background-color: #4baaf5;
-    color: white;
-  }
-  .p-disabled {
-    background-color: unset;
-    color: white;
   }
 }
 </style>

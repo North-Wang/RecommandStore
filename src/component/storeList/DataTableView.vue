@@ -12,7 +12,7 @@
       :first="0"
       :rows="props.rows"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-      class="w-full h-full dark:text-black"
+      class="store-table w-full h-full dark:text-black"
     >
       <Column
         field="name"

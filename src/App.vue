@@ -106,12 +106,14 @@ watch(
       //filter purple
       let matchPurple = true;
       if (purple.value !== "") {
+        console.log("篩選目的");
         matchPurple = item?.purple?.includes(purple.value);
       }
 
       //filter feature
       let matchFeature = true;
       if (feature.value.length !== 0) {
+        console.log("篩選特色");
         if (typeof item.feature === "string") {
           matchFeature = feature.value.includes(item.feature);
         } else {
@@ -124,6 +126,7 @@ watch(
       //filter category
       let matchCategory = true;
       if (category.value.length !== 0) {
+        console.log("篩選種類");
         matchFeature = item?.category.includes(category.value);
       }
 
