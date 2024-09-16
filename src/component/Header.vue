@@ -33,7 +33,7 @@
         class="w-[32px] aspect-square cursor-pointer"
         @click="showLanguage = !showLanguage"
       />
-      <div class="wrapper-lang absolute right-0 top-8" v-if="showLanguage">
+      <div class="wrapper-lang" v-if="showLanguage">
         <select v-model="$i18n.locale">
           <option
             v-for="locale in $i18n.availableLocales"
@@ -150,5 +150,22 @@ header {
 
 .option-lang {
   padding: 2px 6px;
+}
+.wrapper-lang {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  > select {
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      outline: none;
+    }
+    > option {
+      cursor: pointer;
+    }
+  }
 }
 </style>

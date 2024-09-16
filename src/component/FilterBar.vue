@@ -174,7 +174,7 @@ function resetSelected() {
   // justify-content: center;
   align-items: start;
   background-color: rgba(0, 0, 0);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 50;

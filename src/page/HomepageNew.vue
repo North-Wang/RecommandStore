@@ -14,7 +14,7 @@
         <h2 class="font-bold">
           <span>{{ $t("view.homepage.intro") }}</span>
         </h2>
-        <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
+        <!-- <ul class="grid col-span-4 text-black gap-2 mt-3 justify-center">
           <li v-for="types in allTypeOption" :key="types" class="">
             <button
               class="font-semibold dark:bg-white"
@@ -24,7 +24,7 @@
               {{ types }}
             </button>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
     <!-- <FilterButton /> -->
