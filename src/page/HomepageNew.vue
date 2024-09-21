@@ -29,7 +29,7 @@
     </div>
     <!-- <FilterButton /> -->
     <button
-      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none animate-bounce"
+      class="fixed bottom-[100px] z-40 w-3/5 max-w-[240px] cursor-pointer select-none"
       @click="doFilter()"
     >
       {{ $t("view.homepage.button") }}
