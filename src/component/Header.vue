@@ -113,13 +113,13 @@ const routerList = ref([
     }),
     key: "storeList",
   },
-  {
-    path: "/ContactMe",
-    name: computed(() => {
-      return t("header.contactUs");
-    }),
-    key: "contactUs",
-  },
+  // {
+  //   path: "/ContactMe",
+  //   name: computed(() => {
+  //     return t("header.contactUs");
+  //   }),
+  //   key: "contactUs",
+  // },
 ]);
 
 const langObj = ref({
