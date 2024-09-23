@@ -117,11 +117,6 @@ const filterPurple = ref(null);
 const filterFeature = ref(null);
 const filterCategory = ref(null);
 
-//watch pinia
-filterInfo.$subscribe((mutation, state) => {
-  //state：被改動的整個state實例
-});
-
 async function resetFilters() {
   filterInfo.$reset();
   await resetSelected();
