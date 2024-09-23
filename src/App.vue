@@ -12,6 +12,7 @@ import { storeToRefs } from "pinia";
 import { useStoreInfo } from "./store/useStoreInfo.js";
 import { useLoading } from "./store/useLoading";
 import { useFilter } from "./store/useFilter";
+import { debounce } from "./js/debounce.js";
 import axios from "axios";
 import Header from "./component/Header.vue";
 import Footer from "./component/Footer.vue";
@@ -71,73 +72,109 @@ async function getStoreList() {
 }
 
 /**
- * 種類改變的時候，要重新篩選所有選項
+ * 篩選種類
+ * @description 篩選完種類後，還要篩選商圈標籤、等其他條件
  */
-watch(type, async function () {
+async function toFilterType() {
   if (type.value.trim() === "") {
     // 沒有選擇任何篩選條件的type
     type.value = allTypeOption.value[0] || "餐廳";
   }
   await storeInfo.filterType(type.value);
-});
+}
 
 /**
- * 監聽「商圈標籤」改變
+ * 篩選「商圈標籤」
  * @description 如果沒有商圈標籤，则重新篩選type
  */
-watch(addressTag, (tag) => {
-  if (tag === "") {
-    storeInfo.filterType(type.value);
-  } else {
-    storeInfo.filterAddressTag(tag);
-  }
-});
+async function toFilterAddressTag() {
+  addressTag.value.trim() === ""
+    ? storeInfo.filterType(type.value)
+    : storeInfo.filterAddressTag(addressTag.value);
+}
+
+/**
+ * 篩選【目的】、【特色】、【種類】
+ */
+async function FilterPurpleFeatureCategory(newObj) {
+  const result = storeTemporary.value.filter((item) => {
+    //filter purple
+    let matchPurple = true;
+    if (purple.value !== "") {
+      matchPurple = item?.purple?.includes(purple.value);
+    }
+
+    //filter feature
+    let matchFeature = true;
+    if (feature.value.length !== 0) {
+      if (typeof item.feature === "string") {
+        matchFeature = feature.value.includes(item.feature);
+      } else {
+        matchFeature = item?.feature.some((f) => {
+          return feature.value.includes(f);
+        });
+      }
+    }
+
+    //filter category
+    let matchCategory = true;
+    if (category.value.length !== 0) {
+      matchFeature = item?.category.includes(category.value);
+    }
+
+    return matchPurple && matchFeature && matchCategory;
+  });
+}
 
 /**
  * 當暫存的店家資料改變時，要重新篩選出符合條件的店家
  * @description storeTemporary已經篩選完type、addressTag了
  * @description 需要重新篩選【目的】、【特色】、【種類】
  */
-watch(
-  [storeTemporary, purple, feature, category],
-  async function (filterObj) {
-    console.log("新的篩選條件", filterObj);
-    const result = storeTemporary.value.filter((item) => {
-      //filter purple
-      let matchPurple = true;
-      if (purple.value !== "") {
-        console.log("篩選目的");
-        matchPurple = item?.purple?.includes(purple.value);
-      }
+// watch(
+//   [storeTemporary, purple, feature, category],
+//   async function () {
+//     const result = storeTemporary.value.filter((item) => {
+//       //filter purple
+//       let matchPurple = true;
+//       if (purple.value !== "") {
+//         matchPurple = item?.purple?.includes(purple.value);
+//       }
 
-      //filter feature
-      let matchFeature = true;
-      if (feature.value.length !== 0) {
-        console.log("篩選特色");
-        if (typeof item.feature === "string") {
-          matchFeature = feature.value.includes(item.feature);
-        } else {
-          matchFeature = item?.feature.some((f) => {
-            return feature.value.includes(f);
-          });
-        }
-      }
+//       //filter feature
+//       let matchFeature = true;
+//       if (feature.value.length !== 0) {
+//         if (typeof item.feature === "string") {
+//           matchFeature = feature.value.includes(item.feature);
+//         } else {
+//           matchFeature = item?.feature.some((f) => {
+//             return feature.value.includes(f);
+//           });
+//         }
+//       }
 
-      //filter category
-      let matchCategory = true;
-      if (category.value.length !== 0) {
-        console.log("篩選種類");
-        matchFeature = item?.category.includes(category.value);
-      }
+//       //filter category
+//       let matchCategory = true;
+//       if (category.value.length !== 0) {
+//         matchFeature = item?.category.includes(category.value);
+//       }
 
-      return matchPurple && matchFeature && matchCategory;
-    });
-    // console.log("符合所有篩選條件的店家", result);
-    storeInfo.storeResult = result;
-  },
-  { deep: true }
-);
+//       return matchPurple && matchFeature && matchCategory;
+//     });
+//     // console.log("符合所有篩選條件的店家", result);
+//     storeInfo.storeResult = result;
+//   },
+//   { deep: true }
+// );
 
+//watch pinia
+filterInfo.$subscribe((mutation, state) => {
+  //state：被改動的整個state實例
+  console.log("aaa mutation", mutation);
+  console.log("aaa 新的篩選條件", state);
+
+  debounce(toFilterType(), 500);
+});
 onMounted(async function () {
   await getStoreList();
 });

@@ -67,9 +67,24 @@ export const useStoreInfo = defineStore({
      * @description 當商圈標籤變更時，要顯示該商圈標籤的【目的】、【特色】、【種類】
      */
     setAllOption() {
+      const defaultCategory = [
+        "驅寒",
+        "避暑",
+        "台式",
+        "日式",
+        "中式",
+        "韓式",
+        "墨西哥菜",
+        "印度式",
+        "美式",
+        "越式",
+        "義式",
+        "馬來西亞",
+        "港式",
+      ];
       const allPurple = new Set();
       const allFeature = new Set();
-      const allCategory = new Set();
+      const allCategory = new Set(defaultCategory);
 
       this.storeTemporary.forEach((store) => {
         //get all purple options
@@ -85,8 +100,8 @@ export const useStoreInfo = defineStore({
         const featureArray = store.feature.split(/[,，、]/);
         featureArray.forEach((item) => {
           if (item.trim() === "") return;
-          if (!allFeature.has(item)) {
-            allFeature.add(item);
+          if (!allFeature.has(item.trim())) {
+            allFeature.add(item.trim());
           }
         });
 
@@ -94,8 +109,8 @@ export const useStoreInfo = defineStore({
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
           if (item.trim() === "") return;
-          if (!allCategory.has(item)) {
-            allCategory.add(item);
+          if (!allCategory.has(item.trim())) {
+            allCategory.add(item.trim());
           }
         });
       });
