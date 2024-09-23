@@ -67,6 +67,7 @@ export const useStoreInfo = defineStore({
      * @description 當商圈標籤變更時，要顯示該商圈標籤的【目的】、【特色】、【種類】
      */
     setAllOption() {
+      const defaultCategory = ["驅寒", "避暑"];
       const allPurple = new Set();
       const allFeature = new Set();
       const allCategory = new Set();
@@ -76,8 +77,8 @@ export const useStoreInfo = defineStore({
         const purpleArray = store.purple.split(/[,，、]/);
         purpleArray.forEach((item) => {
           if (item.trim() === "") return;
-          if (!allPurple.has(item)) {
-            allPurple.add(item);
+          if (!allPurple.has(item.trim())) {
+            allPurple.add(item.trim());
           }
         });
 
@@ -85,8 +86,8 @@ export const useStoreInfo = defineStore({
         const featureArray = store.feature.split(/[,，、]/);
         featureArray.forEach((item) => {
           if (item.trim() === "") return;
-          if (!allFeature.has(item)) {
-            allFeature.add(item);
+          if (!allFeature.has(item.trim())) {
+            allFeature.add(item.trim());
           }
         });
 
@@ -94,8 +95,8 @@ export const useStoreInfo = defineStore({
         const categoryArray = store.category.split(/[,，、]/);
         categoryArray.forEach((item) => {
           if (item.trim() === "") return;
-          if (!allCategory.has(item)) {
-            allCategory.add(item);
+          if (!allCategory.has(item.trim())) {
+            allCategory.add(item.trim());
           }
         });
       });
