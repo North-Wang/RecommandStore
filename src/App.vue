@@ -138,10 +138,6 @@ watch(
   { deep: true }
 );
 
-filterInfo.$subscribe((mutation, state) => {
-  console.log("aaa mutation", mutation);
-  console.log("aaa state", state);
-});
 onMounted(async function () {
   await getStoreList();
 });
