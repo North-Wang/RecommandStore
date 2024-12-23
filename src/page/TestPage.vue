@@ -25,7 +25,7 @@
         readonly
       />
     </div>
-    <DataTable
+    <!-- <DataTable
       :value="tableData"
       :scrollable="true"
       scrollHeight="flex"
@@ -52,7 +52,7 @@
       <template #empty>
         <div class="text-black dark:text-black">沒有店家資料</div>
       </template>
-    </DataTable>
+    </DataTable> -->
 
     <!-- <form id="myForm">
       <input type="text" id="name" placeholder="Enter your name" />
