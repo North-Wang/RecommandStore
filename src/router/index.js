@@ -12,6 +12,7 @@ import StoreListTable from "../page/StoreListTableNew.vue";
 import StoreListTableComputer from "../page/StoreListTableComputer.vue";
 import TestPage from "../page/TestPage.vue";
 import ContactMe from "../page/ContactMe.vue";
+import TestLogin from "../page/TestLogin.vue";
 
 import isMobileDevice from "../js/isMobileDevice";
 import { useLoading } from "../store/useLoading";
@@ -61,6 +62,11 @@ const router = createRouter({
       path: "/TestPage",
       name: "TestPage",
       component: TestPage,
+    },
+    {
+      path: "/TestLogin",
+      name: "TestLogin",
+      component: TestLogin,
     },
   ],
 });
