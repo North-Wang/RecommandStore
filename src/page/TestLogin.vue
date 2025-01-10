@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 grid grid-cols-2 grid-rows-2">
-    <a :href="lineLoginUrl">Line 登入</a>
+    <button @click="lineLogin">Line 登入</button>
   </div>
 </template>
 
@@ -8,14 +8,18 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
-const lineLoginUrl = computed(() => {
+async function lineLogin() {
   const channelId = 2006738100;
-  const callbackUrl = "https://test-versel-rho.vercel.app/LineCallBackUrl.php";
-  const generateState = () => Math.random().toString(36).substring(2, 15);
-  const state = generateState();
-  const timeStamp = new Date().getTime();
-  return `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${channelId}&redirect_uri=${callbackUrl}&state=${timeStamp}&scope=profile%20openid&nonce=09876xyz`;
-});
+  const callbackUrl = "https://test-versel-rho.vercel.app/auth/line";
+  const state = Math.random().toString(36).substring(2, 15); // 隨機 state 值
+  const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${channelId}&redirect_uri=${callbackUrl}&state=${state}&scope=openid%20openid&nonce=09876xyz`;
+  window.location.href = lineAuthUrl;
+}
+
+async function getToken(params) {
+  try {
+  } catch (error) {}
+}
 
 onMounted(() => {});
 </script>
