@@ -13,6 +13,7 @@ import StoreListTableComputer from "../page/StoreListTableComputer.vue";
 import TestPage from "../page/TestPage.vue";
 import ContactMe from "../page/ContactMe.vue";
 import TestLogin from "../page/TestLogin.vue";
+import FinishLogin from "../page/FinishLogin.vue";
 
 import isMobileDevice from "../js/isMobileDevice";
 import { useLoading } from "../store/useLoading";
@@ -67,6 +68,16 @@ const router = createRouter({
       path: "/TestLogin",
       name: "TestLogin",
       component: TestLogin,
+    },
+    {
+      path: "/FinishLogin",
+      name: "FinishLogin",
+      component: FinishLogin,
+    },
+    {
+      path: "/auth/line-login",
+      name: "FinishLogin",
+      component: FinishLogin,
     },
   ],
 });
