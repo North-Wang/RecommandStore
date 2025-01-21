@@ -9,16 +9,14 @@ import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 
 async function lineLogin() {
-  const channelId = 2006738100;
-  const callbackUrl = "https://test-versel-rho.vercel.app/auth/line";
+  const channelId = import.meta.env.VITE_LINE_PAY_CHANNEL_ID;
+  const callbackUrl = import.meta.env.VITE_line_pay_callback_url;
   const state = Math.random().toString(36).substring(2, 15); // 隨機 state 值
-  const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${channelId}&redirect_uri=${callbackUrl}&state=${state}&scope=openid%20openid&nonce=09876xyz`;
+  const scope = "profile%20openid%20email	";
+  console.log("state", state);
+  const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${channelId}&redirect_uri=${callbackUrl}&state=${state}&scope=${scope}&nonce=09876xyz`;
+  console.log("lineAuthUrl", lineAuthUrl);
   window.location.href = lineAuthUrl;
-}
-
-async function getToken(params) {
-  try {
-  } catch (error) {}
 }
 
 onMounted(() => {});

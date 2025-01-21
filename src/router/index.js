@@ -12,7 +12,7 @@ import StoreListTable from "../page/StoreListTableNew.vue";
 import StoreListTableComputer from "../page/StoreListTableComputer.vue";
 import TestPage from "../page/TestPage.vue";
 import ContactMe from "../page/ContactMe.vue";
-import TestLogin from "../page/TestLogin.vue";
+import TestLineLogin from "../page/TestLineLogin.vue";
 import FinishLogin from "../page/FinishLogin.vue";
 
 import isMobileDevice from "../js/isMobileDevice";
@@ -22,7 +22,7 @@ const isMobile = isMobileDevice();
 // const loadingInfo = useLoading();
 
 const router = createRouter({
-  history: createWebHashHistory(), //如果填入"/object"，這樣進去每個分頁的前面都會有/object
+  history: createWebHistory(), //如果填入"/object"，這樣進去每個分頁的前面都會有/object
   scrollBehavior(to, from, savedPosition) {
     //進到頁面都會回到頂端
     return { top: 0, behavior: "smooth" };
@@ -65,9 +65,9 @@ const router = createRouter({
       component: TestPage,
     },
     {
-      path: "/TestLogin",
-      name: "TestLogin",
-      component: TestLogin,
+      path: "/TestLineLogin",
+      name: "TestLineLogin",
+      component: TestLineLogin,
     },
     {
       path: "/FinishLogin",
