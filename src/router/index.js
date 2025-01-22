@@ -65,17 +65,12 @@ const router = createRouter({
       component: TestPage,
     },
     {
-      path: "/TestLineLogin",
+      path: "/auth/Login",
       name: "TestLineLogin",
       component: TestLineLogin,
     },
     {
-      path: "/FinishLogin",
-      name: "FinishLogin",
-      component: FinishLogin,
-    },
-    {
-      path: "/auth/line-login",
+      path: "/auth/FinishLogin",
       name: "FinishLogin",
       component: FinishLogin,
     },
