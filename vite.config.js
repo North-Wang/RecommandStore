@@ -8,12 +8,10 @@ export default defineConfig(({ mode }) => {
   // 設置第三個參數為 '' 來加載所有環境變量，而不管是否有 `VITE_` 前綴
   const env = loadEnv(mode, process.cwd(), "");
   return {
-    base: `/${env.VITE_LINE_PAY_CHANNEL_ID}/`,
     server: {
       https: true,
     },
     plugins: [vue(), mkcert()],
-    base: [process.env.line_pay_channel_id],
     esbuild: {
       // 讓打包後不會出現console.log
       drop:
